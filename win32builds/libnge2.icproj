@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="libnge2"
+	ProjectGUID="{7C52C7D5-28D6-4EFC-87DD-824999E93169}"
+	VCNestedProjectGUID="{8912E77F-464B-4CC0-9C2A-A7C546E77D49}"
+	VCNestedProjectFileName="libnge2.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="GeneralTool"
+				InterproceduralOptimization="true"/>
+			<Tool
+				Name="CppCmplrTool"
+				GlobalOptimizations="true"
+				OptimizeForWindowsApplication="true"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>

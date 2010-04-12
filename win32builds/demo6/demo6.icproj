@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="demo6"
+	ProjectGUID="{F286FCEB-F994-4395-9DEE-2826C43B619C}"
+	VCNestedProjectGUID="{1CB7999F-DD6A-48F9-8979-0D08007E458C}"
+	VCNestedProjectFileName="demo6.vcproj">
+	<Configurations/>
+	<Files/>
+</VisualStudioProject>

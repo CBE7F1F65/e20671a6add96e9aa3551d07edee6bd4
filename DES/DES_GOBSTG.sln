@@ -1,0 +1,41 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "DES_GOBSTG", "DES_GOBSTG\DES_GOBSTG.icproj", "{A4938EF7-0CE1-47A3-BC8D-4D0B54F94F6D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ACB58A18-DE6E-4C2F-BC64-93C8673CBEBE} = {ACB58A18-DE6E-4C2F-BC64-93C8673CBEBE}
+		{7C52C7D5-28D6-4EFC-87DD-824999E93169} = {7C52C7D5-28D6-4EFC-87DD-824999E93169}
+	EndProjectSection
+EndProject
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "libnge2", "..\win32builds\libnge2.icproj", "{7C52C7D5-28D6-4EFC-87DD-824999E93169}"
+EndProject
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "LuaPlus", "..\LuaPlus\LuaPlus.icproj", "{ACB58A18-DE6E-4C2F-BC64-93C8673CBEBE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4938EF7-0CE1-47A3-BC8D-4D0B54F94F6D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A4938EF7-0CE1-47A3-BC8D-4D0B54F94F6D}.Debug|Win32.Build.0 = Debug|Win32
+		{A4938EF7-0CE1-47A3-BC8D-4D0B54F94F6D}.Release|Win32.ActiveCfg = Release|Win32
+		{A4938EF7-0CE1-47A3-BC8D-4D0B54F94F6D}.Release|Win32.Build.0 = Release|Win32
+		{7C52C7D5-28D6-4EFC-87DD-824999E93169}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7C52C7D5-28D6-4EFC-87DD-824999E93169}.Debug|Win32.Build.0 = Debug|Win32
+		{7C52C7D5-28D6-4EFC-87DD-824999E93169}.Release|Win32.ActiveCfg = Release|Win32
+		{7C52C7D5-28D6-4EFC-87DD-824999E93169}.Release|Win32.Build.0 = Release|Win32
+		{7329E15F-F0AE-44EE-BC64-27B9038C76D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7329E15F-F0AE-44EE-BC64-27B9038C76D7}.Release|Win32.ActiveCfg = Release|Win32
+		{8912E77F-464B-4CC0-9C2A-A7C546E77D49}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8912E77F-464B-4CC0-9C2A-A7C546E77D49}.Release|Win32.ActiveCfg = Release|Win32
+		{ACB58A18-DE6E-4C2F-BC64-93C8673CBEBE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ACB58A18-DE6E-4C2F-BC64-93C8673CBEBE}.Debug|Win32.Build.0 = Debug|Win32
+		{ACB58A18-DE6E-4C2F-BC64-93C8673CBEBE}.Release|Win32.ActiveCfg = Release|Win32
+		{ACB58A18-DE6E-4C2F-BC64-93C8673CBEBE}.Release|Win32.Build.0 = Release|Win32
+		{9C233F9B-D3AF-4C38-8743-45898A100640}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9C233F9B-D3AF-4C38-8743-45898A100640}.Release|Win32.ActiveCfg = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

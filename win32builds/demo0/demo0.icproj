@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="demo0"
+	ProjectGUID="{BA5A0677-37B8-4E03-82E2-6AD4C83920D8}"
+	VCNestedProjectGUID="{8C87CC55-08B4-479A-A87B-72B4AD7EE3CB}"
+	VCNestedProjectFileName="demo0.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="GeneralTool"
+				InterproceduralOptimization="true"/>
+			<Tool
+				Name="CppCmplrTool"
+				GlobalOptimizations="true"
+				OptimizeForWindowsApplication="true"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>
