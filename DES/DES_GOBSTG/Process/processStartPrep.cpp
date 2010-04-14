@@ -1,4 +1,7 @@
 #include "../Header/processPrep.h"
+#ifdef WIN32
+#include <windows.h>
+#endif
 
 void Process::clearPrep(bool bclearkey)
 {
@@ -50,21 +53,22 @@ void Process::startPrep(bool callinit)
 {
 	replayend = false;
 	SetState(STATE_START);
-
+#ifdef WIN32
 	SetCurrentDirectory(hge->Resource_MakePath(""));
+#endif
 
 	BYTE part = 0;
 	if (replaymode)
 	{
-		Replay::rpy.Load(rpyfilename, true);
-		seed = Replay::rpy.partinfo[part].seed;
+		Replay::rpy->Load(rpyfilename, true);
+		seed = Replay::rpy->partinfo[part].seed;
 		for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
 		{
-			Player::p[i].SetChara(Replay::rpy.rpyinfo.usingchara[i][0], Replay::rpy.rpyinfo.usingchara[i][1], Replay::rpy.rpyinfo.usingchara[i][2]);
-			Player::p[i].SetInitLife(Replay::rpy.rpyinfo.initlife[i]);
+			Player::p[i].SetChara(Replay::rpy->rpyinfo.usingchara[i][0], Replay::rpy->rpyinfo.usingchara[i][1], Replay::rpy->rpyinfo.usingchara[i][2]);
+			Player::p[i].SetInitLife(Replay::rpy->rpyinfo.initlife[i]);
 		}
-		SetScene(Replay::rpy.rpyinfo.scene);
-		SetMatchMode(Replay::rpy.rpyinfo.matchmode);
+		SetScene(Replay::rpy->rpyinfo.scene);
+		SetMatchMode(Replay::rpy->rpyinfo.matchmode);
 	}
 	else
 	{
@@ -77,7 +81,7 @@ void Process::startPrep(bool callinit)
 	srandt(seed);
 	hge->Random_Seed(seed);
 
-	Replay::rpy.InitReplayIndex(replaymode, part);
+	Replay::rpy->InitReplayIndex(replaymode, part);
 
 	clearPrep();
 	if (matchmode == M_MATCHMODE_P2C || matchmode == M_MATCHMODE_C2C)
@@ -111,11 +115,11 @@ void Process::startPrep(bool callinit)
 	}
 	Player::ClearRound();
 	FrontDisplay::fdisp.SignUpSpell();
-	musicChange(BResource::res.playerdata[scene].musicID);
+	musicChange(BResource::pbres->playerdata[scene].musicID);
 
 	if(!replaymode)
 	{
-		ZeroMemory(&Replay::rpy.rpyinfo, sizeof(replayInfo));
+		ZeroMemory(&Replay::rpy->rpyinfo, sizeof(replayInfo));
 
 		//partinfo
 		BYTE part = 0;
@@ -125,11 +129,11 @@ void Process::startPrep(bool callinit)
 		{
 			if(i != part)
 			{
-				ZeroMemory(&Replay::rpy.partinfo[i], sizeof(partInfo));
+				ZeroMemory(&Replay::rpy->partinfo[i], sizeof(partInfo));
 			}
 			else
 			{
-				Replay::rpy.partFill(part);
+				Replay::rpy->partFill(part);
 			}
 		}
 	}
@@ -142,7 +146,7 @@ void Process::startPrep(bool callinit)
 		{
 			if (part)
 			{
-				Player::p[i].changePlayerID(Replay::rpy.partinfo[part].nowID[i]);
+				Player::p[i].changePlayerID(Replay::rpy->partinfo[part].nowID[i]);
 			}
 		}
 	}

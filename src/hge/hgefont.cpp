@@ -241,7 +241,11 @@ void hgeFont::ChangeSprite(BYTE chr, hgeSprite * sprite, float pre_a, float post
 	float tex_w = 0;
 	float tex_h = 0;
 	sprite->GetTextureRect(&tex_x, &tex_y, &tex_w, &tex_h);
-	ChangeSprite(chr, sprite->GetTexture(), tex_x, tex_y, tex_w, tex_h, pre_a, post_c);
+	HTEXTURE tex = sprite->GetTexture();
+	if (tex)
+	{
+		ChangeSprite(chr, sprite->GetTexture(), tex_x, tex_y, tex_w, tex_h, pre_a, post_c);
+	}
 }
 
 void hgeFont::ChangeSprite(BYTE chr, HTEXTURE tex, float tex_x, float tex_y, float tex_w, float tex_h, float pre_a, float post_c)
@@ -292,6 +296,7 @@ void hgeFont::RenderEx(float x, float y, int align, const char *string, float sc
 /************************************************************************/
 void hgeFont::Render(float x, float y, int align, const char *string)
 {
+	return;
 	int i;
 	float	fx=x;
 
@@ -324,7 +329,7 @@ void hgeFont::Render(float x, float y, int align, const char *string)
 	}
 }
 
-void hgeFont::printf(float x, float y, int align, const char *format, ...)
+void hgeFont::Printf(float x, float y, int align, const char *format, ...)
 {
 	char	*pArg=(char *) &format+sizeof(format);
 
@@ -338,7 +343,7 @@ void hgeFont::printf(float x, float y, int align, const char *format, ...)
 /************************************************************************/
 /* This function is modified by h5nc (h5nc@yahoo.com.cn)                */
 /************************************************************************/
-void hgeFont::printfb(float x, float y, float w, float h, int align, const char *format, ...)
+void hgeFont::Printfb(float x, float y, float w, float h, int align, const char *format, ...)
 {
 	char	chr, *pbuf, *prevword, *linestart;
 	int		i,lines=0;

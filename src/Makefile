@@ -9,6 +9,7 @@ OBJS = helper/iniparser.o helper/dictionary.o \
        nge_vram.o audiosystem/libcoolaudio.o audiosystem/play_ogg_psp.o \
        audiosystem/play_mp3_psp.o audiosystem/play_pcm_psp.o movieplay/nge_movie.o \
        net/event.o net/log.o net/select.o hge/hgecolor.o hge/hgeparticle.o hge/hgepmanager.o \
+       utility/exception.o \
        hge/hgerect.o hge/hgevector.o \
        hge/hgeEffectSystem.o hge/HGEExport.o hge/hgefont.o hge/hgesprite.o \
        hge/zlib/adler32.o hge/zlib/compress.o hge/zlib/crc32.o hge/zlib/deflate.o hge/zlib/gzio.o hge/zlib/infback.o hge/zlib/inffast.o hge/zlib/inflate.o hge/zlib/inftrees.o hge/zlib/ioapi.o hge/zlib/mztools.o hge/zlib/trees.o hge/zlib/uncompr.o hge/zlib/unzip.o hge/zlib/zip.o hge/zlib/zutil.o
@@ -27,8 +28,9 @@ install:$(TARGET_LIB)
 	cp libnge2.a ../lib/
 	cp *.h ../include/
 	cp helper/*.h ../include/helper/
+	cp utility/*.h ../include/utility/
 	cp hge/*.h ../include/hge/
-	cp hge/zlib*.h ../include/hge/zlib
+	cp hge/zlib/*.h ../include/hge/zlib
 	cp audiosystem/interface.h ../include/audiosystem/
 	cp movieplay/nge_movie.h ../include/movieplay/
 	cp net/event.h ../include/net/

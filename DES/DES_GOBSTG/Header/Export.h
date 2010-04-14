@@ -6,7 +6,7 @@
 
 #define RPYPARTMAX		7
 #define RPYPREFIXMAX	8
-#define RPYENUMMAX		0x40
+#define RPYENUMMAX		0x4
 
 #define RPYFILENAME_CONTENTMAX	7
 
@@ -98,7 +98,6 @@ public:
 	static bool rpySetBias(replayFrame * _replayframe);
 	static float rpyGetReplayFPS(replayFrame _replayframe);
 	static bool packFile(const char * zipname, const char * filename);
-	static bool packFolder(const char * zipname, const char * foldername, const char * filterstr, int * initcount = 0);
 #ifdef __UNPACK
 	#define UNPACK_INIFILENAME	"Unpack.ini"
 	#define UNPACK_SECTION	"Package_"

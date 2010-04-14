@@ -37,7 +37,7 @@ void PlayerGhost::valueSet(BYTE _playerindex, WORD _ID, bool move)
 	lastchasing	=	false;
 	active = true;
 
-	playerghostData * _pgd = &(BResource::res.playerghostdata[ID]);
+	playerghostData * _pgd = &(BResource::pbres->playerghostdata[ID]);
 
 	if (_pgd->siid)
 	{
@@ -190,7 +190,7 @@ void PlayerGhost::action()
 
 	DWORD ownertimer = Player::p[playerindex].timer;
 
-	playerghostData * _pgd = &(BResource::res.playerghostdata[ID]);
+	playerghostData * _pgd = &(BResource::pbres->playerghostdata[ID]);
 
 	if (flag & PGFLAG_TRACE)
 	{

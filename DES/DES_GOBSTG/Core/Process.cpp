@@ -51,9 +51,6 @@ void Process::Release()
 		hge->Ini_SetInt(RESCONFIGS_CUSTOM, RESCONFIGN_LASTMATCHCHARA_2_2, lastmatchchara[1][1]);
 		hge->Ini_SetInt(RESCONFIGS_CUSTOM, RESCONFIGN_LASTMATCHCHARA_2_3, lastmatchchara[1][2]);
 
-		if(playing)
-			DataConnector::addPlayTime();
-
 		if (!Data::data.bin.empty())
 		{
 			Data::data.SaveBin();
@@ -66,13 +63,15 @@ void Process::Release()
 	Bullet::Release();
 	PlayerBullet::Release();
 	Item::Release();
-	BossInfo::Release();
 	Chat::chatitem.Release();
 	EffectSp::Release();
 	FrontDisplay::fdisp.Release();
 	Enemy::Release();
 	SpriteItemManager::Release();
 	hgeEffectSystem::Release();
+	Replay::ReleaseList();
+
+	BResource::Release();
 	Replay::Release();
 
 	for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
@@ -116,7 +115,6 @@ void Process::ClearAll()
 	PlayerBullet::ClearItem();
 	Beam::ClearItem();
 	Chat::chatitem.Clear();
-	BossInfo::Clear();
 	EffectSp::ClearItem();
 	EventZone::Clear();
 	GameAI::ClearAll();
@@ -200,16 +198,16 @@ void Process::musicChange(int ID, bool force)
 	}
 	if(!hge->Channel_IsPlaying(channel) || musicID != ID || force)
 	{
-		if (musicID < 0 || strcmp(BResource::res.musdata[ID].musicfilename, BResource::res.musdata[musicID].musicfilename))
+		if (musicID < 0 || strcmp(BResource::pbres->musdata[ID].musicfilename, BResource::pbres->musdata[musicID].musicfilename))
 		{
 			if(stream)
 				hge->Stream_Free(stream);
-			stream = hge->Stream_Load(BResource::res.musdata[ID].musicfilename, 0, false);
+			stream = hge->Stream_Load(BResource::pbres->musdata[ID].musicfilename, 0, false);
 		}
 		musicID = ID;
-		channelsyncinfo.startPos = BResource::res.musdata[musicID].startpos;
-		channelsyncinfo.introLength = BResource::res.musdata[musicID].introlength;
-		channelsyncinfo.allLength = BResource::res.musdata[musicID].alllength;
+		channelsyncinfo.startPos = BResource::pbres->musdata[musicID].startpos;
+		channelsyncinfo.introLength = BResource::pbres->musdata[musicID].introlength;
+		channelsyncinfo.allLength = BResource::pbres->musdata[musicID].alllength;
 		if (channel)
 		{
 			musicSlide(0, bgmvol);
@@ -232,17 +230,7 @@ void Process::musicChange(int ID, bool force)
 
 void Process::SnapShot()
 {
-	SYSTEMTIME systime;
-	GetLocalTime(&systime);
-	
-	char snapshotfilename[M_PATHMAX];
-	strcpy(snapshotfilename, "");
-	sprintf(snapshotfilename, "%s%s_%04d_%02d_%02d_%02d_%02d_%02d_%04d.%s",
-		BResource::res.resdata.snapshotfoldername,
-		SNAPSHOT_PRIFIX,
-		systime.wYear, systime.wMonth, systime.wDay, systime.wHour, systime.wMinute, systime.wSecond, systime.wMilliseconds,
-		SNAPSHOT_EXTENSION);
-	hge->System_Snapshot(snapshotfilename);
+	hge->System_Snapshot();
 }
 
 char Process::getInputNowChar(bool wide)

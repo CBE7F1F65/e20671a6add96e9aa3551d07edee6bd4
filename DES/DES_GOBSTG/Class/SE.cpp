@@ -16,7 +16,7 @@ bool SE::Initial()
 	char buffer[M_STRMAX];
 	for(int i = 0;i < SEMAX;i++)
 	{
-		strcpy(buffer, BResource::res.resdata.sefilename[i]);
+		strcpy(buffer, BResource::pbres->resdata.sefilename[i]);
 		if(!strlen(buffer))
 		{
 //			if(i < SE_FREEBEGIN)

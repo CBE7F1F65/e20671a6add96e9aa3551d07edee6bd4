@@ -107,6 +107,10 @@ public:
 	void	CALL	Channel_SetLoop(HCHANNEL channel, hgeChannelSyncInfo * pcsi) ;		
 	void	CALL	Channel_RemoveLoop(HCHANNEL channel, hgeChannelSyncInfo * pcsi) ;
 						
+#ifdef WIN32
+	void	CALL		_Input_TranslateKey(int * key);
+#endif
+	bool	CALL		Input_UpdateDI();
 	bool	CALL		Input_GetDIKey(int key, BYTE stateType = DIKEY_PRESSED) ;
 	bool	CALL		Input_SetDIKey(int key, bool set = true) ;
 	
@@ -164,6 +168,11 @@ public:
 	char	szIniFile[_MAX_PATH];
 	char	szLogFile[_MAX_PATH];
 	dictionary * inidic;
+
+	BYTE	keyState[16];
+	BYTE	lastKeyState[16];
+	float	lAnalogx;
+	float	lAnalogy;
 };
 extern HGEExport _hge;
 extern HGEExport * hge;

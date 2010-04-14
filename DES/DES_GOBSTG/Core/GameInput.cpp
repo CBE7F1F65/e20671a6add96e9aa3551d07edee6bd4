@@ -202,6 +202,7 @@ bool GameInput::UpdateInput(bool startstate)
 	SyncControlInputSelf();
 	//
 
+//	hge->Input_UpdateDI();
 	return true;
 }
 

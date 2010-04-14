@@ -367,6 +367,21 @@ typedef struct{
 	float bottom;
 }rectf;
 
+#define         _PSP_CTRL_SELECT     10
+#define         _PSP_CTRL_START      11
+#define         _PSP_CTRL_UP         8
+#define         _PSP_CTRL_RIGHT      9
+#define         _PSP_CTRL_DOWN       6
+#define         _PSP_CTRL_LEFT       7
+#define         _PSP_CTRL_LTRIGGER   4
+#define         _PSP_CTRL_RTRIGGER   5
+#define         _PSP_CTRL_TRIANGLE   0
+#define         _PSP_CTRL_CIRCLE     1
+#define         _PSP_CTRL_CROSS      2
+#define         _PSP_CTRL_SQUARE     3
+#define         _PSP_CTRL_HOME       12
+#define         _PSP_CTRL_HOLD       13
+#define         _PSP_CTRL_NOTE       14
 
 //input proc define
 #ifdef WIN32
@@ -385,21 +400,23 @@ typedef struct{
 #define PSP_BUTTON_START         SDLK_b
 #define PSP_BUTTON_HOME          SDLK_n
 #define PSP_BUTTON_HOLD          SDLK_m  
+#define PSP_BUTTON_NOTE          SDLK_c  
 #else
-#define PSP_BUTTON_UP            8
-#define PSP_BUTTON_DOWN          6
-#define PSP_BUTTON_LEFT          7
-#define PSP_BUTTON_RIGHT         9
-#define PSP_BUTTON_TRIANGLE      0
-#define PSP_BUTTON_CIRCLE        1
-#define PSP_BUTTON_CROSS         2
-#define PSP_BUTTON_SQUARE        3
-#define PSP_BUTTON_LEFT_TRIGGER  4
-#define PSP_BUTTON_RIGHT_TRIGGER 5
-#define PSP_BUTTON_SELECT        10
-#define PSP_BUTTON_START         11
-#define PSP_BUTTON_HOME          12
-#define PSP_BUTTON_HOLD          13  
+#define PSP_BUTTON_UP            _PSP_CTRL_UP
+#define PSP_BUTTON_DOWN          _PSP_CTRL_DOWN
+#define PSP_BUTTON_LEFT          _PSP_CTRL_LEFT
+#define PSP_BUTTON_RIGHT         _PSP_CTRL_RIGHT
+#define PSP_BUTTON_TRIANGLE      _PSP_CTRL_TRIANGLE
+#define PSP_BUTTON_CIRCLE        _PSP_CTRL_CIRCLE
+#define PSP_BUTTON_CROSS         _PSP_CTRL_CROSS
+#define PSP_BUTTON_SQUARE        _PSP_CTRL_SQUARE
+#define PSP_BUTTON_LEFT_TRIGGER  _PSP_CTRL_LTRIGGER
+#define PSP_BUTTON_RIGHT_TRIGGER _PSP_CTRL_RTRIGGER
+#define PSP_BUTTON_SELECT        _PSP_CTRL_SELECT
+#define PSP_BUTTON_START         _PSP_CTRL_START
+#define PSP_BUTTON_HOME          _PSP_CTRL_HOME
+#define PSP_BUTTON_HOLD          _PSP_CTRL_HOLD  
+#define PSP_BUTTON_NOTE          _PSP_CTRL_NOTE
 #endif
 
 

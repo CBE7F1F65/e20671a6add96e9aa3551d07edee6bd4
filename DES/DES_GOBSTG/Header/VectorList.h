@@ -1,5 +1,6 @@
 #ifndef _VECTORLIST_H
 #define _VECTORLIST_H
+#include <string.h>
 
 #define VECLST_INDEXERROR	0xffffffff
 

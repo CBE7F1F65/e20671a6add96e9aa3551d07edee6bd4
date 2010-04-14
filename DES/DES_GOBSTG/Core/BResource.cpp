@@ -3,7 +3,7 @@
 #include "../Header/ConstResource.h"
 #include "../../../src/hge/HGEExport.h"
 
-BResource BResource::res;
+BResource * BResource::pbres = NULL;
 
 BResource::BResource()
 {
@@ -17,6 +17,21 @@ BResource::~BResource()
 {
 	ReleaseSpriteData();
 	ReleaseCustomConst();
+}
+
+void BResource::Init()
+{
+	Release();
+	pbres = new BResource();
+}
+
+void BResource::Release()
+{
+	if (pbres)
+	{
+		delete pbres;
+		pbres = NULL;
+	}
 }
 
 void BResource::InitSpriteData()
@@ -340,7 +355,6 @@ bool BResource::Pack(void * pStrdesc, void * pCustomConstData)
 //		RSIZE_SPRITE + 
 		RSIZE_PLAYERSHOOT + 
 		RSIZE_PLAYERGHOST + 
-		RSIZE_SPELL +
 		RSIZE_SPRITENUMBER +
 		RSIZE_SPRITE;
 	BYTE * content = (BYTE *)malloc(size);
@@ -390,8 +404,6 @@ bool BResource::Pack(void * pStrdesc, void * pCustomConstData)
 	offset += RSIZE_PLAYERSHOOT;
 	memcpy(content+offset, playerghostdata, RSIZE_PLAYERGHOST);
 	offset += RSIZE_PLAYERGHOST;
-	memcpy(content+offset, spelldata, RSIZE_SPELL);
-	offset += RSIZE_SPELL;
 
 	memcpy(content+offset, &spritenumber, RSIZE_SPRITENUMBER);
 	offset += RSIZE_SPRITENUMBER;
@@ -454,8 +466,6 @@ bool BResource::Gain(void * pStrdesc, void * pCustomConstData)
 			offset += RSIZE_PLAYERSHOOT;
 			memcpy(playerghostdata, content+offset, RSIZE_PLAYERGHOST);
 			offset += RSIZE_PLAYERGHOST;
-			memcpy(spelldata, content+offset, RSIZE_SPELL);
-			offset += RSIZE_SPELL;
 
 			memcpy(&spritenumber, content+offset, RSIZE_SPRITENUMBER);
 			offset += RSIZE_SPRITENUMBER;

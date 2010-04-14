@@ -6,7 +6,6 @@
 #include "../Header/FrontDisplay.h"
 #include "../Header/BResource.h"
 #include "../Header/Data.h"
-#include "../Header/BossInfo.h"
 #include "../Header/Enemy.h"
 #include "../Header/ConstResource.h"
 

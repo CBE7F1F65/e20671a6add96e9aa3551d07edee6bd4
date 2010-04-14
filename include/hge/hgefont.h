@@ -35,8 +35,8 @@ public:
 	/* This function is added by h5nc (h5nc@yahoo.com.cn)                   */
 	/************************************************************************/
 	void		RenderEx(float x, float y, int align, const char *string, float scale=1.0f, float properation=1.0f, float rotation=0, float tracking=0, float spacing=1.0f);
-	void		printf(float x, float y, int align, const char *format, ...);
-	void		printfb(float x, float y, float w, float h, int align, const char *format, ...);
+	void		Printf(float x, float y, int align, const char *format, ...);
+	void		Printfb(float x, float y, float w, float h, int align, const char *format, ...);
 
 	/************************************************************************/
 	/* This function is modified by h5nc (h5nc@yahoo.com.cn)                */

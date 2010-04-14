@@ -10,7 +10,7 @@ extern "C"
 #include "../nge_image_load.h"
 #include "../nge_graphics.h"
 };
-#include <stdlib.h>
+//#include <stdlib.h>
 
 unsigned int g_seed=0;
 unsigned int g_seed_self=0;
@@ -56,6 +56,11 @@ void CALL HGEExport::Init(const char * apppath)
 
 	res = NULL;
 	textures = NULL;
+
+	memset(keyState, 0, sizeof(BYTE)*16);
+	memset(lastKeyState, 0, sizeof(BYTE)*16);
+	lAnalogx = 0;
+	lAnalogy = 0;
 }
 
 void CALL HGEExport::Release()
@@ -85,11 +90,12 @@ void CALL HGEExport::System_Log(const char *szFormat, ...)
 
 	char message[1024];
 	va_start(ap, szFormat);
-	int iret = vsnprintf(message, sizeof(char)*1022, szFormat, ap);
+	int iret = vsnprintf(message, sizeof(char)*1021, szFormat, ap);
 	va_end(ap);
-	message[iret] = '\n';
-	message[iret+1] = 0;
-	io_fwrite(message, 1, iret+2, ifile);
+	message[iret] = '\r';
+	message[iret+1] = '\n';
+	message[iret+2] = 0;
+	io_fwrite(message, iret+3, 1, ifile);
 	io_fclose(ifile);
 }
 
@@ -197,6 +203,7 @@ void CALL HGEExport::System_SetStateString(hgeStringState state, const char *val
 	case HGE_LOGFILE:		if(value)
 							{
 								strcpy(szLogFile,Resource_MakePath(value));
+								io_fdelete(szLogFile);
 								int ifile = io_fopen(szLogFile, IO_WRONLY);
 								if(!ifile) szLogFile[0]=0;
 								else io_fclose(ifile);
@@ -332,7 +339,10 @@ BYTE * CALL HGEExport::Resource_Load(const char* filename, DWORD * size)
 
 	// Load from file
 _fromfile:
-	int ifile = io_fopen(filename, IO_RDONLY/*"rb"*/);
+	int ifile = io_fopen(Resource_MakePath(filename), IO_RDONLY/*"rb"*/);
+#ifdef __DEBUG
+	System_Log("Loading Resource: %s...", Resource_MakePath(filename));
+#endif
 	if (!ifile)
 	{
 		return 0;
@@ -344,6 +354,16 @@ _fromfile:
 	BYTE * content = (BYTE *)malloc(*size*sizeof(BYTE));
 	io_fread((void*)content, 1, *size*sizeof(BYTE), ifile);
 	io_fclose(ifile);
+#ifdef __DEBUG
+	if (content)
+	{
+		System_Log("Succeeded.");
+	}
+	else
+	{
+		System_Log("Failed.");
+	}
+#endif
 	return content;
 }
 
@@ -943,13 +963,110 @@ void	CALL HGEExport::	Channel_RemoveLoop(HCHANNEL channel, hgeChannelSyncInfo * 
 
 }
 
+bool CALL HGEExport::Input_UpdateDI()
+{
+	memcpy(lastKeyState, keyState, sizeof(BYTE)*16);
+	memset(keyState, 0, sizeof(BYTE)*16);
+	return true;
+}
+#ifdef WIN32
+void CALL HGEExport::_Input_TranslateKey(int * key)
+{
+	if (!key)
+	{
+		return;
+	}
+	switch (*key)
+	{
+	case PSP_BUTTON_UP:
+		*key = _PSP_CTRL_UP;
+		break;
+	case PSP_BUTTON_DOWN:
+		*key = _PSP_CTRL_DOWN;
+		break;
+	case PSP_BUTTON_LEFT:
+		*key = _PSP_CTRL_LEFT;
+		break;
+	case PSP_BUTTON_RIGHT:
+		*key = _PSP_CTRL_RIGHT;
+		break;
+	case PSP_BUTTON_TRIANGLE:
+		*key = _PSP_CTRL_TRIANGLE;
+		break;
+	case PSP_BUTTON_CIRCLE:
+		*key = _PSP_CTRL_CIRCLE;
+		break;
+	case PSP_BUTTON_CROSS:
+		*key = _PSP_CTRL_CROSS;
+		break;
+	case PSP_BUTTON_SQUARE:
+		*key = _PSP_CTRL_SQUARE;
+		break;
+	case PSP_BUTTON_LEFT_TRIGGER:
+		*key = _PSP_CTRL_LTRIGGER;
+		break;
+	case PSP_BUTTON_RIGHT_TRIGGER:
+		*key = _PSP_CTRL_RTRIGGER;
+		break;
+	case PSP_BUTTON_SELECT:
+		*key = _PSP_CTRL_SELECT;
+		break;
+	case PSP_BUTTON_START:
+		*key = _PSP_CTRL_START;
+		break;
+	case PSP_BUTTON_HOME:
+		*key = _PSP_CTRL_HOME;
+		break;
+	case PSP_BUTTON_HOLD:
+		*key = _PSP_CTRL_HOLD;
+		break;
+	case PSP_BUTTON_NOTE:
+		*key = _PSP_CTRL_NOTE;
+		break;
+	}
+}
+#endif
+
 bool CALL HGEExport::Input_GetDIKey(int key, BYTE stateType /* = DIKEY_PRESSED */)
 {
+#ifdef WIN32
+	_Input_TranslateKey(&key);
+#endif
+	if(key >= 0 && key < 16)
+	{
+		switch(stateType)
+		{
+		case DIKEY_PRESSED:
+			if(keyState[key])
+				return true;
+			break;
+		case DIKEY_DOWN:
+			if(keyState[key] && !lastKeyState[key])
+				return true;
+			break;
+		case DIKEY_UP:
+			if(!keyState[key] && lastKeyState[key])
+				return true;
+			break;
+		default:
+			return false;
+		}
+	}
 	return false;
 }
 
 bool CALL HGEExport::Input_SetDIKey(int key, bool set /* = true */)
 {
+#ifdef WIN32
+	_Input_TranslateKey(&key);
+#endif
+	if(key >=0 && key < 16)
+	{
+		if(set)
+			keyState[key] |= 1<<7;
+		else
+			keyState[key] = 0;
+	}
 	return true;
 }
 
@@ -974,9 +1091,9 @@ void	CALL HGEExport::		Gfx_RenderQuad(const hgeQuad *quad)
 	RenderQuad(texture,
 		quad->v[0].tx*texture->texw, quad->v[0].ty*texture->texh,
 		(quad->v[1].tx-quad->v[0].tx)*texture->texw, (quad->v[3].ty-quad->v[0].ty)*texture->texh,
-		quad->v[0].x, quad->v[0].y,
-		1.0, 1.0,
-		0, quad->v[0].col
+		quad->v[0].x/2, quad->v[0].y/2,
+		0.5, 0.5,
+		(float)(quad->blend)/10000.0f, quad->v[0].col
 		);
 }
 

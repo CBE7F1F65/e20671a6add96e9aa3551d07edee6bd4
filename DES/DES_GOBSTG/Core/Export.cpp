@@ -3,6 +3,10 @@
 #include "../../../src/hge/HGEExport.h"
 #include "../../../win32depends/include/zip.h"
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 char Export::resourcefilename[M_PATHMAX];
 char Export::resbinname[M_PATHMAX];
 partInfo Export::partinfo[RPYPARTMAX];
@@ -31,12 +35,12 @@ void Export::Release()
 
 void Export::keydownproc(int keycode)
 {
-
+	hge->Input_SetDIKey(keycode);
 }
 
 void Export::keyupproc(int keycode)
 {
-
+	hge->Input_SetDIKey(keycode, false);
 }
 
 
@@ -50,7 +54,7 @@ bool Export::clientInitial(bool usesound /* = false */, bool extuse /* = false *
 #ifdef WIN32
 	GetCurrentDirectory(_MAX_PATH, respath);
 #else
-	strcpy(respath, "ms0:");
+	strcpy(respath, "");
 #endif
 	hge->Init(respath);
 
@@ -349,200 +353,6 @@ bool Export::packFile(const char * zipname, const char * filename)
 			ret = true;
 		hge->Resource_Free(_content);
 	}
-	return ret;
-}
-
-bool Export::packFolder(const char * zipname, const char * foldername, const char * filterstr, int * initcount)
-{
-	bool ret = true;
-	WIN32_FIND_DATA SearchData;
-
-	char buffer[_MAX_PATH];
-	strcpy(buffer, foldername);
-	if(buffer[strlen(buffer)-1]!='\\' && buffer[strlen(buffer)-1]!='/')
-	{
-		strcat(buffer, "\\");
-	}
-	strcat(buffer, "*");
-
-	HANDLE hSearch = FindFirstFile(buffer, &SearchData);
-
-	char filenamebuffer[M_STRMAX];
-	char filter[M_STRITOAMAX][M_STRMAX];
-	ZeroMemory(filter, sizeof(char) * M_STRITOAMAX * M_STRMAX);
-	int filtercount = 0;
-
-	int tfiltercount = 0;
-	for (int i=0; i<strlen(filterstr); i++)
-	{
-		if (filtercount >= M_STRITOAMAX)
-		{
-			break;
-		}
-		if (filterstr[i] == ';')
-		{
-			filtercount++;
-			tfiltercount = 0;
-			continue;
-		}
-		if (isspace(filterstr[i]) || filterstr[i] == '*')
-		{
-			continue;
-		}
-		filter[filtercount][tfiltercount] = tolower(filterstr[i]);
-		if (filter[filtercount][tfiltercount] == '/')
-		{
-			filter[filtercount][tfiltercount] = '\\';
-		}
-		tfiltercount++;
-	}
-
-#ifdef __UNPACK
-	int packagenum = 0;
-	char sec[M_STRMAX];
-	char name[M_STRMAX];
-	char inifilename[M_STRMAX];
-	char packnamebuffer[M_STRMAX];
-	int typecount = 0;
-	if (initcount)
-	{
-		typecount = *initcount;
-	}
-
-	strcpy(inifilename, hge->Resource_MakePath(UNPACK_INIFILENAME));
-	strcpy(name, UNPACK_PACKNAME);
-	while (true)
-	{
-		sprintf(sec, "%s%d", UNPACK_SECTION, packagenum);
-		GetPrivateProfileString(sec, name, "", packnamebuffer, M_STRMAX, inifilename);
-		if (strlen(packnamebuffer) == 0)
-		{
-			break;
-		}
-		if (!strcmp(packnamebuffer, zipname))
-		{
-			while (true)
-			{
-				sprintf(name, "%s%d", UNPACK_TYPE, typecount);
-				GetPrivateProfileString(sec, name, "", packnamebuffer, M_STRMAX, inifilename);
-				if (!strlen(packnamebuffer))
-				{
-					break;
-				}
-				if (initcount && !(*initcount))
-				{
-					WritePrivateProfileString(sec, name, "", inifilename);
-				}
-				typecount++;
-			}
-			break;
-		}
-		packagenum++;
-	}
-	if (initcount)
-	{
-		typecount = *initcount;
-	}
-	else
-	{
-		typecount = 0;
-	}
-
-#endif
-
-	while(hSearch != INVALID_HANDLE_VALUE)
-	{
-		bool filtered = false;
-		strcpy(filenamebuffer, SearchData.cFileName);
-		for (int i=0; i<strlen(filenamebuffer); i++)
-		{
-			filenamebuffer[i] = tolower(filenamebuffer[i]);
-			if (filenamebuffer[i] == '/')
-			{
-				filenamebuffer[i] = '\\';
-			}
-		}
-		for (int i=0; i<M_STRITOAMAX; i++)
-		{
-			if (!strlen(filter[i]))
-			{
-				break;
-			}
-			string tstr = filenamebuffer;
-			if (tstr.find(filter[i]) != string::npos)
-			{
-				filtered = true;
-				break;
-			}
-		}
-		if (!filtered)
-		{
-			if((SearchData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
-				strcmp(filenamebuffer,".") && strcmp(filenamebuffer,".."))
-			{
-				strcpy(buffer, foldername);
-				if(buffer[strlen(buffer)-1]!='\\' && buffer[strlen(buffer)-1]!='/')
-				{
-					strcat(buffer, "\\");
-				}
-				strcat(buffer, filenamebuffer);
-				if(!packFolder(zipname, buffer, filterstr 
-#ifdef __UNPACK	
-					, &typecount
-#endif
-					))
-				{
-					ret = false;
-					break;
-				}
-				strcpy(buffer, foldername);
-			}
-			else if(!(SearchData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-			{
-				strcpy(buffer, foldername);
-				if(buffer[strlen(buffer)-1]!='\\' && buffer[strlen(buffer)-1]!='/')
-				{
-					strcat(buffer, "\\");
-				}
-				strcat(buffer, filenamebuffer);
-				BYTE * _content;
-				DWORD _size;
-				_content = hge->Resource_Load(buffer, &_size);
-				if(_content)
-				{
-					hgeMemoryFile memfile;
-					memfile.data = _content;
-					memfile.filename = buffer;
-					memfile.size = _size;
-					if(!hge->Resource_AddFileInPack(zipname, password, &memfile))
-					{
-						ret = false;
-						break;
-					}
-#ifdef __UNPACK
-					sprintf(name, "%s%d", UNPACK_TYPE, typecount);
-					WritePrivateProfileString(sec, name, buffer, inifilename);
-					typecount++;
-#endif
-					hge->Resource_Free(_content);
-				}
-			}
-		}
-		if(!FindNextFile(hSearch, &SearchData))
-			break;
-	}
-	FindClose(hSearch);
-#ifdef __UNPACK
-	if (ret)
-	{
-		if (initcount)
-		{
-			*initcount = typecount;
-		}
-		strcpy(name, UNPACK_PACKNAME);
-		WritePrivateProfileString(sec, name, zipname, inifilename);
-	}
-#endif
 	return ret;
 }
 

@@ -14,8 +14,10 @@ int io_fopen(const char* fname,int flag)
 #else
 	if(flag == IO_RDONLY)
 		return sceIoOpen(fname, PSP_O_RDONLY, 0777);
-	else
-		return sceIoOpen(fname, PSP_O_RDWR|PSP_O_CREAT, 0777);
+	else if(flag == IO_WRONLY)
+		return sceIoOpen(fname, PSP_O_WRONLY|PSP_O_CREAT, 0777);
+	else if(flag == IO_APPEND)
+		return sceIoOpen(fname, PSP_O_WRONLY|PSP_O_APPEND|PSP_O_CREAT, 0777);
 #endif
 }
 
@@ -89,5 +91,20 @@ int io_fsize(int handle)
 	size = sceIoLseek(handle, 0, IO_SEEK_END);
 	sceIoLseek(handle, cur, IO_SEEK_SET);
 	return size;
+#endif
+}
+
+#ifdef WIN32
+#include <windows.h>
+#endif
+
+int io_fdelete(const char * fname)
+{
+#ifdef WIN32
+	if (!DeleteFile(fname))
+		return -1;
+	return 0;
+#else
+	return sceIoRemove(fname);
 #endif
 }

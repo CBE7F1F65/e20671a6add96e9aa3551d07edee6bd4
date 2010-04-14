@@ -317,11 +317,11 @@ int _HDSSCallGet::Call_SAVEREPLAY(LuaState * ls)
 		{
 			if (_bFill)
 			{
-				Replay::rpy.Fill();
+				Replay::rpy->Fill();
 			}
-			Replay::rpy.Save(_filename);
+			Replay::rpy->Save(_filename);
 		}
-		Replay::Release(false);
+		Replay::ReleaseList(false);
 	}
 	return 0;
 }

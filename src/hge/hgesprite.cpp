@@ -159,6 +159,7 @@ void hgeSprite::RenderEx(float x, float y, float rot, float hscale, float vscale
 
 	if (rot != 0.0f)
 	{
+/*
 		cost = cosf(rot);
 		sint = sinf(rot);
 			
@@ -172,7 +173,13 @@ void hgeSprite::RenderEx(float x, float y, float rot, float hscale, float vscale
 		quad.v[2].y  = tx2*sint + ty2*cost + y;	
 
 		quad.v[3].x  = tx1*cost - ty2*sint + x;
-		quad.v[3].y  = tx1*sint + ty2*cost + y;	
+		quad.v[3].y  = tx1*sint + ty2*cost + y;*/
+		quad.v[0].x = tx1 + x; quad.v[0].y = ty1 + y;
+		quad.v[1].x = tx2 + x; quad.v[1].y = ty1 + y;
+		quad.v[2].x = tx2 + x; quad.v[2].y = ty2 + y;
+		quad.v[3].x = tx1 + x; quad.v[3].y = ty2 + y;
+		quad.blend = rot * 10000;
+	
 	}
 	else
 	{

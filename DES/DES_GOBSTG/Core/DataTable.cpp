@@ -78,88 +78,88 @@ void _DataTable::SetFile(FILE * _file)
 bool _DataTable::DataTableDefine()
 {
 	_READSTRINGBUFFERLINE(2);
-	strcpy(BResource::res.resdata.customconstfilename, BResource::res.resdata.datafoldername);
+	strcpy(BResource::pbres->resdata.customconstfilename, BResource::pbres->resdata.datafoldername);
 	_READSTRINGBUFFERLINE(2);
-	strcat(BResource::res.resdata.customconstfilename, buffer);
+	strcat(BResource::pbres->resdata.customconstfilename, buffer);
 //	strcpy(BResource::res.resdata.spelldefinefilename, BResource::res.resdata.datafoldername);
 //	_READSTRINGBUFFERLINE(2);
 //	strcat(BResource::res.resdata.spelldefinefilename, buffer);
-	strcpy(BResource::res.resdata.musicdefinefilename, BResource::res.resdata.datafoldername);
+	strcpy(BResource::pbres->resdata.musicdefinefilename, BResource::pbres->resdata.datafoldername);
 	_READSTRINGBUFFERLINE(2);
-	strcat(BResource::res.resdata.musicdefinefilename, buffer);
-	strcpy(BResource::res.resdata.bulletdefinefilename, BResource::res.resdata.datafoldername);
+	strcat(BResource::pbres->resdata.musicdefinefilename, buffer);
+	strcpy(BResource::pbres->resdata.bulletdefinefilename, BResource::pbres->resdata.datafoldername);
 	_READSTRINGBUFFERLINE(2);
-	strcat(BResource::res.resdata.bulletdefinefilename, buffer);
-	strcpy(BResource::res.resdata.enemydefinefilename, BResource::res.resdata.datafoldername);
+	strcat(BResource::pbres->resdata.bulletdefinefilename, buffer);
+	strcpy(BResource::pbres->resdata.enemydefinefilename, BResource::pbres->resdata.datafoldername);
 	_READSTRINGBUFFERLINE(2);
-	strcat(BResource::res.resdata.enemydefinefilename, buffer);
-	strcpy(BResource::res.resdata.playerdefinefilename, BResource::res.resdata.datafoldername);
+	strcat(BResource::pbres->resdata.enemydefinefilename, buffer);
+	strcpy(BResource::pbres->resdata.playerdefinefilename, BResource::pbres->resdata.datafoldername);
 	_READSTRINGBUFFERLINE(2);
-	strcat(BResource::res.resdata.playerdefinefilename, buffer);
-	strcpy(BResource::res.resdata.spritedefinefilename, BResource::res.resdata.datafoldername);
+	strcat(BResource::pbres->resdata.playerdefinefilename, buffer);
+	strcpy(BResource::pbres->resdata.spritedefinefilename, BResource::pbres->resdata.datafoldername);
 	_READSTRINGBUFFERLINE(2);
-	strcat(BResource::res.resdata.spritedefinefilename, buffer);
-	strcpy(BResource::res.resdata.playershootdefinefilename, BResource::res.resdata.datafoldername);
+	strcat(BResource::pbres->resdata.spritedefinefilename, buffer);
+	strcpy(BResource::pbres->resdata.playershootdefinefilename, BResource::pbres->resdata.datafoldername);
 	_READSTRINGBUFFERLINE(2);
-	strcat(BResource::res.resdata.playershootdefinefilename, buffer);
-	strcpy(BResource::res.resdata.playerghostdefinefilename, BResource::res.resdata.datafoldername);
+	strcat(BResource::pbres->resdata.playershootdefinefilename, buffer);
+	strcpy(BResource::pbres->resdata.playerghostdefinefilename, BResource::pbres->resdata.datafoldername);
 	_READSTRINGBUFFERLINE(2);
-	strcat(BResource::res.resdata.playerghostdefinefilename, buffer);
+	strcat(BResource::pbres->resdata.playerghostdefinefilename, buffer);
 	return true;
 }
 
 bool _DataTable::PackageTableDefine()
 {
-	ZeroMemory(BResource::res.resdata.packagefilename, sizeof(char) * PACKAGEMAX * M_PATHMAX);
+	ZeroMemory(BResource::pbres->resdata.packagefilename, sizeof(char) * PACKAGEMAX * M_PATHMAX);
 	_READSTRINGBUFFERLINE(3);
 	while (!feof(file))
 	{
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
 		_CHECKEOF_DATATABLE;
-		fscanf(file, "%s", BResource::res.resdata.packagefilename[tindex]);
+		fscanf(file, "%s", BResource::pbres->resdata.packagefilename[tindex]);
 	}
 	return true;
 }
 
 bool _DataTable::TextureTableDefine()
 {
-	ZeroMemory(BResource::res.resdata.texfilename, sizeof(char) * TEXMAX * M_PATHMAX);
+	ZeroMemory(BResource::pbres->resdata.texfilename, sizeof(char) * TEXMAX * M_PATHMAX);
 	_READSTRINGBUFFERLINE(3);
 	while (!feof(file))
 	{
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
 		_CHECKEOF_DATATABLE;
-		fscanf(file, "%s", BResource::res.resdata.texfilename[tindex]);
+		fscanf(file, "%s", BResource::pbres->resdata.texfilename[tindex]);
 	}
 	return true;
 }
 
 bool _DataTable::EffectTableDefine()
 {
-	ZeroMemory(BResource::res.resdata.effectsysfilename, sizeof(char) * EFFECTSYSTYPEMAX * M_PATHMAX);
+	ZeroMemory(BResource::pbres->resdata.effectsysfilename, sizeof(char) * EFFECTSYSTYPEMAX * M_PATHMAX);
 	_READSTRINGBUFFERLINE(3);
 	while (!feof(file))
 	{
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
 		_CHECKEOF_DATATABLE;
-		fscanf(file, "%s", BResource::res.resdata.effectsysfilename[tindex]);
+		fscanf(file, "%s", BResource::pbres->resdata.effectsysfilename[tindex]);
 	}
 	return true;
 }
 
 bool _DataTable::SETableDefine()
 {
-	ZeroMemory(BResource::res.resdata.sefilename, sizeof(char) * SEMAX * M_PATHMAX);
+	ZeroMemory(BResource::pbres->resdata.sefilename, sizeof(char) * SEMAX * M_PATHMAX);
 	_READSTRINGBUFFERLINE(3);
 	while (!feof(file))
 	{
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
 		_CHECKEOF_DATATABLE;
-		fscanf(file, "%s", BResource::res.resdata.sefilename[tindex]);
+		fscanf(file, "%s", BResource::pbres->resdata.sefilename[tindex]);
 	}
 	return true;
 }
@@ -167,8 +167,8 @@ bool _DataTable::SETableDefine()
 bool _DataTable::CustomConstFile()
 {
 //	BResource::res.ReleaseCustomConst();
-	BResource::res.MallocCustomConst();
-	ZeroMemory(BResource::res.customconstdata, RSIZE_CUSTOMCONST);
+	BResource::pbres->MallocCustomConst();
+	ZeroMemory(BResource::pbres->customconstdata, RSIZE_CUSTOMCONST);
 	_READSTRINGBUFFERLINE(4);
 	while (!feof(file))
 	{
@@ -177,7 +177,7 @@ bool _DataTable::CustomConstFile()
 		fscanf(file, "%d", &tindex);
 		_CHECKEOF_DATATABLE;
 
-		customconstData * item = &(BResource::res.customconstdata[tindex]);
+		customconstData * item = &(BResource::pbres->customconstdata[tindex]);
 		fscanf(file, "%s%d", 
 			item->name, 
 			&(item->value));
@@ -226,14 +226,14 @@ bool _DataTable::SpellDefineFile()
 */
 bool _DataTable::MusicDefineFile()
 {
-	ZeroMemory(BResource::res.musdata, RSIZE_MUSIC);
+	ZeroMemory(BResource::pbres->musdata, RSIZE_MUSIC);
 	_READSTRINGBUFFERLINE(7);
 	while (!feof(file))
 	{
 		_INITTINT;
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
-		musicData * item = &(BResource::res.musdata[tindex]);
+		musicData * item = &(BResource::pbres->musdata[tindex]);
 		_CHECKEOF_DATATABLE;
 
 		fscanf(file, "\t%[^\t]%s%d%d%d", 
@@ -251,14 +251,14 @@ bool _DataTable::MusicDefineFile()
 
 bool _DataTable::BulletDefineFile()
 {
-	ZeroMemory(BResource::res.bulletdata, RSIZE_BULLET);
+	ZeroMemory(BResource::pbres->bulletdata, RSIZE_BULLET);
 	_READSTRINGBUFFERLINE(16);
 	while (!feof(file))
 	{
 		_INITTINT;
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
-		bulletData * item = &(BResource::res.bulletdata[tindex]);
+		bulletData * item = &(BResource::pbres->bulletdata[tindex]);
 		_CHECKEOF_DATATABLE;
 
 		fscanf(file, "%s%d%d%d%f%f%d%d%d%d%d%d%d%d", 
@@ -296,14 +296,14 @@ bool _DataTable::BulletDefineFile()
 
 bool _DataTable::EnemyDefineFile()
 {
-	ZeroMemory(BResource::res.enemydata, RSIZE_ENEMY);
+	ZeroMemory(BResource::pbres->enemydata, RSIZE_ENEMY);
 	_READSTRINGBUFFERLINE(31);
 	while (!feof(file))
 	{
 		_INITTINT;
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
-		enemyData * item = &(BResource::res.enemydata[tindex]);
+		enemyData * item = &(BResource::pbres->enemydata[tindex]);
 		_CHECKEOF_DATATABLE;
 
 		fscanf(file, "%d%s%f%f%x%d%d%d%d%d%d%d%d%d%d%d%d%d%d%f%d%d%d%d%f%f%f\t%[^\t]\t%[^\r\n]", 
@@ -360,14 +360,14 @@ bool _DataTable::EnemyDefineFile()
 
 bool _DataTable::PlayerDefineFile()
 {
-	ZeroMemory(BResource::res.playerdata, RSIZE_PLAYER);
+	ZeroMemory(BResource::pbres->playerdata, RSIZE_PLAYER);
 	_READSTRINGBUFFERLINE(31);
 	while (!feof(file))
 	{
 		_INITTINT;
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
-		playerData * item = &(BResource::res.playerdata[tindex]);
+		playerData * item = &(BResource::pbres->playerdata[tindex]);
 		_CHECKEOF_DATATABLE;
 
 		fscanf(file, "%f%f%f%f%f%d%d%d%f%f%f%x%s%s%s\t%[^\t]\t%[^\t]\t%[^\t]%d%s%d%d%d%d%d%d\t%[^\t]\t%[^\t]\t%[^\r\n]", 
@@ -423,8 +423,8 @@ bool _DataTable::PlayerDefineFile()
 
 bool _DataTable::SpriteDefineFile()
 {
-	fscanf(file, "%d", &(BResource::res.spritenumber));
-	BResource::res.InitSpriteData();
+	fscanf(file, "%d", &(BResource::pbres->spritenumber));
+	BResource::pbres->InitSpriteData();
 //	ZeroMemory(BResource::res.spritedata, RSIZE_SPRITE);
 	_READSTRINGBUFFERLINE(8);
 	while (!feof(file))
@@ -433,7 +433,7 @@ bool _DataTable::SpriteDefineFile()
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
 		_CHECKEOF_DATATABLE;
-		spriteData * item = &(BResource::res.spritedata[tindex]);
+		spriteData * item = &(BResource::pbres->spritedata[tindex]);
 
 		fscanf(file, "%s%d%d%d%d%d", 
 			item->spritename, 
@@ -451,7 +451,7 @@ bool _DataTable::SpriteDefineFile()
 
 bool _DataTable::PlayerShootDefineFile()
 {
-	ZeroMemory(BResource::res.playershootdata, RSIZE_PLAYERSHOOT);
+	ZeroMemory(BResource::pbres->playershootdata, RSIZE_PLAYERSHOOT);
 	_READSTRINGBUFFERLINE(20);
 	while (!feof(file))
 	{
@@ -459,7 +459,7 @@ bool _DataTable::PlayerShootDefineFile()
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
 		_CHECKEOF_DATATABLE;
-		playershootData * item = &(BResource::res.playershootdata[tindex]);
+		playershootData * item = &(BResource::pbres->playershootdata[tindex]);
 
 		fscanf(file, "%d%d%s%d%d%x%f%d%d%d%d%f%f%f%f%f%f%d", 
 			_SAVETINT, 
@@ -496,7 +496,7 @@ bool _DataTable::PlayerShootDefineFile()
 
 bool _DataTable::PlayerGhostDefineFile()
 {
-	ZeroMemory(BResource::res.playerghostdata, RSIZE_PLAYERGHOST);
+	ZeroMemory(BResource::pbres->playerghostdata, RSIZE_PLAYERGHOST);
 	_READSTRINGBUFFERLINE(12);
 	while (!feof(file))
 	{
@@ -504,7 +504,7 @@ bool _DataTable::PlayerGhostDefineFile()
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
 		_CHECKEOF_DATATABLE;
-		playerghostData * item = &(BResource::res.playerghostdata[tindex]);
+		playerghostData * item = &(BResource::pbres->playerghostdata[tindex]);
 
 		fscanf(file, "%s%f%f%f%x%d%d%f%d%d", 
 			strbuffer[0],  

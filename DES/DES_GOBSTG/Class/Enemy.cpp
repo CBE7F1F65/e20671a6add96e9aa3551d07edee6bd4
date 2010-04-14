@@ -4,7 +4,6 @@
 #include "../header/Item.h"
 #include "../header/Scripter.h"
 #include "../header/Chat.h"
-#include "../header/BossInfo.h"
 #include "../header/Process.h"
 #include "../header/BResource.h"
 #include "../header/FrontDisplay.h"
@@ -68,8 +67,8 @@ void Enemy::Release()
 
 int Enemy::Build(WORD eID, BYTE playerindex, float x, float y, int angle, float speed, BYTE type, float life, int infitimer)
 {
-	BYTE nmaxset = BResource::res.enemydata[type].nmaxset;
-	BYTE nmax = BResource::res.enemydata[type].nmax;
+	BYTE nmaxset = BResource::pbres->enemydata[type].nmaxset;
+	BYTE nmax = BResource::pbres->enemydata[type].nmax;
 	if (nmax && nEnemyNow[playerindex][nmaxset] > nmax)
 	{
 		return -1;
@@ -162,7 +161,7 @@ void Enemy::Action()
 				Enemy * pen = &(*(en[j]));
 				if (pen->exist)
 				{
-					BYTE nmaxset = BResource::res.enemydata[(*en[j]).type].nmaxset;
+					BYTE nmaxset = BResource::pbres->enemydata[(*en[j]).type].nmaxset;
 					nEnemyNow[j][nmaxset]++;
 					DWORD _index = en[j].getIndex();
 					if (!binstop)
@@ -397,7 +396,7 @@ void Enemy::valueSet(BYTE _playerindex, WORD _eID, float _x, float _y, int _angl
 void Enemy::ChangeType(BYTE _type)
 {
 	type = _type;
-	enemyData * _enemydata = &(BResource::res.enemydata[type]);
+	enemyData * _enemydata = &(BResource::pbres->enemydata[type]);
 	faceindex = _enemydata->faceIndex;
 	if (!_enemydata->rightPreFrame && !_enemydata->leftPreFrame && !_enemydata->rightFrame && !_enemydata->leftFrame)
 	{
@@ -585,7 +584,7 @@ void Enemy::updateFrame(BYTE frameenum, int usetimer /* = -1*/)
 	{
 		return;
 	}
-	enemyData * pdata = &(BResource::res.enemydata[type]);
+	enemyData * pdata = &(BResource::pbres->enemydata[type]);
 	frameoffset++;
 	BYTE tbyte;
 	switch (nowstate)
@@ -751,7 +750,7 @@ void Enemy::updateFrameAsMove()
 
 void Enemy::updateAction()
 {
-	enemyData * pdata = &(BResource::res.enemydata[type]);
+	enemyData * pdata = &(BResource::pbres->enemydata[type]);
 	if(!actionflag)
 	{
 		updateFrameAsMove();
@@ -793,7 +792,7 @@ void Enemy::updateAction()
 
 void Enemy::initFrameIndex()
 {
-	enemyData * pdata = &(BResource::res.enemydata[type]);
+	enemyData * pdata = &(BResource::pbres->enemydata[type]);
 	int tfi = 0;
 	frameindex[ENEMY_FRAME_STAND] = tfi;
 
@@ -855,7 +854,7 @@ void Enemy::initFrameIndex()
 BYTE Enemy::getFrameIndex(BYTE frameenum)
 {
 	flipx = false;
-	enemyData * pdata = &(BResource::res.enemydata[type]);
+	enemyData * pdata = &(BResource::pbres->enemydata[type]);
 	if ((frameenum == ENEMY_FRAME_RIGHTPRE || frameenum == ENEMY_FRAME_RIGHT) && (!pdata->rightPreFrame) ||
 		(frameenum == ENEMY_FRAME_LEFTPRE || frameenum == ENEMY_FRAME_LEFT) && (!pdata->leftPreFrame))
 	{
@@ -873,7 +872,7 @@ void Enemy::setFrame(BYTE frameenum)
 
 void Enemy::setIndexFrame(BYTE index)
 {
-	enemyData * pdata = &(BResource::res.enemydata[type]);
+	enemyData * pdata = &(BResource::pbres->enemydata[type]);
 	SpriteItemManager::ChangeSprite(pdata->siid+index, sprite);
 //	sprite->SetFlip(flipx, false);
 	SpriteItemManager::SetSpriteFlip(sprite, flipx);
@@ -881,8 +880,8 @@ void Enemy::setIndexFrame(BYTE index)
 
 void Enemy::GetCollisionRect(float * w, float * h)
 {
-	*w = BResource::res.enemydata[type].collision_w;
-	*h = BResource::res.enemydata[type].collision_h;
+	*w = BResource::pbres->enemydata[type].collision_w;
+	*h = BResource::pbres->enemydata[type].collision_h;
 }
 
 bool Enemy::CostLife(float power)
@@ -902,10 +901,10 @@ bool Enemy::CostLife(float power)
 
 bool Enemy::isInRect(float aimx, float aimy, float r, float w, float h, int nextstep/* =0 */)
 {
-	WORD infinmaxset = BResource::res.playerdata[Player::p[playerindex].nowID].infinmaxset;
+	WORD infinmaxset = BResource::pbres->playerdata[Player::p[playerindex].nowID].infinmaxset;
 	if (infinmaxset)
 	{
-		BYTE nmaxset = BResource::res.enemydata[type].nmaxset;
+		BYTE nmaxset = BResource::pbres->enemydata[type].nmaxset;
 		for (int i=0; i<4; i++)
 		{
 			infinmaxset>>(i*4);
@@ -983,7 +982,7 @@ void Enemy::DoShot()
 			}
 			if (it->isInRect(x, y, 0, tw, th))
 			{
-				if ( CostLife(it->power * BResource::res.enemydata[type].blastdamagerate) )
+				if ( CostLife(it->power * BResource::pbres->enemydata[type].blastdamagerate) )
 				{
 					if (it->type & EVENTZONE_TYPE_NOSEND)
 					{
@@ -1078,7 +1077,7 @@ bool Enemy::DoActivate()
 	}
 	if (!checkActive() && Player::p[playerindex].bDrain)
 	{
-		float rori = (BResource::res.enemydata[type].collision_w + BResource::res.enemydata[type].collision_h) / 4;
+		float rori = (BResource::pbres->enemydata[type].collision_w + BResource::pbres->enemydata[type].collision_h) / 4;
 		if (CheckENAZ(playerindex, x, y, rori))
 		{
 			ForceActive();
@@ -1220,7 +1219,7 @@ void Enemy::action()
 
 	if(!fadeout)
 	{
-		if((Chat::chatitem.IsChatting() || (BossInfo::flag >= BOSSINFO_COLLAPSE)))
+		if(Chat::chatitem.IsChatting())
 		{
 			life = 0;
 			Fadeout();
@@ -1330,13 +1329,13 @@ void Enemy::action()
 			{
 				Player::p[playerindex].DoEnemyCollapse(x, y, type);
 			}
-			if (BResource::res.enemydata[type].spellpoint)
+			if (BResource::pbres->enemydata[type].spellpoint)
 			{
 				int tscore = Player::p[playerindex].nSpellPoint;
 				ScoreDisplay _item;
 				if (tscore < PLAYER_NSPELLPOINTMAX)
 				{
-					itoa(tscore, _item.cScore, 10);
+					sprintf(_item.cScore, "%d", tscore);
 				}
 				else
 				{
@@ -1409,15 +1408,15 @@ void Enemy::GetBlastInfo(BYTE * maxtime/* =NULL */, float * r/* =NULL */, float 
 {
 	if (maxtime)
 	{
-		*maxtime = BResource::res.enemydata[type].blastmaxtime;
+		*maxtime = BResource::pbres->enemydata[type].blastmaxtime;
 	}
 	if (r)
 	{
-		*r = BResource::res.enemydata[type].blastr;
+		*r = BResource::pbres->enemydata[type].blastr;
 	}
 	if (power)
 	{
-		*power = BResource::res.enemydata[type].blastpower;
+		*power = BResource::pbres->enemydata[type].blastpower;
 	}
 }
 

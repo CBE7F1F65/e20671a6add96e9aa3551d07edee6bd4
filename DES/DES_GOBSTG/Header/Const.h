@@ -1,9 +1,7 @@
 #ifndef _CONST_H
 #define _CONST_H
 
-#define DIRECTINPUT_VERSION 0x0800
-#include <dinput.h>
-#include "../../../src/hge/hgeDefines.h"
+//#include "../../../src/hge/hgeDefines.h"
 
 #define GAME_VERSION		0x073
 #define GAME_VERSION_STR	"ver.0x073"
@@ -43,9 +41,6 @@
 
 #define HGELOG			hge->System_Log
 #define HGELOG_ERRSTR	"**********ERROR**********"
-
-
-#define M_PROJECTIONMATRIX_OFFSET	0.5f
 
 #define M_DEFAULT_FPS			60
 #define M_DEFAULT_FRAMESKIP		1
@@ -92,59 +87,12 @@
 #define BTYPE_ENEMY		0x30
 #define BTYPE_GHOST		0x40
 
-#define BINDEX_NULL		0x100000
-
 #define M_KEYKEYMAX			0x100
 #define M_JOYKEYMAX			0x20
 
 #define M_PL_CONTINUEMAX	5
 #define M_PL_ONESETPLAYER	3
 #define M_PL_MATCHMAXPLAYER	2
-
-#define M_NDIFFI			6
-#define M_NSTAGEDIFFI		11
-#define M_DIFFI_EASY		0
-#define M_DIFFI_NORMAL		1
-#define M_DIFFI_HARD		2
-#define M_DIFFI_DESTINY		3
-#define M_DIFFI_EXTRA_START	4
-#define M_DIFFI_EXTRA_1		M_DIFFI_EXTRA_START
-#define M_DIFFI_EXTRA_2		(M_DIFFI_EXTRA_START+1)
-#define M_DIFFI_EXTRA_3		(M_DIFFI_EXTRA_START+2)
-#define M_DIFFI_EXTRA_4		(M_DIFFI_EXTRA_START+3)
-#define M_DIFFI_EXTRA_5		(M_DIFFI_EXTRA_START+4)
-#define M_DIFFI_EXTRA_6		(M_DIFFI_EXTRA_START+5)
-
-#define M_LASTSTAGESTR_1		"1"
-#define M_LASTSTAGESTR_2		"2"
-#define M_LASTSTAGESTR_3		"3"
-#define M_LASTSTAGESTR_4		"4"
-#define M_LASTSTAGESTR_5		"5"
-#define M_LASTSTAGESTR_6		"6"
-#define M_LASTSTAGESTR_EX		"Ex"
-#define M_LASTSTAGESTR_C		"C"
-
-#define M_DIFFISTR_EASY		"Easy"
-#define M_DIFFISTR_NORMAL	"Normal"
-#define M_DIFFISTR_HARD		"Hard"
-#define M_DIFFISTR_DESTINY	"Destiny"
-#define M_DIFFISTR_EXTRA	"Extra"
-#define M_DIFFISTR_EXTRA_1	"Extra_1"
-#define M_DIFFISTR_EXTRA_2	"Extra_2"
-#define M_DIFFISTR_EXTRA_3	"Extra_3"
-#define M_DIFFISTR_EXTRA_4	"Extra_4"
-#define M_DIFFISTR_EXTRA_5	"Extra_5"
-#define M_DIFFISTR_EXTRA_6	"Extra_6"
-
-#define M_DIFFISTR_EASY_S		"E"
-#define M_DIFFISTR_NORMAL_S		"N"
-#define M_DIFFISTR_HARD_S		"H"
-#define M_DIFFISTR_DESTINY_S	"Des"
-#define M_DIFFISTR_EXTRA_S		"Ex"
-
-#define M_STAGESTR_PRE			"S-"
-#define M_STAGESTR_STAGEPRE		"Stage "
-#define M_REPLAY_SAVEFILEPRE	"DES_"
 
 #define	M_RPYMODE_SPELL		1
 #define	M_RPYMODE_PRACTICE	2
@@ -164,25 +112,6 @@
 #define	M_LATENCY_MAX	9
 
 #define M_STAGENSCENE	100
-
-#define M_STAGESCENE_1_E	1
-#define M_STAGESCENE_1_N	2
-#define M_STAGESCENE_1_H	3
-#define M_STAGESCENE_2_E	4
-#define M_STAGESCENE_2_N	5
-#define M_STAGESCENE_2_H	5
-#define M_STAGESCENE_3_E	6
-#define M_STAGESCENE_3_N	6
-#define M_STAGESCENE_3_H	6
-#define M_STAGESCENE_4_E	7
-#define M_STAGESCENE_4_N	7
-#define M_STAGESCENE_4_H	8
-#define M_STAGESCENE_5_E	9
-#define M_STAGESCENE_5_N	10
-#define M_STAGESCENE_5_H	10
-#define M_STAGESCENE_6_E	11
-#define M_STAGESCENE_6_N	11
-#define M_STAGESCENE_6_H	11
 
 #define M_SQUARE_2			0.70710678f
 
@@ -210,7 +139,7 @@
 #define MUSICMAX			0x40
 #define SEMAX				0x80
 #define STRINGDESCMAX		0x400
-#define M_SAVEINPUTMAX		0x36000
+#define M_SAVEINPUTMAX		0x3600
 #define M_SCRIPTFOLDERMAX	8
 
 #define DEFAULT_RESOURCEPATH	"Resource"
@@ -247,17 +176,6 @@
 #define M_RENDER_NULL		0x00
 #define M_RENDER_LEFT		0x01
 #define	M_RENDER_RIGHT		0x02
-
-
-enum{
-	S0 = 100,
-	S100 = 100,
-	S700 = 700,
-	S1200 = 1200,
-	S1 = 1800,
-
-	SCLEAR = 100000
-};
 
 
 #define CINT(p)		(*(int *)(p))

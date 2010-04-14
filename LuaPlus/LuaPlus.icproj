@@ -12,6 +12,10 @@
 			<Tool
 				Name="GeneralTool"
 				InterproceduralOptimization="true"/>
+			<Tool
+				Name="CppCmplrTool"
+				GlobalOptimizations="true"
+				OptimizeForWindowsApplication="true"/>
 		</Configuration>
 	</Configurations>
 	<Files/>

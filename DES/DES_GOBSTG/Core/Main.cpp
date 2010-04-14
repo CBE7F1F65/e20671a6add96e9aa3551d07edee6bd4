@@ -9,14 +9,13 @@
 #include "../Header/Main.h"
 #include "../Header/GameInput.h"
 
-
 int gametime = 0;
 
 bool RenderFunc()
 {
 
 	Process::mp.render();
-	
+
 	return false;
 }
 
@@ -47,6 +46,9 @@ bool ExitFunc()
 
 int GameStart(int seed=0)
 {
+#ifndef WIN32
+	initExceptionHandler();
+#endif
 	Export::clientInitial(true);
 	Export::clientAfterInitial();
 
@@ -66,6 +68,8 @@ int GameStart(int seed=0)
 		InputProc();
 		FrameFunc();
 		RenderFunc();
+//		BeginScene(1);
+//		EndScene();
 		LimitFps(60);
 	}
 

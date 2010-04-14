@@ -268,7 +268,6 @@ public:
 	char * sRead(BYTE type, DWORD section, DWORD name, const char * def_val);
 
 	DWORD sLinkType(DWORD type);
-	DWORD sLinkDiff(DWORD sec, BYTE diff);
 	DWORD sLinkNum(DWORD sec, DWORD num);
 
 	DWORD nLinkType(DWORD type);
@@ -289,27 +288,30 @@ public:
 	bool CheckMemHeader(const BYTE * memdata, DWORD size, BYTE type);
 	bool CheckHeader(BYTE type);
 
+/*
 	int getSpellNumber(int sno);
 	int getSpellUser(int sno);
 	char * getSpellName(int sno);
 	char * getSpellUserName(int sno);
-	char * getSpellUserEName(int sno);
+	char * getSpellUserEName(int sno);*/
+
 	char * getEnemyName(int type);
 	char * getEnemyEName(int type);
 	char * getPlayerName(int type);
 	char * getPlayerEName(int type);
 
-	void MoveDown(DWORD sec, BYTE i);
 /*
+	void MoveDown(DWORD sec, BYTE i);
+/ *
 	WORD raGetIndi(int sno);
 	void raSetIndi(int sno, WORD indi);
-*/
+* /
 	int nMeet(int sno, bool bSpell = false);
 	int nGet(int sno, bool bSpell = false);
 	LONGLONG nHighScore(int sno, BYTE difflv, bool bSpell = false, bool bPractice = false);
-	int nTryStageTime(int stage, BYTE difflv);
+	int nTryStageTime(int stage, BYTE difflv);*/
 
-	LONGLONG getTotalRunTime();
+
 	//
 	
 	bool SetEffectSystemResourceName(int effi, const char * filename);

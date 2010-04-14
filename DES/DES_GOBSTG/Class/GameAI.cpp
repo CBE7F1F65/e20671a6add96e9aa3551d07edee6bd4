@@ -438,8 +438,13 @@ bool GameAI::SetMove()
 	}
 	//
 
-	tox = (aimx - x) / speed / overr;
-	toy = (aimy - y) / speed / overr;
+	tox = (aimx - x) /*/ speed*/ / overr;
+	toy = (aimy - y) /*/ speed*/ / overr;
+	if (speed)
+	{
+		tox /= speed;
+		toy /= speed;
+	}
 
 	if (tox > 1.0f)
 	{

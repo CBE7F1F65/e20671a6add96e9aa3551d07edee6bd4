@@ -83,6 +83,10 @@
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				SubSystem="1"
+				HeapReserveSize="18"
+				HeapCommitSize="18"
+				StackReserveSize="18"
+				StackCommitSize="18"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				TargetMachine="1"
@@ -144,11 +148,11 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="../../../include;../../../win32depends/include"
+				AdditionalIncludeDirectories="../../win32depends/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;__DEBUG;_CONSOLE"
 				StringPooling="true"
 				MinimalRebuild="false"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
 				EnableEnhancedInstructionSet="0"
@@ -176,7 +180,7 @@
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../win32depends/lib;../../lib"
-				IgnoreDefaultLibraryNames="LIBCMT.lib;LIBC.lib"
+				IgnoreDefaultLibraryNames="LIBCMT.lib;LIBC.lib;LIBMMT.lib"
 				DelayLoadDLLs=""
 				GenerateDebugInformation="false"
 				GenerateMapFile="false"
@@ -190,7 +194,7 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
-				TargetMachine="0"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -239,15 +243,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Core\DataConnector.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Core\DataMap.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Core\DataPrinter.cpp"
 					>
 				</File>
 				<File
@@ -329,6 +325,14 @@
 						RelativePath=".\Core\Export_Lua_HDSS_GetFunctions.cpp"
 						>
 					</File>
+					<File
+						RelativePath=".\Core\Export_Lua_HGE.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\Export_Lua_HGEHelper.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -344,10 +348,6 @@
 				</File>
 				<File
 					RelativePath=".\Class\BObject.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Class\BossInfo.cpp"
 					>
 				</File>
 				<File
@@ -384,14 +384,6 @@
 				</File>
 				<File
 					RelativePath=".\Class\GameAI.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Class\Ghost.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Class\InfoQuad.cpp"
 					>
 				</File>
 				<File
@@ -569,14 +561,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Header\DataConnector.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Header\DataPrinter.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Header\DataStruct.h"
 					>
 				</File>
@@ -655,6 +639,14 @@
 						RelativePath=".\Header\Export_Lua_HDSS_CallGetDefine.h"
 						>
 					</File>
+					<File
+						RelativePath=".\Header\Export_Lua_HGE.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Header\Export_Lua_HGEHelp.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -670,10 +662,6 @@
 				</File>
 				<File
 					RelativePath=".\Header\BObject.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Header\BossInfo.h"
 					>
 				</File>
 				<File
@@ -722,14 +710,6 @@
 				</File>
 				<File
 					RelativePath=".\Header\GameAI.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Header\Ghost.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Header\InfoQuad.h"
 					>
 				</File>
 				<File

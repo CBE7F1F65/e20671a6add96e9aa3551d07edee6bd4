@@ -127,7 +127,7 @@
 				AdditionalIncludeDirectories="../include;../win32depends/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=".\Release/libnge2.pch"
 				AssemblerListingLocation=".\Release/"
@@ -1157,6 +1157,18 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="utility"
+				>
+				<File
+					RelativePath="..\src\utility\exception.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\utility\exception.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

@@ -108,7 +108,7 @@ void Player::initFrameIndex()
 		{
 			continue;
 		}
-		playerData * pdata = &(BResource::res.playerdata[_ID]);
+		playerData * pdata = &(BResource::pbres->playerdata[_ID]);
 		int tfi = 0;
 		frameindex[i][PLAYER_FRAME_STAND] = tfi;
 
@@ -163,7 +163,7 @@ void Player::initFrameIndex()
 BYTE Player::getFrameIndex(BYTE frameenum)
 {
 	flipx = false;
-	playerData * pdata = &(BResource::res.playerdata[nowID]);
+	playerData * pdata = &(BResource::pbres->playerdata[nowID]);
 	if ((frameenum == PLAYER_FRAME_RIGHTPRE || frameenum == PLAYER_FRAME_RIGHT) && (!pdata->rightPreFrame) ||
 		(frameenum == PLAYER_FRAME_LEFTPRE || frameenum == PLAYER_FRAME_LEFT) && (!pdata->leftPreFrame))
 	{
@@ -190,9 +190,9 @@ void Player::setFrame(BYTE frameenum)
 
 void Player::setIndexFrame(BYTE index)
 {
-	playerData * pdata = &(BResource::res.playerdata[nowID]);
+	playerData * pdata = &(BResource::pbres->playerdata[nowID]);
 	nowframeindex = index;
-	SpriteItemManager::ChangeSprite(BResource::res.playerdata[nowID].siid+index, sprite);
+	SpriteItemManager::ChangeSprite(BResource::pbres->playerdata[nowID].siid+index, sprite);
 //	sprite->SetFlip(flipx, false);
 	SpriteItemManager::SetSpriteFlip(sprite, flipx);
 }
@@ -213,7 +213,7 @@ void Player::updateFrame(BYTE frameenum, int usetimer /* = -1*/)
 	{
 		return;
 	}
-	playerData * pdata = &(BResource::res.playerdata[nowID]);
+	playerData * pdata = &(BResource::pbres->playerdata[nowID]);
 	frameoffset++;
 	BYTE tbyte;
 	switch (nowstate)
@@ -305,7 +305,7 @@ void Player::updateFrame(BYTE frameenum, int usetimer /* = -1*/)
 
 void Player::UpdatePlayerData()
 {
-	playerData * pdata = &(BResource::res.playerdata[nowID]);
+	playerData * pdata = &(BResource::pbres->playerdata[nowID]);
 	r = pdata->collision_r;
 	speed = pdata->fastspeed;
 	slowspeed = pdata->slowspeed;

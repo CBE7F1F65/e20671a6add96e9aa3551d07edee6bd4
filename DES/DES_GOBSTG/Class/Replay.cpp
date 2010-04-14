@@ -7,10 +7,14 @@
 #include "../header/SE.h"
 #include "../header/ConstResource.h"
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 list<_ReplayNameListItem> Replay::_rpyfilenamelist;
 
-Replay Replay::rpy;
-Replay Replay::enumrpy[RPYENUMMAX];
+Replay * Replay::rpy;
+Replay * Replay::enumrpy;
 int Replay::nenumrpy = 0;
 
 Replay::Replay()
@@ -25,13 +29,34 @@ Replay::~Replay()
 {
 }
 
-void Replay::Release(bool deletefiles/* =true */)
+void Replay::Init()
+{
+	Release();
+	rpy = new Replay();
+	enumrpy = new Replay[RPYENUMMAX];
+}
+
+void Replay::Release()
+{
+	if (rpy)
+	{
+		delete rpy;
+		rpy = NULL;
+	}
+	if (enumrpy)
+	{
+		delete enumrpy;
+		enumrpy = NULL;
+	}
+}
+
+void Replay::ReleaseList(bool deletefiles/* =true */)
 {
 	for (list<_ReplayNameListItem>::iterator it=_rpyfilenamelist.begin(); it!=_rpyfilenamelist.end();)
 	{
 		if (deletefiles)
 		{
-			DeleteFile(it->filename);
+			io_fdelete(hge->Resource_MakePath(it->filename));
 		}
 		it = _rpyfilenamelist.erase(it);
 	}
@@ -49,12 +74,14 @@ int Replay::GetEnumReplay()
 {
 	ReleaseEnumReplay();
 
-	SetCurrentDirectory(hge->Resource_MakePath(BResource::res.resdata.replayfoldername));
+#ifdef WIN32
+	SetCurrentDirectory(hge->Resource_MakePath(BResource::pbres->resdata.replayfoldername));
+#endif
 	char * buffer;
 	char enumfile[M_STRMAX];
-	strcpy(enumfile, BResource::res.resdata.replayfoldername);
+	strcpy(enumfile, BResource::pbres->resdata.replayfoldername);
 	strcat(enumfile, "*.");
-	strcat(enumfile, BResource::res.resdata.replayextensionname7);
+	strcat(enumfile, BResource::pbres->resdata.replayextensionname7);
 	buffer = hge->Resource_EnumFiles(enumfile);
 
 	int tnrpys = 0;
@@ -88,8 +115,10 @@ void Replay::ReleaseEnumReplay()
 
 void Replay::Fill()
 {
-	SYSTEMTIME systime;
-	GetLocalTime(&systime);
+//	SYSTEMTIME systime;
+//	GetLocalTime(&systime);
+	WORD wYear, wMonth, wDay, wHour, wMinute;
+	nge_get_time(&wYear, &wMonth, &wDay, &wHour, &wMinute, 0, 0);
 
 //	rpyinfo.modeflag = (Process::mp.spellmode?M_RPYMODE_SPELL:0)|(Process::mp.practicemode?M_RPYMODE_PRACTICE:0);
 
@@ -103,11 +132,11 @@ void Replay::Fill()
 
 	rpyinfo.scene = Process::mp.scene;
 	rpyinfo.alltime = Process::mp.alltime;
-	rpyinfo.year = systime.wYear;
-	rpyinfo.month = systime.wMonth;
-	rpyinfo.day = systime.wDay;
-	rpyinfo.hour = systime.wHour;
-	rpyinfo.minute = systime.wMinute;
+	rpyinfo.year = wYear;
+	rpyinfo.month = wMonth;
+	rpyinfo.day = wDay;
+	rpyinfo.hour = wHour;
+	rpyinfo.minute = wMinute;
 
 	rpyinfo.lost = Player::lostStack / Process::mp.framecounter;
 	rpyinfo.matchmode = Process::mp.matchmode;
@@ -155,18 +184,18 @@ bool Replay::Check(const char * _filename)
 
 	strcpy(filename, _filename);
 	char treplayfilename[M_PATHMAX];
-	strcpy(treplayfilename, BResource::res.resdata.replayfoldername);
+	strcpy(treplayfilename, BResource::pbres->resdata.replayfoldername);
 	strcat(treplayfilename, _filename);
 	hge->Resource_AttachPack(treplayfilename, Data::data.password ^ REPLAYPASSWORD_XORMAGICNUM);
 
 	content = hge->Resource_Load(hge->Resource_GetPackFirstFileName(treplayfilename));
 	if(content)
 	{
-		if(strcmp((char *)(content + RPYOFFSET_SIGNATURE), BResource::res.resdata.replaysignature11))
+		if(strcmp((char *)(content + RPYOFFSET_SIGNATURE), BResource::pbres->resdata.replaysignature11))
 			goto exit;
 		if(*(DWORD *)(content + RPYOFFSET_VERSION) != GAME_VERSION)
 			goto exit;
-		if(strcmp((char *)(content + RPYOFFSET_COMPLETESIGN), BResource::res.resdata.replaycompletesign3))
+		if(strcmp((char *)(content + RPYOFFSET_COMPLETESIGN), BResource::pbres->resdata.replaycompletesign3))
 			goto exit;
 		bret = true;
 	}
@@ -201,7 +230,7 @@ void Replay::InitReplayIndex(bool replaymode, BYTE part)
 {
 	if (replaymode)
 	{
-		replayIndex = rpy.partinfo[part].offset - 1;
+		replayIndex = rpy->partinfo[part].offset - 1;
 	}
 	else
 	{
@@ -215,7 +244,7 @@ bool Replay::Load(const char * _filename, bool getInput)
 	if(Check(_filename))
 	{
         char treplayfilename[M_PATHMAX];
-		strcpy(treplayfilename, BResource::res.resdata.replayfoldername);
+		strcpy(treplayfilename, BResource::pbres->resdata.replayfoldername);
 		strcat(treplayfilename, _filename);
 		ret = Export::rpyLoad(treplayfilename, &rpyinfo, partinfo, getInput ? replayframe : NULL);
 		if (getInput)
@@ -258,7 +287,7 @@ void Replay::CreateSaveFilename(char * filename)
 			}
 			strcat(_filename, buffer);
 			strcat(_filename, ".");
-			strcat(_filename, BResource::res.resdata.replayextensionname7);
+			strcat(_filename, BResource::pbres->resdata.replayextensionname7);
 			break;;
 		}
 	}
@@ -286,11 +315,11 @@ void Replay::Save(const char * replayfilename)
 	DWORD _size = RPYOFFSET_INPUTDATA + (replayIndex + 1) * RPYSIZE_FRAME;
 	BYTE * _rpydata = (BYTE *)malloc(_size);
 	DWORD tdw;
-	memcpy(_rpydata + RPYOFFSET_SIGNATURE, BResource::res.resdata.replaysignature11, RPYSIZE_SIGNATURE);
+	memcpy(_rpydata + RPYOFFSET_SIGNATURE, BResource::pbres->resdata.replaysignature11, RPYSIZE_SIGNATURE);
 	tdw = GAME_VERSION;
 	memcpy(_rpydata + RPYOFFSET_VERSION, &tdw, RPYSIZE_VERSION);
-	memcpy(_rpydata + RPYOFFSET_COMPLETESIGN, BResource::res.resdata.replaycompletesign3, RPYSIZE_COMPLETESIGN);
-	memcpy(_rpydata + RPYOFFSET_TAG, BResource::res.resdata.replaytag3, RPYSIZE_TAG);
+	memcpy(_rpydata + RPYOFFSET_COMPLETESIGN, BResource::pbres->resdata.replaycompletesign3, RPYSIZE_COMPLETESIGN);
+	memcpy(_rpydata + RPYOFFSET_TAG, BResource::pbres->resdata.replaytag3, RPYSIZE_TAG);
 	tdw = RPYOFFSET_PARTINFO;
 	memcpy(_rpydata + RPYOFFSET_INFOOFFSET, &tdw, RPYSIZE_INFOOFFSET);
 	strcpy(buffer, "");
@@ -307,12 +336,13 @@ void Replay::Save(const char * replayfilename)
 	*/
 
 	char treplayfilename[M_PATHMAX];
-	strcpy(treplayfilename, BResource::res.resdata.replayfoldername);
+	strcpy(treplayfilename, BResource::pbres->resdata.replayfoldername);
 	strcat(treplayfilename, savefilename);
 
 	char crcfilename[M_PATHMAX];
 	strcpy(crcfilename, savefilename);
-	strcat(crcfilename, itoa(hge->Resource_GetCRC(_rpydata, _size), buffer, 10));
+	sprintf(buffer, "%d", hge->Resource_GetCRC(_rpydata, _size));
+	strcat(crcfilename, buffer);
 	hgeMemoryFile memfile;
 	memfile.filename = crcfilename;
 	memfile.data = _rpydata;

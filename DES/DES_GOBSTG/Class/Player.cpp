@@ -9,7 +9,6 @@
 #include "../header/Enemy.h"
 #include "../header/Bullet.h"
 #include "../header/Chat.h"
-#include "../header/BossInfo.h"
 #include "../header/EffectIDDefine.h"
 #include "../header/SpriteItemManager.h"
 #include "../header/FrontDisplayName.h"
@@ -700,7 +699,7 @@ void Player::action()
 			y = PL_MOVABLE_TOP;
 	}
 	//AI
-	GameAI::ai[playerindex].UpdateBasicInfo(x, y, speed*speedfactor, slowspeed*speedfactor, r, BResource::res.playerdata[nowID].aidraintime);
+	GameAI::ai[playerindex].UpdateBasicInfo(x, y, speed*speedfactor, slowspeed*speedfactor, r, BResource::pbres->playerdata[nowID].aidraintime);
 	float aiaimx = _PL_MERGETOPOS_X_(playerindex);
 	float aiaimy = _PL_MERGETOPOS_Y;
 	bool tobelow = false;
@@ -1125,7 +1124,7 @@ void Player::DoEnemyCollapse(float x, float y, BYTE type)
 	AddComboHit(1, true);
 	AddCharge(0, addcharge);
 
-	enemyData * edata = &(BResource::res.enemydata[type]);
+	enemyData * edata = &(BResource::pbres->enemydata[type]);
 	AddExPoint(edata->expoint, x, y);
 
 	int addghostpoint;
@@ -1434,7 +1433,7 @@ void Player::setShootingCharge(BYTE _shootingchargeflag)
 		shootingchargeflag |= _shootingchargeflag;
 		if (shootingchargeflag & _PL_SHOOTINGCHARGE_1)
 		{
-			shootchargetimer = BResource::res.playerdata[nowID].shootchargetime;
+			shootchargetimer = BResource::pbres->playerdata[nowID].shootchargetime;
 		}
 		if (_shootingchargeflag & ~_PL_SHOOTINGCHARGE_1)
 		{
@@ -1685,7 +1684,7 @@ BYTE Player::AddCharge(float addcharge, float addchargemax)
 	float addchargemaxval = addchargemax;
 	if (addchargemax > 0)
 	{
-		addchargemaxval = addchargemax * BResource::res.playerdata[nowID].addchargerate;
+		addchargemaxval = addchargemax * BResource::pbres->playerdata[nowID].addchargerate;
 	}
 	fChargeMax += addchargemaxval;
 	if (fChargeMax > PLAYER_CHARGEMAX)

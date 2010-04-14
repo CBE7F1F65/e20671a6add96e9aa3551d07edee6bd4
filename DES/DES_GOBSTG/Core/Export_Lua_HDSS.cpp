@@ -54,11 +54,11 @@ bool Export_Lua_HDSS::_LuaRegistConst(LuaObject * obj)
 	}
 
 	//SI
-	for (i=0; i<BResource::res.spritenumber; i++)
+	for (i=0; i<BResource::pbres->spritenumber; i++)
 	{
-		if (strlen(BResource::res.spritedata[i].spritename))
+		if (strlen(BResource::pbres->spritedata[i].spritename))
 		{
-			obj->SetInteger(BResource::res.spritedata[i].spritename, i);
+			obj->SetInteger(BResource::pbres->spritedata[i].spritename, i);
 		}
 	}
 	return true;

@@ -2,11 +2,8 @@
 #include "../Header/Scripter.h"
 #include "../Header/BResource.h"
 #include "../Header/Data.h"
-#include "../Header/DataConnector.h"
 #include "../Header/SelectSystem.h"
 #include "../Header/SE.h"
-#include "../Header/DataPrinter.h"
-#include "../Header/BossInfo.h"
 #include "../Header/ConstResource.h"
 
 int Process::processResult()

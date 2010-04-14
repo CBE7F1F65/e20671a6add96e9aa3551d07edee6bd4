@@ -1,8 +1,6 @@
 #include "../Header/Process.h"
 #include "../Header/Scripter.h"
 #include "../Header/Chat.h"
-#include "../Header/DataConnector.h"
-#include "../Header/BossInfo.h"
 #include "../Header/GameInput.h"
 
 int Process::frame()
@@ -49,10 +47,6 @@ int Process::frame()
 	{
 		frameskip = M_DEFAULT_FRAMESKIP;
 	}
-	else if (BossInfo::allover)
-	{
-		frameskip = M_FRAMESKIP_SLOWSKIP;
-	}
 	hge->System_SetState(HGE_FRAMESKIP, frameskip);
 
 	getInput();
@@ -65,8 +59,7 @@ int Process::frame()
 	{
 		
 	case STATE_START:
-		rv=PGO;
-//		rv = processStart();
+		rv = processStart();
 		break;
 	case STATE_PAUSE:
 		rv = processPause();
@@ -111,25 +104,16 @@ int Process::frame()
 		rv = processMusic();
 		break;
 	case STATE_INIT:
-		if (gametime==0)
-			rv = processInit();
-		else
-			rv = PGO;
+		rv = processInit();
 		break;
 	}
 
 	if(playing && !playtimeStart)
 	{
-		SYSTEMTIME tsystime;
-		FILETIME tfiletime;
-		GetLocalTime(&tsystime);
-		SystemTimeToFileTime(&tsystime, &tfiletime);
-
-		playtimeStart = (((LONGLONG)tfiletime.dwHighDateTime) << 32) | tfiletime.dwLowDateTime;
+		playtimeStart = nge_get_time(0, 0, 0, 0, 0, 0, 0);
 	}
 	else if(!playing && playtimeStart)
 	{
-		DataConnector::addPlayTime();
 	}
 	
 	if(rv == 0xffffffff)

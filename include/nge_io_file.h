@@ -81,6 +81,8 @@ int io_fclose(int handle);
  */
 int io_fsize(int handle);
 
+int io_fdelete(const char * fname);
+
 
 #ifdef __cplusplus
 }

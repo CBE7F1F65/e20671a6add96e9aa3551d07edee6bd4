@@ -43,7 +43,7 @@ WORD PlayerBullet::beams;
 
 #define _PB_HEADARCPLUS			10
 
-#define PLAYERBULLETMAX		0x100
+#define PLAYERBULLETMAX		0x40
 
 #define _PBTEX_PLAYERBEGIN		10
 
@@ -72,7 +72,7 @@ void PlayerBullet::Init(HTEXTURE * _tex)
 	{
 		for (int j=0; j<4; j++)
 		{
-			sprite[i][j] = SpriteItemManager::CreateSprite(BResource::res.playershootdata[i].siid+(((BResource::res.playershootdata[i].flag)&PBFLAG_ANIMATION)?j:0));
+			sprite[i][j] = SpriteItemManager::CreateSprite(BResource::pbres->playershootdata[i].siid+(((BResource::pbres->playershootdata[i].flag)&PBFLAG_ANIMATION)?j:0));
 		}
 	}
 }
@@ -159,7 +159,7 @@ void PlayerBullet::BuildShoot(BYTE playerindex, BYTE playerID, int usetimer, boo
 	playershootData * item;
 	for (int i=0; i<PLAYERSHOOTTYPEMAX; i++)
 	{
-		item = &(BResource::res.playershootdata[i]);
+		item = &(BResource::pbres->playershootdata[i]);
 		if (item->userID == playerID)
 		{
 			if ((bchargeshoot) ^ (item->bchargeshoot))
@@ -181,7 +181,7 @@ int PlayerBullet::Build(BYTE playerindex, int shootdataID, bool explode/* =false
 		return -1;
 	}
 	PlayerBullet _pb;
-	playershootData * item = &(BResource::res.playershootdata[shootdataID]);
+	playershootData * item = &(BResource::pbres->playershootdata[shootdataID]);
 	if (!(item->timeMod) && !explode)
 	{
 		return -1;
@@ -255,8 +255,8 @@ void PlayerBullet::valueSet(BYTE _playerindex, WORD _ID, BYTE _arrange, float _x
 
 	if (flag & PBFLAG_BEAM)
 	{
-		hscale = M_CLIENT_HEIGHT / SpriteItemManager::GetTexW(BResource::res.playershootdata[ID].siid);
-		vscale = scale / SpriteItemManager::GetTexH(BResource::res.playershootdata[ID].siid);
+		hscale = M_CLIENT_HEIGHT / SpriteItemManager::GetTexW(BResource::pbres->playershootdata[ID].siid);
+		vscale = scale / SpriteItemManager::GetTexH(BResource::pbres->playershootdata[ID].siid);
 		angle = -9000;
 		for (int i=0; i<PLAYERBULLETTYPE; i++)
 		{
@@ -467,7 +467,7 @@ bool PlayerBullet::isInRange(float aimx, float aimy, float w, float h)
 		}
 		h = M_CLIENT_HEIGHT / 2;
 	}
-	float rOri = BResource::res.playershootdata[ID].collisionr * hscale;
+	float rOri = BResource::pbres->playershootdata[ID].collisionr * hscale;
 	if (checkCollisionSquare(aimx, aimy, w, h, rOri))
 	{
 		if (hiton)

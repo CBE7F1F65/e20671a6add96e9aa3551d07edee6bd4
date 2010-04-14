@@ -3,7 +3,6 @@
 #include "../header/BResource.h"
 #include "../header/FrontDisplayName.h"
 #include "../header/processPrep.h"
-#include "../header/BossInfo.h"
 #include "../header/Fontsys.h"
 #include "../header/EffectIDDefine.h"
 
@@ -76,6 +75,7 @@ void FrontDisplay::BuildPostPrint(hgeFont * font, float x, float y, const char *
 
 void FrontDisplay::RenderPostPrint()
 {
+	return;
 	if (postprintlist.size())
 	{
 		for (list<fdPostPrint>::iterator it=postprintlist.begin(); it!=postprintlist.end(); it++)
@@ -130,7 +130,7 @@ void FrontDisplay::SignUpSpell()
 	{
 		for (int i=0; i<3; i++)
 		{
-			gameinfodisplay.fsSpell[j][i].SignUp(BResource::res.playerdata[Player::p[j].nowID].spellname[i], info.smallfont);
+			gameinfodisplay.fsSpell[j][i].SignUp(BResource::pbres->playerdata[Player::p[j].nowID].spellname[i], info.smallfont);
 		}
 	}
 }
@@ -157,7 +157,7 @@ void FrontDisplay::OnShootCharge(BYTE playerindex, BYTE nowshootingcharge)
 void FrontDisplay::OnChangeMusic(int musicID)
 {
 	SetState(FDISP_MUSICNAME, FDISPSTATE_ON);
-	gameinfodisplay.fsMusic.SignUp(BResource::res.musdata[musicID].musicname, info.tinyfont);
+	gameinfodisplay.fsMusic.SignUp(BResource::pbres->musdata[musicID].musicname, info.tinyfont);
 }
 
 void FrontDisplay::action()
@@ -249,7 +249,7 @@ void FrontDisplay::RenderHeadInfo(BYTE playerindex)
 		gameinfodisplay.charge->SetColor(color);
 		gameinfodisplay.charge->Render(px, py-tyoffset-10);
 		info.headdigitfont->SetColor(color);
-		info.headdigitfont->printf(px, py-tyoffset-6, HGETEXT_CENTER, "%d / %d", ncharge, nchargemax);
+		info.headdigitfont->Printf(px, py-tyoffset-6, HGETEXT_CENTER, "%d / %d", ncharge, nchargemax);
 	}
 	if (gameinfodisplay.lastlifecountdown[playerindex])
 	{
@@ -294,7 +294,7 @@ void FrontDisplay::RenderHeadInfo(BYTE playerindex)
 		gameinfodisplay.gaugelevel->SetColor(color);
 		gameinfodisplay.gaugelevel->Render(px-16, py-tyoffset);
 		info.headdigitfont->SetColor(color);
-		info.headdigitfont->printf(px+16, py-tyoffset-8, HGETEXT_CENTER, "%d", nchargemax);
+		info.headdigitfont->Printf(px+16, py-tyoffset-8, HGETEXT_CENTER, "%d", nchargemax);
 	}
 	if (gameinfodisplay.lilycountdown)
 	{
@@ -361,9 +361,9 @@ void FrontDisplay::RenderPanel()
 					buffer[j] += 10;
 				}
 			}
-			info.spellpointdigitfont->printf(spellpointx[i]+38, M_GAMESQUARE_TOP+16, HGETEXT_RIGHT, "%s", buffer);
+			info.spellpointdigitfont->Printf(spellpointx[i]+38, M_GAMESQUARE_TOP+16, HGETEXT_RIGHT, "%s", buffer);
 			int nSpellPoint = Player::p[i].nSpellPoint;
-			info.spellpointdigitfont->printf(spellpointx[i]+38, M_GAMESQUARE_TOP+16, HGETEXT_LEFT, "%06d", nSpellPoint);
+			info.spellpointdigitfont->Printf(spellpointx[i]+38, M_GAMESQUARE_TOP+16, HGETEXT_LEFT, "%06d", nSpellPoint);
 
 			if (Player::p[i].winflag)
 			{
@@ -411,8 +411,8 @@ void FrontDisplay::RenderPanel()
 			}
 			if (info.spellpointdigitfont)
 			{
-				info.spellpointdigitfont->printf(M_GAMESQUARE_LEFT_(i)+2, M_GAMESQUARE_BOTTOM-11, HGETEXT_LEFT, "%02d", Player::p[i].cardlevel);
-				info.spellpointdigitfont->printf(M_GAMESQUARE_RIGHT_(i)-2, M_GAMESQUARE_BOTTOM-11, HGETEXT_RIGHT, "%02d", Player::p[i].bosslevel);
+				info.spellpointdigitfont->Printf(M_GAMESQUARE_LEFT_(i)+2, M_GAMESQUARE_BOTTOM-11, HGETEXT_LEFT, "%02d", Player::p[i].cardlevel);
+				info.spellpointdigitfont->Printf(M_GAMESQUARE_RIGHT_(i)-2, M_GAMESQUARE_BOTTOM-11, HGETEXT_RIGHT, "%02d", Player::p[i].bosslevel);
 			}
 		}
 		for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
@@ -451,7 +451,7 @@ void FrontDisplay::RenderPanel()
 	if(info.asciifont)
 	{
 #ifdef __DEBUG
-		info.asciifont->printf(
+		info.asciifont->Printf(
 			400,
 			465,
 			0,
@@ -459,8 +459,8 @@ void FrontDisplay::RenderPanel()
 			hge->Timer_GetWorstFPS(35)/M_DEFAULT_RENDERSKIP,
 			hge->Timer_GetFPS()/M_DEFAULT_RENDERSKIP
 			);
-		info.asciifont->printf(8, 465, 0, "%d %d", gametime, hge->System_GetState(HGE_FRAMECOUNTER));
-		info.asciifont->printf(540, 1, 0, "%f",	hge->Timer_GetTime());
+		info.asciifont->Printf(8, 465, 0, "%d %d", gametime, hge->System_GetState(HGE_FRAMECOUNTER));
+		info.asciifont->Printf(540, 1, 0, "%f",	hge->Timer_GetTime());
 #endif
 		if (((Process::mp.IsInGame() && Player::CheckAble()) || Process::mp.state == STATE_OVER) && info.asciifont)
 		{
@@ -479,13 +479,14 @@ void FrontDisplay::RenderPanel()
 				sprintf(strfpsbuffer, "%.2ffps", hge->Timer_GetFPS(35));
 			}
 			info.asciifont->Render(M_CLIENT_CENTER_X, M_CLIENT_BOTTOM-14, HGETEXT_CENTER, strfpsbuffer);
-			info.asciifont->printf(M_CLIENT_CENTER_X, M_CLIENT_TOP, HGETEXT_CENTER, "%02d:%02d", usingtime/3600, (usingtime/60)%60);
+			info.asciifont->Printf(M_CLIENT_CENTER_X, M_CLIENT_TOP, HGETEXT_CENTER, "%02d:%02d", usingtime/3600, (usingtime/60)%60);
 		}
 	}
 }
 
 void FrontDisplay::RenderSpellName(BYTE playerindex)
 {
+	return;
 	if (spellnamestate[1-playerindex])
 	{
 		float aimx = M_GAMESQUARE_LEFT_(playerindex) + 120;
@@ -547,9 +548,9 @@ bool FrontDisplay::Init()
 {
 	Release();
 
-	info.normalfont = hge->Font_Load(BResource::res.resdata.widefontname, 20);
-	info.smallfont = hge->Font_Load(BResource::res.resdata.widefontname, 16);
-	info.tinyfont = hge->Font_Load(BResource::res.resdata.widefontname, 10);
+	info.normalfont = hge->Font_Load(BResource::pbres->resdata.widefontname, 20);
+	info.smallfont = hge->Font_Load(BResource::pbres->resdata.widefontname, 16);
+	info.tinyfont = hge->Font_Load(BResource::pbres->resdata.widefontname, 10);
 
 	int idx = 0;
 

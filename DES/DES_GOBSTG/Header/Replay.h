@@ -26,8 +26,11 @@ public:
 	float GetReplayFPS();
 	void InitReplayIndex(bool replaymode=false, BYTE part=0);
 
+	static void Init();
+	static void Release();
+
 	static void Free(const char * filename);
-	static void Release(bool deletefiles=true);
+	static void ReleaseList(bool deletefiles=true);
 	static int GetEnumReplay();
 	static void ReleaseEnumReplay();
 
@@ -40,8 +43,8 @@ public:
 
 	static list<_ReplayNameListItem> _rpyfilenamelist;
 
-	static Replay rpy;
-	static Replay enumrpy[RPYENUMMAX];
+	static Replay * rpy;
+	static Replay * enumrpy;
 	static int nenumrpy;
 };
 

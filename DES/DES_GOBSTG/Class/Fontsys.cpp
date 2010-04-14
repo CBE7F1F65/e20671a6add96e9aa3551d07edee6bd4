@@ -211,6 +211,7 @@ int Fontsys::strTranslate(char * dtext, const char * stext, int * maxchar)
 
 void Fontsys::SignUp(const char * _text, HD3DFONT _font)
 {
+	return;
 	HTEXTURE tex;
 
 	if (_text != NULL)
@@ -276,6 +277,7 @@ void Fontsys::SignUp(const char * _text, HD3DFONT _font)
 
 void Fontsys::Render(float x, float y, float shadow, float hscale, float vscale, BYTE alignflag)
 {
+	return;
 	if (!sprite)
 	{
 		return;

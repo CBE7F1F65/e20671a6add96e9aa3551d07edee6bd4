@@ -3,24 +3,24 @@
 void Process::_Render(BYTE renderflag/* =M_RENDER_NULL */)
 {
 	BYTE playerindex = Export::GetPlayerIndexByRenderFlag(renderflag);
-	Export::clientSet3DMode();
-	Export::clientSetMatrix(worldx[playerindex], worldy[playerindex], worldz[playerindex], renderflag);
-	BGLayer::RenderBG(playerindex);
-	Export::clientSet2DMode();
-	Export::clientSetMatrix(worldx[playerindex], worldy[playerindex], worldz[playerindex], renderflag);
+//	Export::clientSet3DMode();
+//	Export::clientSetMatrix(worldx[playerindex], worldy[playerindex], worldz[playerindex], renderflag);
+//	BGLayer::RenderBG(playerindex);
+//	Export::clientSet2DMode();
+//	Export::clientSetMatrix(worldx[playerindex], worldy[playerindex], worldz[playerindex], renderflag);
 	if(renderflag != M_RENDER_NULL)
 	{
-		EventZone::RenderAll(playerindex);
+//		EventZone::RenderAll(playerindex);
 		Enemy::RenderAll(playerindex);
 		PlayerBullet::RenderAll(playerindex);
 		Player::RenderAll(playerindex);
 		Effectsys::RenderAll(playerindex);
-		Beam::RenderAll(playerindex);
+//		Beam::RenderAll(playerindex);
 		Bullet::RenderAll(playerindex);
-		Item::RenderAll(playerindex);
-		Enemy::RenderScore(playerindex);
-		FrontDisplay::fdisp.RenderSpellName(playerindex);
-		FrontDisplay::fdisp.RenderHeadInfo(playerindex);
+//		Item::RenderAll(playerindex);
+//		Enemy::RenderScore(playerindex);
+//		FrontDisplay::fdisp.RenderSpellName(playerindex);
+//		FrontDisplay::fdisp.RenderHeadInfo(playerindex);
 		//
 		/*
 		for (int i=M_GAMESQUARE_LEFT_(playerindex); i<M_GAMESQUARE_RIGHT_(playerindex); i++)
@@ -90,7 +90,7 @@ void Process::_Render(BYTE renderflag/* =M_RENDER_NULL */)
 		*/
 		//
 	}
-	BGLayer::RenderFG(playerindex);
+//	BGLayer::RenderFG(playerindex);
 }
 
 void Process::_RenderTar()
@@ -113,10 +113,8 @@ void Process::_RenderTar()
 
 int Process::render()
 {
+
 	BeginScene(1);
-	renderInit();
-	EndScene();
-	return PGO;
 	bool isingame = IsInGame();
 	if (isingame)
 	{
@@ -136,6 +134,7 @@ int Process::render()
 	if (state == STATE_INIT)
 	{
 		int ret = renderInit();
+		EndScene();
 //		hge->Gfx_EndScene();
 		return ret;
 	}
@@ -149,19 +148,19 @@ int Process::render()
 	{
 		_RenderTar();
 	}
-	SpriteItemManager::RenderFrontSprite();
-	FrontDisplay::fdisp.RenderPostPrint();
-
-	FrontDisplay::fdisp.RenderPanel();
+//	SpriteItemManager::RenderFrontSprite();
+//	FrontDisplay::fdisp.RenderPostPrint();
+//	FrontDisplay::fdisp.RenderPanel();
 
 	if(isingame)
 	{
-		Chat::chatitem.Render();
-		EffectSp::RenderAll();
-		FrontDisplay::fdisp.RenderEnemyX();
+//		Chat::chatitem.Render();
+//		EffectSp::RenderAll();
+//		FrontDisplay::fdisp.RenderEnemyX();
 	}
-	BGLayer::RenderFGPause();
+//	BGLayer::RenderFGPause();
 	SelectSystem::RenderAll();
+	EndScene();
 //	hge->Gfx_EndScene();
 	return PGO;
 }

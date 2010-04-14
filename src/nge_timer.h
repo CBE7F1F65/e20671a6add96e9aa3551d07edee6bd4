@@ -44,5 +44,6 @@ void timer_free(nge_timer* timer);
 
 uint32 nge_get_tick();
 uint64 nge_get_tick_longlong();
+uint64 nge_get_time(uint16 *wYear, uint16 *wMonth, uint16 *wDay, uint16 *wHour, uint16 *wMinutes, uint16 *wSeconds, uint32 *dMicroseconds);
 
 #endif

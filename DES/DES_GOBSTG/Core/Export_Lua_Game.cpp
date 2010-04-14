@@ -177,7 +177,7 @@ int Export_Lua_Game::LuaFn_Game_GetPlayerContentTable(LuaState * ls)
 		int _playercount = PLAYERTYPEMAX;
 		for (int i=0; i<PLAYERTYPEMAX; i++)
 		{
-			if (!strlen(BResource::res.playerdata[i].name))
+			if (!strlen(BResource::pbres->playerdata[i].name))
 			{
 				_playercount = i;
 				break;
@@ -189,9 +189,9 @@ int Export_Lua_Game::LuaFn_Game_GetPlayerContentTable(LuaState * ls)
 	else
 	{
 		int _index = args[1].GetInteger();
-		ls->PushInteger(BResource::res.playerdata[_index].faceSIID);
-		_LuaHelper_PushString(ls, BResource::res.playerdata[_index].name);
-		_LuaHelper_PushString(ls, BResource::res.playerdata[_index].ename);
+		ls->PushInteger(BResource::pbres->playerdata[_index].faceSIID);
+		_LuaHelper_PushString(ls, BResource::pbres->playerdata[_index].name);
+		_LuaHelper_PushString(ls, BResource::pbres->playerdata[_index].ename);
 		return 3;
 	}
 	return 0;
@@ -205,7 +205,7 @@ int Export_Lua_Game::LuaFn_Game_GetSceneContentTable(LuaState * ls)
 		int _scenecount = SCENEMAX;
 		for (int i=0; i<SCENEMAX; i++)
 		{
-			if (!strlen(BResource::res.playerdata[i].scenename))
+			if (!strlen(BResource::pbres->playerdata[i].scenename))
 			{
 				_scenecount = i;
 				break;
@@ -217,7 +217,7 @@ int Export_Lua_Game::LuaFn_Game_GetSceneContentTable(LuaState * ls)
 	else
 	{
 		int _index = args[1].GetInteger();
-		ls->PushString(BResource::res.playerdata[_index].scenename);
+		ls->PushString(BResource::pbres->playerdata[_index].scenename);
 		return 1;
 	}
 	return 0;
@@ -534,7 +534,7 @@ int Export_Lua_Game::LuaFn_Game_GetPlayerShootChargeOneInfo(LuaState * ls)
 	LuaStack args(ls);
 	BYTE _playerindex = args[1].GetInteger();
 	BYTE _ID = Player::p[_playerindex].nowID;
-	BYTE _shootchargemaxtime = BResource::res.playerdata[_ID].shootchargetime;
+	BYTE _shootchargemaxtime = BResource::pbres->playerdata[_ID].shootchargetime;
 	ls->PushInteger(_ID);
 	ls->PushNumber(Player::p[_playerindex].x);
 	ls->PushNumber(Player::p[_playerindex].y);

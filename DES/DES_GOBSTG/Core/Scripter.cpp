@@ -5,6 +5,16 @@
 #include "../Header/Export_Lua_HDSS.h"
 #include "../../../src/hge/HGEExport.h"
 
+#ifndef iswspace
+#define iswspace(X) ((X)==0x20 || (X)>=0x09&&(X)<=0x0D)
+#endif
+#ifndef iswdigit
+#define iswdigit(X) ((X)>='0' || (X)<='9')
+#endif
+#ifndef iswlower
+#define iswlower(X) ((X)>='a' || (X)<='z')
+#endif
+
 Scripter Scripter::scr;
 
 char Scripter::strdesc[STRINGDESCMAX][M_STRMAX*2];
@@ -566,7 +576,7 @@ addblock:
 						if(!binmode && file)
 						{
 							char tbuff[M_STRITOAMAX];
-							ltoa(ftell(file), tbuff, 16);
+							sprintf(tbuff, "%x", ftell(file));
 							HGELOG("Point to 0x%s.", tbuff);
 						}
 #endif
@@ -614,6 +624,12 @@ Token Scripter::GetToken()
 	ret.type = 0;
 	ret.value = 0;
 
+	int i = 0;
+	bool quoted = false;
+	bool bFound = false;
+	int kti = 0;
+	bool bIsAddress = false;
+
 	if(binmode)
 	{
 		goto exit;
@@ -625,8 +641,6 @@ Token Scripter::GetToken()
 		goto exit;
 	}
 
-	int i = 0;
-	bool quoted = false;
 	while(true)
 	{
 		if(!fread(&buffer[i], 1, 1, file))
@@ -785,9 +799,9 @@ Token Scripter::GetToken()
 		ret.value = 0;
 		for(int j=0; j<SCR_CUSTOMCONSTMAX; j++)
 		{
-			if(!strcmp(&buffer[1], BResource::res.customconstdata[j].name))
+			if(!strcmp(&buffer[1], BResource::pbres->customconstdata[j].name))
 			{
-				ret.value = BResource::res.customconstdata[j].value;
+				ret.value = BResource::pbres->customconstdata[j].value;
 				break;
 			}
 		}
@@ -797,9 +811,9 @@ Token Scripter::GetToken()
 	else if (!strncmp(buffer, "SI_", 3))
 	{
 		bool bIsSIItem = false;
-		for (int j=0; j<BResource::res.spritenumber; j++)
+		for (int j=0; j<BResource::pbres->spritenumber; j++)
 		{
-			if (!strcmp(&buffer[3], &(BResource::res.spritedata[j].spritename[3])))
+			if (!strcmp(&buffer[3], &(BResource::pbres->spritedata[j].spritename[3])))
 			{
 				ret.value = j;
 				bIsSIItem = true;
@@ -816,7 +830,6 @@ Token Scripter::GetToken()
 	ret.type |= SCR_TOKEN_KEYWORD;
 
 	//variable
-	bool bIsAddress = false;
 	if(buffer[0] == '[' && buffer[strlen(buffer)-1] == ']')
 	{
 		bIsAddress = true;
@@ -876,7 +889,6 @@ Token Scripter::GetToken()
 	}
 
 	//keyword
-	bool bFound = false;
 	//timefunc
 	if (!strncmp(buffer, SCRKT_STR_TIMEFUNC, sizeof(char)*SCRKT_SIZE_TIMEFUNC))
 	{
@@ -927,7 +939,6 @@ Token Scripter::GetToken()
 		bFound = true;
 	}
 	//keyword
-	int kti = 0;
 	if (!bFound)
 	{
 		for(; scrKeyTable[kti].code != SCR_CONST || strcmp(scrKeyTable[kti].word, SCR_CONST_STR); kti++)

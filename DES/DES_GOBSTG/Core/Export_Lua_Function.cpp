@@ -4,8 +4,14 @@
 #include "../Header/LuaConstDefine.h"
 
 #include "../Header/Export_Lua_HDSS.h"
+#include "../Header/Export_Lua_HGE.h"
+#include "../Header/Export_Lua_HGEHelp.h"
 #include "../Header/Export_Lua_Game.h"
 #include "../../../src/hge/HGEExport.h"
+
+#ifdef WIN32
+#include <windows.h>
+#endif
 
 bool Export_Lua::_LuaRegistFunction(LuaObject * obj)
 {
@@ -20,10 +26,6 @@ bool Export_Lua::_LuaRegistFunction(LuaObject * obj)
 	_globalobj.Register("HSVA", LuaFn_Global_HSVA);
 	_globalobj.Register("GetARGB", LuaFn_Global_GetARGB);
 	_globalobj.Register("SetARGB", LuaFn_Global_SetARGB);
-	_globalobj.Register("GetLocalTime", LuaFn_Global_GetLocalTime);
-	_globalobj.Register("GetClipBoard", LuaFn_Global_GetClipBoard);
-	_globalobj.Register("GetPrivateProfileString", LuaFn_Global_GetPrivateProfileString);
-	_globalobj.Register("WritePrivateProfileString", LuaFn_Global_WritePrivateProfileString);
 	_globalobj.Register("MessageBox", LuaFn_Global_MessageBox);
 
 	LuaObject _luastateobj = obj->CreateTable("luastate");
@@ -39,7 +41,6 @@ bool Export_Lua::_LuaRegistFunction(LuaObject * obj)
 	_luastateobj.Register("Not", LuaFn_LuaState_Not);
 	_luastateobj.Register("LShift", LuaFn_LuaState_LShift);
 	_luastateobj.Register("RShift", LuaFn_LuaState_RShift);
-	_luastateobj.Register("ReadLineInContent", LuaFn_LuaState_ReadLineInContent);
 
 	return true;
 }
@@ -54,6 +55,14 @@ bool Export_Lua::LuaRegistFunction()
 	}
 #ifndef __NOTUSEHDSS
 	if (!Export_Lua_HDSS::_LuaRegistFunction(&obj))
+	{
+		return false;
+	}
+	if (!Export_Lua_HGE::_LuaRegistFunction(&obj))
+	{
+		return false;
+	}
+	if (!Export_Lua_HGEHelp::_LuaRegistFunction(&obj))
 	{
 		return false;
 	}
@@ -78,6 +87,14 @@ bool Export_Lua::LuaRegistConst()
 	}
 #ifndef __NOTUSEHDSS
 	if (!Export_Lua_HDSS::_LuaRegistConst(&obj))
+	{
+		return false;
+	}
+	if (!Export_Lua_HGE::_LuaRegistConst(&obj))
+	{
+		return false;
+	}
+	if (!Export_Lua_HGEHelp::_LuaRegistConst(&obj))
 	{
 		return false;
 	}
@@ -513,70 +530,9 @@ int Export_Lua::LuaFn_Global_SetARGB(LuaState * ls)
 	return 1;
 }
 
-int Export_Lua::LuaFn_Global_GetLocalTime(LuaState * ls)
-{
-	LuaStack args(ls);
-	LuaStackObject table;
-	QWORD qret;
-
-	SYSTEMTIME systime;
-	FILETIME filetime;
-	GetLocalTime(&systime);
-	SystemTimeToFileTime(&systime, &filetime);
-	table = ls->CreateTable();
-	table.SetInteger("wYear", systime.wYear);
-	table.SetInteger("wMonth", systime.wMonth);
-	table.SetInteger("wDayOfWeek", systime.wDayOfWeek);
-	table.SetInteger("wDay", systime.wDay);
-	table.SetInteger("wHour", systime.wHour);
-	table.SetInteger("wMinute", systime.wMinute);
-	table.SetInteger("wSecond", systime.wSecond);
-	table.SetInteger("wMilliseconds", systime.wMilliseconds);
-	qret = (((QWORD)(filetime.dwHighDateTime))<<32) + filetime.dwLowDateTime;
-
-	ls->PushValue(table);
-	_LuaHelper_PushQWORD(ls, qret);
-	return 2;
-}
-
-int Export_Lua::LuaFn_Global_GetClipBoard(LuaState * ls)
-{
-	LuaStack args(ls);
-
-	if (OpenClipboard(NULL))
-	{
-		HANDLE hData = GetClipboardData(CF_TEXT);
-		char * buffer = (char*)GlobalLock(hData);
-		_LuaHelper_PushString(ls, buffer);
-		GlobalUnlock(hData);
-		CloseClipboard();
-		return 1;
-	}
-	return 0;
-}
-
-int Export_Lua::LuaFn_Global_GetPrivateProfileString(LuaState * ls)
-{
-	LuaStack args(ls);
-	char sret[M_STRINGMAX];
-
-	GetPrivateProfileString(args[1].GetString(), args[2].GetString(), args[3].GetString(), sret, M_STRINGMAX, args[4].GetString());
-
-	_LuaHelper_PushString(ls, sret);
-	return 1;
-}
-
-int Export_Lua::LuaFn_Global_WritePrivateProfileString(LuaState * ls)
-{
-	LuaStack args(ls);
-
-	WritePrivateProfileString(args[1].GetString(), args[2].GetString(), args[3].GetString(), args[4].GetString());
-
-	return 0;
-}
-
 int Export_Lua::LuaFn_Global_MessageBox(LuaState * ls)
 {
+#ifdef WIN32
 	LuaStack args(ls);
 	int iret;
 
@@ -602,6 +558,9 @@ int Export_Lua::LuaFn_Global_MessageBox(LuaState * ls)
 
 	ls->PushInteger(iret);
 	return 1;
+#else
+	return 0;
+#endif
 }
 
 int Export_Lua::LuaFn_LuaState_DoFile(LuaState * ls)
@@ -794,54 +753,6 @@ int Export_Lua::LuaFn_LuaState_RShift(LuaState * ls)
 
 	ls->PushInteger(iret);
 	return 1;
-}
-
-int Export_Lua::LuaFn_LuaState_ReadLineInContent(LuaState * ls)
-{
-	LuaStack args(ls);
-	string sret;
-	DWORD dret;
-
-	LuaObject _obj = args[1];
-	DWORD content = _LuaHelper_GetDWORD(&_obj);
-	dret = content;
-	_obj = args[2];
-	DWORD size = _LuaHelper_GetDWORD(&_obj);
-	int i=0;
-	sret = "";
-	if (dret < content + size)
-	{
-		char buffer = *(char*)dret;
-		while (buffer != '\r' && buffer != '\n')
-		{
-			sret += buffer;
-			i++;
-			dret++;
-			if (dret >= content + size)
-			{
-				dret = content + size;
-				break;
-			}
-			buffer = *(char*)dret;
-		}
-		if (buffer == '\r')
-		{
-			if (*(((char*)dret)+1) == '\n')
-			{
-				dret++;
-			}
-		}
-		if (dret < content + size)
-		{
-			dret++;
-		}
-		size -= dret - content;
-	}
-
-	_LuaHelper_PushString(ls, sret.data());
-	_LuaHelper_PushDWORD(ls, dret);
-	_LuaHelper_PushDWORD(ls, size);
-	return 3;
 }
 
 #endif

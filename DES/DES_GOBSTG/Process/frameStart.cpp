@@ -1,7 +1,6 @@
 #include "../Header/Process.h"
 #include "../Header/Player.h"
 #include "../Header/Data.h"
-#include "../Header/DataConnector.h"
 #include "../Header/Replay.h"
 #include "../Header/GameInput.h"
 
@@ -13,12 +12,12 @@ void Process::frameStart()
 	{
 		playing = true;
 		nowInput = GameInput::GetNowInput();
-		Replay::rpy.WriteInput(nowInput);
+		Replay::rpy->WriteInput(nowInput);
 	}
 	else
 	{
-		nowInput = Replay::rpy.ReadInput();
-		replayFPS = Replay::rpy.GetReplayFPS();
+		nowInput = Replay::rpy->ReadInput();
+		replayFPS = Replay::rpy->GetReplayFPS();
 
 		if(nowInput == 0xffff)
 		{

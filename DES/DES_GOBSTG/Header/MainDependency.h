@@ -2,22 +2,22 @@
 #define _MAINDEPENDENCY_H
 
 //#include <windows.h>
-#include <list>
-#include <vector>
-#include "../Header/VectorList.h"
 extern "C"
 {
-#include "../../../src/libnge2.h"
+#include "../../../src/utility/exception.h"
 #include "../../../src/nge_define.h"
+#include "../../../src/libnge2.h"
 #include "../../../src/nge_main.h"
 #include "../../../src/nge_io_file.h"
 #include "../../../src/nge_timer.h"
 #include "../../../src/nge_graphics.h"
 };
+#include <list>
+#include <vector>
+#include "../Header/VectorList.h"
 #include "../../../src/hge/hgeEffectSystem.h"
 #include "../../../src/hge/hgeDefines.h"
 #include "../../../src/hge/hgeFont.h"
-#include <io.h>
 
 using namespace std;
 /*

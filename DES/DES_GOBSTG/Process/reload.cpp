@@ -1,8 +1,13 @@
 #include "../Header/processPrep.h"
+#ifdef WIN32
+#include <windows.h>
+#endif
 
 bool Process::reload()
 {
+#ifdef WIN32
 	SetCurrentDirectory(hge->Resource_MakePath(""));
+#endif
 
 	BGLayer::Init(tex);
 	Enemy::ClearAll();
@@ -11,14 +16,12 @@ bool Process::reload()
 	SelectSystem::Init();
 	Effectsys::ClearAll();
 	Chat::chatitem.Clear();
-	BossInfo::Clear();
 	Player::Init();
 	EventZone::Clear();
 
-
 	frameskip = M_DEFAULT_FRAMESKIP;
 	strcpy(rpyfilename, "");
-	Replay::rpy.InitReplayIndex();
+	Replay::rpy->InitReplayIndex();
 	pauseinit = false;
 	replaymode = false;
 	replayFPS = 0;
@@ -49,23 +52,18 @@ bool Process::reload()
 	SpriteItemManager::Init(tex);
 	EffectSp::Init();
 
-	BossInfo::Init();
-	InfoQuad::Init(tex[TEX_WHITE]);
-
 	FrontDisplay::fdisp.Init();
 	Fontsys::Init(FrontDisplay::fdisp.info.normalfont);
 	Fontsys::HeatUp();
 	Replay::ReleaseEnumReplay();
 
-	Replay::Release();
+	Replay::ReleaseList();
 
 	GameInput::SwapInput(false);
 
-#ifdef __DEBUG
-	HGELOG("\nCleared up.\n");
-#endif
-
+#ifdef WIN32
 	SetCurrentDirectory(hge->Resource_MakePath(""));
+#endif
 
 	return true;
 }

@@ -3,7 +3,6 @@
 #include "../header/Player.h"
 #include "../header/SE.h"
 #include "../header/Chat.h"
-#include "../header/BossInfo.h"
 #include "../header/Item.h"
 #include "../header/Target.h"
 #include "../header/Export.h"
@@ -161,7 +160,7 @@ void Beam::valueSet(WORD _ID, float _x, float _y, int _angle, float _speed, BYTE
 	xplus = cost(angle);
 	yplus = sint(angle);
 
-	spriteData * spdata = SpriteItemManager::CastSprite(BResource::res.bulletdata[type].siid);
+	spriteData * spdata = SpriteItemManager::CastSprite(BResource::pbres->bulletdata[type].siid);
 	texw	=	spdata->tex_w;
 	texh	=	spdata->tex_h;
 
@@ -240,11 +239,6 @@ void Beam::action(BYTE playerindex)
 
 	if(!fadeout)
 	{
-		if(BossInfo::flag >> 2)
-		{
-			fadeout = true;
-			timer = 0;
-		}
 		if(timer == 1)
 		{
 			SE::push(SE_BEAM_1, x);
@@ -376,8 +370,8 @@ bool Beam::isInRect(float aimx, float aimy, float r, int nextstep)
 	float _x = x;
 	float _y = y;
 
-	float rl = BResource::res.bulletdata[type].collisionMain;
-	float rs = BResource::res.bulletdata[type].collisionSub;
+	float rl = BResource::pbres->bulletdata[type].collisionMain;
+	float rs = BResource::pbres->bulletdata[type].collisionSub;
 
 	float nowrl = vscale * rl;
 	if (nextstep)

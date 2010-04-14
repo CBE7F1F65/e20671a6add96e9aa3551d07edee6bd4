@@ -12,8 +12,8 @@ int Process::processOver()
 	{
 		if (!replaymode)
 		{
-			Replay::rpy.Fill();
-			Replay::rpy.Save();
+			Replay::rpy->Fill();
+			Replay::rpy->Save();
 //			FrontDisplay::fdisp.SetState(FDISP_PANEL, 0);
 		}
 		else

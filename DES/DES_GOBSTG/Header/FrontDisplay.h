@@ -4,7 +4,6 @@
 #include "MainDependency.h"
 #include "Const.h"
 #include "Effectsys.h"
-#include "InfoQuad.h"
 #include "Enemy.h"
 #include "Fontsys.h"
 

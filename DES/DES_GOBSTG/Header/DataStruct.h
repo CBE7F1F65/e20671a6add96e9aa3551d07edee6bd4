@@ -16,18 +16,6 @@ struct musicData{
 	LONGLONG alllength;
 };
 
-struct spellData{
-	char spellname[M_STRMAX];
-	LONGLONG bonus;
-	int spellnumber;
-	int turntoscene;
-	BYTE timelimit;
-	BYTE remain;
-	BYTE userID;
-	BYTE spellflag;
-	BYTE battleID;
-};
-
 struct uiStringData 
 {
 	char filename[M_STRMAX];

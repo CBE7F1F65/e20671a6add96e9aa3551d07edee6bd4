@@ -95,7 +95,7 @@ static void TM_unpause(nge_timer* timer)
 
 
 #ifdef WIN32
-//#include <WinBase.h>
+#include <windows.h>
 uint64 nge_get_tick_longlong()
 {
 /*
@@ -107,6 +107,44 @@ uint64 nge_get_tick_longlong()
 uint32 nge_get_tick()
 {
 	return SDL_GetTicks();
+}
+uint64 nge_get_time(uint16 *wYear, uint16 *wMonth, uint16 *wDay, uint16 *wHour, uint16 *wMinutes, uint16 *wSeconds, uint32 *dMicroseconds)
+{
+	SYSTEMTIME systime;
+	FILETIME filetime;
+	uint64 llret;
+	GetLocalTime(&systime);
+	SystemTimeToFileTime(&systime, &filetime);
+	if (wYear)
+	{
+		*wYear = systime.wYear;
+	}
+	if (wMonth)
+	{
+		*wMonth = systime.wMonth;
+	}
+	if (wDay)
+	{
+		*wDay = systime.wDay;
+	}
+	if (wHour)
+	{
+		*wHour = systime.wHour;
+	}
+	if (wMinutes)
+	{
+		*wMinutes = systime.wMinute;
+	}
+	if (wSeconds)
+	{
+		*wSeconds = systime.wSecond;
+	}
+	if (dMicroseconds)
+	{
+		*dMicroseconds = systime.wMilliseconds;
+	}
+	llret = (((uint64)filetime.dwHighDateTime)<<32)+(uint64)filetime.dwLowDateTime;
+	return llret;
 }
 #else
 #include <psprtc.h>
@@ -123,5 +161,40 @@ uint32 nge_get_tick()
 {
 	uint32 tick32 = nge_get_tick_longlong()/1000;
 	return tick32;
+}
+uint64 nge_get_time(uint16 *wYear, uint16 *wMonth, uint16 *wDay, uint16 *wHour, uint16 *wMinutes, uint16 *wSeconds, uint32 *dMicroseconds)
+{
+	pspTime date;
+	u64 time;
+	sceRtcGetWin32FileTime(&date, &time);
+	if (wYear)
+	{
+		*wYear = date.year;
+	}
+	if (wMonth)
+	{
+		*wMonth = date.month;
+	}
+	if (wDay)
+	{
+		*wDay = date.day;
+	}
+	if (wHour)
+	{
+		*wHour = date.hour;
+	}
+	if (wMinutes)
+	{
+		*wMinutes = date.minutes;
+	}
+	if (wSeconds)
+	{
+		*wSeconds = date.seconds;
+	}
+	if (dMicroseconds)
+	{
+		*dMicroseconds = date.microseconds;
+	}
+	return (uint64)time;
 }
 #endif

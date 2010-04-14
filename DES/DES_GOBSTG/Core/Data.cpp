@@ -4,6 +4,10 @@
 #include "../../../src/hge/HGEExport.h"
 #include "../Header/ConstResource.h"
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 Data Data::data;
 
 Data::Data()
@@ -84,7 +88,8 @@ char * Data::translateSection(DWORD sec)
 	{
 		char buffer[M_STRITOAMAX];
 		strcat(transbufs, "_");
-		strcat(transbufs, itoa((sec & ~DATASBINMASK_NUM), buffer, 10));
+		sprintf(buffer, "%d", (sec & ~DATASBINMASK_NUM));
+		strcat(transbufs, buffer);
 	}
 	return transbufs;
 }
@@ -104,7 +109,8 @@ char * Data::translateName(DWORD name)
 	{
 		char buffer[M_STRITOAMAX];
 		strcat(transbufn, "_");
-		strcat(transbufn, itoa((name & ~DATASBINMASK_NUM), buffer, 10));
+		sprintf(buffer, "%d", (name & ~DATASBINMASK_NUM));
+		strcat(transbufn, buffer);
 	}
 	return transbufn;
 }
@@ -112,54 +118,6 @@ char * Data::translateName(DWORD name)
 DWORD Data::sLinkType( DWORD type)
 {
 	return dataMap[type].binname;
-}
-
-DWORD Data::sLinkDiff(DWORD sec, BYTE diff)
-{
-	switch(diff)
-	{
-	case M_DIFFI_EASY:
-		sec &= DATASBINMASK_DIFF;
-		sec |= dataMap[DATATDIFF_E].binname;
-		break;
-	case M_DIFFI_NORMAL:
-		sec &= DATASBINMASK_DIFF;
-		sec |= dataMap[DATATDIFF_N].binname;
-		break;
-	case M_DIFFI_HARD:
-		sec &= DATASBINMASK_DIFF;
-		sec |= dataMap[DATATDIFF_H].binname;
-		break;
-	case M_DIFFI_DESTINY:
-		sec &= DATASBINMASK_DIFF;
-		sec |= dataMap[DATATDIFF_D].binname;
-		break;
-	case M_DIFFI_EXTRA_1:
-		sec &= DATASBINMASK_DIFF;
-		sec |= dataMap[DATATDIFF_X1].binname;
-		break;
-	case M_DIFFI_EXTRA_2:
-		sec &= DATASBINMASK_DIFF;
-		sec |= dataMap[DATATDIFF_X2].binname;
-		break;
-	case M_DIFFI_EXTRA_3:
-		sec &= DATASBINMASK_DIFF;
-		sec |= dataMap[DATATDIFF_X3].binname;
-		break;
-	case M_DIFFI_EXTRA_4:
-		sec &= DATASBINMASK_DIFF;
-		sec |= dataMap[DATATDIFF_X4].binname;
-		break;
-	case M_DIFFI_EXTRA_5:
-		sec &= DATASBINMASK_DIFF;
-		sec |= dataMap[DATATDIFF_X5].binname;
-		break;
-	case M_DIFFI_EXTRA_6:
-		sec &= DATASBINMASK_DIFF;
-		sec |= dataMap[DATATDIFF_X6].binname;
-		break;
-	}
-	return sec;
 }
 
 DWORD Data::sLinkNum(DWORD sec, DWORD num)
@@ -189,7 +147,8 @@ void Data::raSetIndi(int sno, WORD _indi)
 {
 	indi[sno] = _indi;
 }
-*/
+*//*
+
 int Data::getSpellNumber(int sno)
 {
 	return BResource::res.spelldata[sno].spellnumber;
@@ -217,6 +176,7 @@ char * Data::getSpellUserEName(int sno)
 	strcpy(buf, getEnemyEName(BResource::res.spelldata[sno].userID));
 	return buf;
 }
+*/
 
 char * Data::getEnemyName(int type)
 {
@@ -224,7 +184,7 @@ char * Data::getEnemyName(int type)
 	{
 		return NULL;
 	}
-	return BResource::res.enemydata[type].name;
+	return BResource::pbres->enemydata[type].name;
 }
 
 char * Data::getEnemyEName(int type)
@@ -233,7 +193,7 @@ char * Data::getEnemyEName(int type)
 	{
 		return NULL;
 	}
-	return BResource::res.enemydata[type].ename;
+	return BResource::pbres->enemydata[type].ename;
 }
 
 char * Data::getPlayerName(int type)
@@ -242,7 +202,7 @@ char * Data::getPlayerName(int type)
 	{
 		return NULL;
 	}
-	return BResource::res.playerdata[type].name;
+	return BResource::pbres->playerdata[type].name;
 }
 
 char * Data::getPlayerEName(int type)
@@ -251,53 +211,7 @@ char * Data::getPlayerEName(int type)
 	{
 		return NULL;
 	}
-	return BResource::res.playerdata[type].ename;
-}
-
-void Data::MoveDown(DWORD sec, BYTE i)
-{
-	DWORD secS;
-	DWORD secD;
-
-	secS = sLinkNum(sec, i);
-	secD = sLinkNum(sec, i+1);
-
-	lWrite(DATA_BINFILE, secD, nLinkType(DATAN_SCORE), lRead(DATA_BINFILE, secS, nLinkType(DATAN_SCORE), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_LASTSTAGE), iRead(DATA_BINFILE, secS, nLinkType(DATAN_LASTSTAGE), 0));
-	sWrite(DATA_BINFILE, secD, nLinkType(DATAN_USERNAME), sRead(DATA_BINFILE, secS, nLinkType(DATAN_USERNAME), RESCONFIGDEFAULT_USERNAME));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_TIME_YEAR), iRead(DATA_BINFILE, secS, nLinkType(DATAN_TIME_YEAR), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_TIME_MONTH), iRead(DATA_BINFILE, secS, nLinkType(DATAN_TIME_MONTH), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_TIME_DAY), iRead(DATA_BINFILE, secS, nLinkType(DATAN_TIME_DAY), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_TIME_HOUR), iRead(DATA_BINFILE, secS, nLinkType(DATAN_TIME_HOUR), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_TIME_MINUTE), iRead(DATA_BINFILE, secS, nLinkType(DATAN_TIME_MINUTE), 0));
-	fWrite(DATA_BINFILE, secD, nLinkType(DATAN_LOST), fRead(DATA_BINFILE, secS, nLinkType(DATAN_LOST), 0));
-	fWrite(DATA_BINFILE, secD, nLinkType(DATAN_BORDERRATE), fRead(DATA_BINFILE, secS, nLinkType(DATAN_BORDERRATE), 0));
-	fWrite(DATA_BINFILE, secD, nLinkType(DATAN_FASTRATE), fRead(DATA_BINFILE, secS, nLinkType(DATAN_FASTRATE), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_ALLTIME), iRead(DATA_BINFILE, secS, nLinkType(DATAN_ALLTIME), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_SPELLGET), iRead(DATA_BINFILE, secS, nLinkType(DATAN_SPELLGET), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_MAXPLAYER), iRead(DATA_BINFILE, secS, nLinkType(DATAN_MAXPLAYER), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_POINT), iRead(DATA_BINFILE, secS, nLinkType(DATAN_POINT), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_FAITH), iRead(DATA_BINFILE, secS, nLinkType(DATAN_FAITH), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_MISS), iRead(DATA_BINFILE, secS, nLinkType(DATAN_MISS), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_BOMB), iRead(DATA_BINFILE, secS, nLinkType(DATAN_BOMB), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_CONTINUE), iRead(DATA_BINFILE, secS, nLinkType(DATAN_CONTINUE), 0));
-	iWrite(DATA_BINFILE, secD, nLinkType(DATAN_PAUSE), iRead(DATA_BINFILE, secS, nLinkType(DATAN_PAUSE), 0));
-
-	DWORD name;
-	name = nLinkType(DATAN_CHARA);
-	for (int j=0; j<M_PL_ONESETPLAYER; j++)
-	{
-		name = nLinkNum(name, j+1);
-		iWrite(DATA_BINFILE, secD, name, iRead(DATA_BINFILE, secS, name, 0));
-	}
-	/*
-	name = nLinkType(DATAN_GETSPELL);
-	for (int j=0; j<M_GETSPELLMAX; j++)
-	{
-		name = nLinkNum(name, j+1);
-		iWrite(DATA_BINFILE, secD, name, iRead(DATA_BINFILE, secS, name, 0));
-	}
-	*/
+	return BResource::pbres->playerdata[type].ename;
 }
 
 BYTE * Data::CreateMemHeader(BYTE type)
@@ -312,7 +226,8 @@ BYTE * Data::CreateMemHeader(BYTE type)
 	strcat(buffer, "]\r\n");
 	strcat(buffer, translateName(nLinkType(DATAN_GAMEVERSION)));
 	strcat(buffer, "=");
-	strcat(buffer, itoa(GAME_VERSION, tbuff, 10));
+	sprintf(tbuff, "%d", GAME_VERSION);
+	strcat(buffer, tbuff);
 	strcat(buffer, "\r\n");
 	strcat(buffer, translateName(nLinkType(DATAN_SIGNATURE)));
 	strcat(buffer, "=");
@@ -320,7 +235,8 @@ BYTE * Data::CreateMemHeader(BYTE type)
 	strcat(buffer, "\r\n");
 	strcat(buffer, translateName(nLinkType(DATAN_FILETYPE)));
 	strcat(buffer, "=");
-	strcat(buffer, itoa(type, tbuff, 10));
+	sprintf(tbuff, "%d", type);
+	strcat(buffer, tbuff);
 	strcat(buffer, "\r\n");
 
 	memcpy(memheader, buffer, strlen(buffer));
@@ -425,14 +341,11 @@ bool Data::Init(BYTE type)
 		return true;
 	}
 
-	SYSTEMTIME systime;
-	FILETIME filetime;
-
 	getFile(type);
 	if(!nowfilename)
 		return false;
 
-	DeleteFile(nowfilename);
+	io_fdelete(hge->Resource_MakePath(nowfilename));
 
 	if(type == DATA_BINFILE)
 		bin.clear();
@@ -510,12 +423,9 @@ bool Data::Init(BYTE type)
 
 		hge->Resource_CreatePack(nowfilename, password, &memfile, NULL);
 
-		GetLocalTime(&systime);
-		SystemTimeToFileTime(&systime, &filetime);
 		iWrite(type, sLinkType(DATAS_HEADER), nLinkType(DATAN_GAMEVERSION), GAME_VERSION);
 		sWrite(type, sLinkType(DATAS_HEADER), nLinkType(DATAN_SIGNATURE), GAME_SIGNATURE);
 		iWrite(type, sLinkType(DATAS_HEADER), nLinkType(DATAN_FILETYPE), type);
-		lWrite(DATA_BINFILE, sLinkType(DATAS_TOTAL), nLinkType(DATAN_FIRSTRUNTIME), (((LONGLONG)filetime.dwHighDateTime)<<32)|filetime.dwLowDateTime);
 	}
 #ifdef __DEBUG
 	HGELOG("Succeeded in rebuilding Data File %s.", nowfilename);
@@ -928,9 +838,13 @@ bool Data::iWrite(BYTE type, DWORD section, DWORD name, int value)
 		}
 		else
 		{
+#ifdef WIN32
 			sprintf(buf, "%d", value);
 			if(WritePrivateProfileString(translateSection(section), translateName(name), buf, nowfilename))
 				return true;
+#else
+			return true;
+#endif
 		}
 	}
 	return false;
@@ -946,10 +860,12 @@ int Data::iRead(BYTE type, DWORD section, DWORD name, int def_val)
 		}
 		else
 		{
+#ifdef WIN32
 			if(GetPrivateProfileString(translateSection(section), translateName(name), "", buf, sizeof(buf), nowfilename))
 			{
 				return atoi(buf);
 			}
+#endif
 		}
 	}
 	return def_val;
@@ -966,9 +882,13 @@ bool Data::lWrite(BYTE type, DWORD section, DWORD name, LONGLONG value)
 		}
 		else
 		{
+#ifdef WIN32
 			_i64toa(value, buf, 10);
 			if(WritePrivateProfileString(translateSection(section), translateName(name), buf, nowfilename))
 				return true;
+#else
+			return true;
+#endif
 		}
 	}
 	return false;
@@ -984,10 +904,12 @@ LONGLONG Data::lRead(BYTE type, DWORD section, DWORD name, LONGLONG def_val)
 		}
 		else
 		{
+#ifdef WIN32
 			if(GetPrivateProfileString(translateSection(section), translateName(name), "", buf, sizeof(buf), nowfilename))
 			{
 				return _atoi64(buf);
 			}
+#endif
 		}
 	}
 	return def_val;
@@ -1004,9 +926,13 @@ bool Data::fWrite(BYTE type, DWORD section, DWORD name, float value)
 		}
 		else
 		{
+#ifdef WIN32
 			sprintf(buf, "%f", value);
 			if(WritePrivateProfileString(translateSection(section), translateName(name), buf, nowfilename))
 				return true;
+#else
+			return true;
+#endif
 		}
 	}
 	return false;
@@ -1022,10 +948,12 @@ float Data::fRead(BYTE type, DWORD section, DWORD name, float def_val)
 		}
 		else
 		{
+#ifdef WIN32
 			if(GetPrivateProfileString(translateSection(section), translateName(name), "", buf, sizeof(buf), nowfilename))
 			{
 				return float(atof(buf));
 			}
+#endif
 		}
 	}
 	return def_val;
@@ -1042,8 +970,12 @@ bool Data::sWrite(BYTE type, DWORD section, DWORD name, const char * value)
 		}
 		else
 		{
+#ifdef WIN32
 			if(WritePrivateProfileString(translateSection(section), translateName(name), value, nowfilename))
 				return true;
+#else
+			return true;
+#endif
 		}
 	}
 	return false;
@@ -1059,7 +991,9 @@ char * Data::sRead(BYTE type, DWORD section, DWORD name, const char * def_val)
 		}
 		else
 		{
+#ifdef WIN32
 			GetPrivateProfileString(translateSection(section), translateName(name), def_val, buf, sizeof(buf), nowfilename);
+#endif
 		}
 	}
 	else
@@ -1072,7 +1006,7 @@ bool Data::SetEffectSystemResourceName(int effi, const char * filename)
 {
 	if(effi < 0 || effi >= EFFECTSYSTYPEMAX)
 		return false;
-	strcpy(BResource::res.resdata.effectsysfilename[effi], filename);
+	strcpy(BResource::pbres->resdata.effectsysfilename[effi], filename);
 	FILE * file = checkTableFile(DATA_EFFECTTABLEDEFINE);
 	if (file == NULL)
 	{
@@ -1093,9 +1027,9 @@ bool Data::SetEffectSystemResourceName(int effi, const char * filename)
 	fprintf(file, "%s\t%s\r\n", comment[0], comment[1]);
 	for (int i=0; i<EFFECTSYSTYPEMAX; i++)
 	{
-		if (strlen(BResource::res.resdata.effectsysfilename[i]))
+		if (strlen(BResource::pbres->resdata.effectsysfilename[i]))
 		{
-			fprintf(file, "%d\t%s\r\n", i, BResource::res.resdata.effectsysfilename[i]);
+			fprintf(file, "%d\t%s\r\n", i, BResource::pbres->resdata.effectsysfilename[i]);
 		}
 	}
 	fclose(file);
@@ -1119,11 +1053,11 @@ bool Data::GetEffectSystemResourceName(int effi, char * filename)
 {
 	if(!filename || effi < 0 || effi >= EFFECTSYSTYPEMAX)
 		return false;
-	if (!strlen(BResource::res.resdata.effectsysfilename[effi]))
+	if (!strlen(BResource::pbres->resdata.effectsysfilename[effi]))
 	{
 		return false;
 	}
-	strcpy(filename, BResource::res.resdata.effectsysfilename[effi]);
+	strcpy(filename, BResource::pbres->resdata.effectsysfilename[effi]);
 	/*
 	DWORD sec = sLinkType(RESDATAS_EFFECTSYS);
 	DWORD name = nLinkNum(nLinkType(RESDATAN_TYPE), effi+1);
@@ -1135,8 +1069,9 @@ bool Data::GetEffectSystemResourceName(int effi, char * filename)
 	*/
 	return true;
 }
+/*
 
-int Data::nMeet(int sno, bool bSpell /* = false */)
+int Data::nMeet(int sno, bool bSpell / * = false * /)
 {
 	DWORD sec;
 	sec = sLinkType(DATAS_SPELL);
@@ -1151,7 +1086,7 @@ int Data::nMeet(int sno, bool bSpell /* = false */)
 	}
 }
 
-int Data::nGet(int sno, bool bSpell /* = false */)
+int Data::nGet(int sno, bool bSpell / * = false * /)
 {
 	DWORD sec;
 	sec = sLinkType(DATAS_SPELL);
@@ -1166,7 +1101,7 @@ int Data::nGet(int sno, bool bSpell /* = false */)
 	}
 }
 
-LONGLONG Data::nHighScore(int sno, BYTE difflv, bool bSpell /* = false */, bool bPractice /* = false */)
+LONGLONG Data::nHighScore(int sno, BYTE difflv, bool bSpell / * = false * /, bool bPractice / * = false * /)
 {
 	DWORD sec;
 	if(bSpell)
@@ -1200,23 +1135,5 @@ int Data::nTryStageTime(int stage, BYTE difflv)
 	sec = sLinkNum(sec, stage);
 
 	return iRead(DATA_BINFILE, sec, nLinkType(DATAN_TRYTIME), 0);
-}
+}*/
 
-LONGLONG Data::getTotalRunTime()
-{
-	LONGLONG firstruntime = lRead(DATA_BINFILE, sLinkType(DATAS_TOTAL), nLinkType(DATAN_FIRSTRUNTIME), 0);
-	FILETIME nowfiletime;
-	SYSTEMTIME nowsystemtime;
-	LONGLONG tlnowtime;
-	GetLocalTime(&nowsystemtime);
-	SystemTimeToFileTime(&nowsystemtime, &nowfiletime);
-	tlnowtime = (((LONGLONG)nowfiletime.dwHighDateTime)<<32) | nowfiletime.dwLowDateTime;
-
-	if (!firstruntime)
-	{
-		lWrite(DATA_BINFILE, sLinkType(DATAS_TOTAL), nLinkType(DATAN_FIRSTRUNTIME), tlnowtime);
-		firstruntime = tlnowtime;
-	}
-
-	return (tlnowtime - firstruntime) / 10000000;
-}

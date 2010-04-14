@@ -75,10 +75,6 @@ public:
 	static int LuaFn_Global_HSVA(LuaState * ls);
 	static int LuaFn_Global_GetARGB(LuaState * ls);
 	static int LuaFn_Global_SetARGB(LuaState * ls);
-	static int LuaFn_Global_GetLocalTime(LuaState * ls);
-	static int LuaFn_Global_GetClipBoard(LuaState * ls);
-	static int LuaFn_Global_GetPrivateProfileString(LuaState * ls);
-	static int LuaFn_Global_WritePrivateProfileString(LuaState * ls);
 	static int LuaFn_Global_MessageBox(LuaState * ls);
 
 	static int LuaFn_LuaState_DoFile(LuaState * ls);
@@ -93,7 +89,6 @@ public:
 	static int LuaFn_LuaState_Not(LuaState * ls);
 	static int LuaFn_LuaState_LShift(LuaState * ls);
 	static int LuaFn_LuaState_RShift(LuaState * ls);
-	static int LuaFn_LuaState_ReadLineInContent(LuaState * ls);
 
 	/* HGE Help */
 

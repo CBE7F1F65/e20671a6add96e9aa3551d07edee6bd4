@@ -6,6 +6,10 @@
 #include "../Header/ConstResource.h"
 #include "../../../src/hge/HGEExport.h"
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 LuaStateOwner Export_Lua::state;
 HTEXTURE * Export_Lua::texset = NULL;
 
@@ -185,6 +189,7 @@ int Export_Lua::PackLuaFiles(LuaState * ls)
 	int filecount = 0;
 	bool bUseUnpackedFiles = CheckUseUnpackedFiles(ls);
 	LuaObject _obj = ls->GetGlobals().GetByName(DEFAULT_LUAFILETABLENAME);
+
 	FILE * tempoutputfile = fopen(hge->Resource_MakePath(DEFAULT_TEMPLUAFILE), "wb");
 	//	LoadLuaFile(ls, DEFAULT_LUACONSTFILE, bUseUnpackedFiles, &filecount, tempoutputfile);
 	for (int i=1; i<=_obj.GetCount(); i++)
@@ -207,7 +212,8 @@ int Export_Lua::PackLuaFiles(LuaState * ls)
 	iret = ls->Dump(writer, (void *)outputfile, 1, '=');
 	fclose(outputfile);
 
-	DeleteFile(hge->Resource_MakePath(DEFAULT_TEMPLUAFILE));
+	io_fdelete(hge->Resource_MakePath(DEFAULT_TEMPLUAFILE));
+//	DeleteFile(hge->Resource_MakePath(DEFAULT_TEMPLUAFILE));
 	if (iret != 0)
 	{
 		ShowError(LUAERROR_DUMPINGSCRIPT, ls->GetError(iret));
@@ -256,7 +262,8 @@ int Export_Lua::LoadPackedLuaFiles(LuaState * ls)
 		ShowError(LUAERROR_LOADINGSCRIPT, ls->GetError(iret));
 	}
 	hge->Resource_Free(content);
-	DeleteFile(hge->Resource_MakePath(DEFAULT_BINLUAFILE));
+	io_fdelete(hge->Resource_MakePath(DEFAULT_BINLUAFILE));
+//	DeleteFile(hge->Resource_MakePath(DEFAULT_BINLUAFILE));
 	return iret;
 }
 
@@ -280,7 +287,9 @@ void Export_Lua::ShowError(int errortype, const char * err)
 	default:
 		strcpy(msgtitle, "Error!");
 	}
+#ifdef WIN32
 	MessageBox(NULL, err, msgtitle, MB_OK);
+#endif
 	if (!hge->System_GetState(HGE_LOGFILE) || !strlen(hge->System_GetState(HGE_LOGFILE)))
 	{
 		hge->System_SetState(HGE_LOGFILE, LOG_STR_FILENAME);
