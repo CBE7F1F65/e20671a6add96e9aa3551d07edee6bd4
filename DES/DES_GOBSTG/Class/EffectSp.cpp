@@ -219,7 +219,7 @@ void EffectSp::valueSet(int _setID, WORD _ID, int _siid, float _x, float _y, int
 	exist = true;
 	headangleadd = 0;
 	animation = 0;
-	animationinterval = 0;
+	animationinterval = 1;
 
 	colorSet(0xffffffff);
 }
@@ -227,7 +227,10 @@ void EffectSp::valueSet(int _setID, WORD _ID, int _siid, float _x, float _y, int
 void EffectSp::animationSet(BYTE _animation, BYTE _animationinterval)
 {
 	animation = _animation;
-	animationinterval = _animationinterval;
+	if (_animationinterval)
+	{
+		animationinterval = _animationinterval;
+	}
 }
 
 void EffectSp::colorSet(DWORD color, int _blend)

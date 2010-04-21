@@ -12,7 +12,7 @@ void Process::frameStart()
 	{
 		playing = true;
 		nowInput = GameInput::GetNowInput();
-		Replay::rpy->WriteInput(nowInput);
+//		Replay::rpy->WriteInput(nowInput);
 	}
 	else
 	{

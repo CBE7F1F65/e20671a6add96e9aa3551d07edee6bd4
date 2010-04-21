@@ -39,13 +39,14 @@ bool FrameFunc()
 	return false;
 }
 
-bool ExitFunc()
+void ExitFunc()
 {
-	return true;
+	Process::mp.Release();
 }
 
 int GameStart(int seed=0)
 {
+	atexit(ExitFunc);
 #ifndef WIN32
 	initExceptionHandler();
 #endif
@@ -79,7 +80,11 @@ int GameStart(int seed=0)
 
 //int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int)
 extern "C"
+#ifdef WIN32
 int main(int argc, char* argv[])
+#else
+int NGE_main(int argc, char* argv[])
+#endif
 {
 	GameStart();
 	Process::mp.Release();	

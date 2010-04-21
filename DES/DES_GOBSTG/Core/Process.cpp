@@ -1,3 +1,7 @@
+#ifdef WIN32
+#include <vld.h>
+#endif
+
 #include "../Header/processPrep.h"
 #include "../Header/GameInput.h"
 

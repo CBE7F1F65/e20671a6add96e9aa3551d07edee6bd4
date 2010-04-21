@@ -116,12 +116,12 @@ public:
 	static replayInfo rpyinfo;
 	static int password;
 
-/*
-	static D3DXMATRIX matView2DMode;
-	static D3DXMATRIX matProj2DMode;
-	static D3DXMATRIX matView[M_PL_MATCHMAXPLAYER];
-	static D3DXMATRIX matProj[M_PL_MATCHMAXPLAYER];
-	*/
+
+	static HGEMATRIX matView2DMode;
+	static HGEMATRIX matProj2DMode;
+	static HGEMATRIX matView[M_PL_MATCHMAXPLAYER];
+	static HGEMATRIX matProj[M_PL_MATCHMAXPLAYER];
+	
 	static hge3DPoint ptfar;
 };
 

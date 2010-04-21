@@ -295,7 +295,7 @@ void BGLayer::SetFlag(BYTE _flag, int maxtime)
 		return;
 	}
 	flag = _flag;
-	if (maxtime < 0)
+	if (maxtime <= 0)
 	{
 		switch (flag & BG_FLAGMASK)
 		{

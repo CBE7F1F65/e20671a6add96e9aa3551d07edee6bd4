@@ -138,7 +138,14 @@ void Replay::Fill()
 	rpyinfo.hour = wHour;
 	rpyinfo.minute = wMinute;
 
-	rpyinfo.lost = Player::lostStack / Process::mp.framecounter;
+	if (Process::mp.framecounter)
+	{
+		rpyinfo.lost = Player::lostStack / Process::mp.framecounter;
+	}
+	else
+	{
+		rpyinfo.lost = 0;
+	}
 	rpyinfo.matchmode = Process::mp.matchmode;
 	rpyinfo.offset = replayIndex;
 

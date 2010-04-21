@@ -199,7 +199,6 @@ void Effectsys::SetColorMask(DWORD color)
 
 void Effectsys::Render()
 {
-	return;
 	BYTE renderflag = Export::GetRenderFlagByPlayerIndex(playerindex);
 	eff.Render(Export::GetFarPoint(renderflag), (alpha<<24)|diffuse);
 }
@@ -214,7 +213,6 @@ void Effectsys::MoveTo(float _x, float _y, float _z, bool bForce)
 
 void Effectsys::action(bool byself)
 {
-	return;
 	timer++;
 
 	if (lifetime > 0)

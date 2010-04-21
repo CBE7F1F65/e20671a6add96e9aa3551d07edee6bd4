@@ -670,7 +670,7 @@ void Bullet::action()
 				{
 					hscale -= 0.0625f;
 				}
-				else
+				else if(fadeinTime > 0)
 				{
 					hscale += 1.0f / fadeinTime;
 				}
@@ -822,7 +822,7 @@ bool Bullet::isInRect(float aimx, float aimy, float r, int nextstep)
 	float rotSin;
 	if (tbd->collisiontype ==  BULLET_COLLISION_ELLIPSE || tbd->collisiontype == BULLET_COLLISION_RECT)
 	{
-		if (!speed)
+		if (speed)
 		{
 			if (!xplus && !yplus)
 			{

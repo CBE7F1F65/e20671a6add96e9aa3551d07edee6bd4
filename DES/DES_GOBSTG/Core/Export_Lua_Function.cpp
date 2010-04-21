@@ -123,14 +123,14 @@ DWORD Export_Lua::_LuaHelper_GetDWORD(LuaObject * obj)
 	else
 	{
 		lua_Number lnval = obj->GetNumber();
-		dret = CUINTN(lnval);
+		dret = /*CUINTN*/(lnval);
 	}
 	return dret;
 }
 
 void Export_Lua::_LuaHelper_PushDWORD(LuaState * ls, DWORD dval)
 {
-	lua_Number lnval = CDOUBLEN(dval);
+	lua_Number lnval = /*CDOUBLEN*/(dval);
 	ls->PushNumber(lnval);
 }
 
@@ -338,11 +338,25 @@ int Export_Lua::LuaFn_Global_Calculate(LuaState * ls)
 	case '/':
 		if (buseq)
 		{
-			qret = q1 / q2;
+			if (q2)
+			{
+				qret = q1 / q2;
+			}
+			else
+			{
+				qret = 0;
+			}
 		}
 		else
 		{
-			lret = l1 / l2;
+			if (l2)
+			{
+				lret = l1 / l2;
+			}
+			else
+			{
+				lret = 0;
+			}
 		}
 		break;
 	case '%':

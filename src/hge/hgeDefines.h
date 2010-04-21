@@ -90,6 +90,24 @@ typedef s64 LONGLONG;
 // Texture Offset
 #define HGE_TEXTUREOFFSET	0.0f
 
+typedef struct _HGEMATRIX {
+	union {
+		struct {
+			float        _11, _12, _13, _14;
+			float        _21, _22, _23, _24;
+			float        _31, _32, _33, _34;
+			float        _41, _42, _43, _44;
+
+		};
+		float m[4][4];
+	};
+} HGEMATRIX;
+
+#define HGEMATRIX_VIEW			0
+#define HGEMATRIX_MODEL			1
+#define HGEMATRIX_PROJECTION	2
+#define HGEMATRIX_TEXTURE		3
+
 /*
 ** HGE Handle types
 */

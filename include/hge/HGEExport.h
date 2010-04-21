@@ -8,6 +8,10 @@ extern "C"
 #include "../helper/dictionary.h"
 };
 
+#ifdef WIN32
+#include <Windows.h>
+#endif
+
 #define ZLIB_USEPSW
 
 class HGEExport
@@ -118,8 +122,10 @@ public:
 	void	CALL		Gfx_RenderLine(float x1, float y1, float x2, float y2, DWORD color=0xFFFFFFFF, float z=0) ;		
 	void	CALL		Gfx_RenderTriple(const hgeTriple *triple) ;		
 	void	CALL		Gfx_RenderQuad(const hgeQuad *quad) ;
-	void	CALL		Gfx_SetClipping(int x=0, int y=0, int w=0, int h=0) ;		
-	void	CALL		Gfx_SetTransform(float x=0, float y=0, float dx=0, float dy=0, float rot=0, float hscale=0, float vscale=0) ;
+	void	CALL		Gfx_SetClipping(int x=0, int y=0, int w=0, int h=0) ;
+	void	CALL		_Gfx_TanslateTransformState(int * State, bool bGet=false);
+	void	CALL	Gfx_SetTransform(int State, const HGEMATRIX * pMatrix);
+	HGEMATRIX CALL	Gfx_GetTransform(int State);
 						
 	HTEXTURE	CALL	Texture_Create(int width, int height) ;			
 	HTEXTURE	CALL	Texture_Load(const char *filename, DWORD size=0, bool bMipmap=false) ;			
@@ -173,6 +179,10 @@ public:
 	BYTE	lastKeyState[16];
 	float	lAnalogx;
 	float	lAnalogy;
+#ifdef WIN32
+	HANDLE				hSearch;
+	WIN32_FIND_DATA		SearchData;
+#endif
 };
 extern HGEExport _hge;
 extern HGEExport * hge;

@@ -14,7 +14,7 @@ static char btn_analog[4] = {0};
 #include <pspkernel.h>
 #include <pspdebug.h>
 #include <pspctrl.h>
-#define printf pspDebugScreenPrintf
+//#define printf pspDebugScreenPrintf
 #endif
 
 static void btn_down_default(int keycode);
@@ -234,9 +234,10 @@ key_states nge_keymap[]={
 	{0,0,PSP_CTRL_SELECT,10},//10
 	{0,0,PSP_CTRL_START,11},//11
 	{0,0,PSP_CTRL_HOME,12},//12
-	{0,0,PSP_CTRL_HOLD,13}//13
+	{0,0,PSP_CTRL_HOLD,13},//13
+	{0,0,PSP_CTRL_NOTE,14}//14
 };
-int key_num = 14;//sizeof(nge_keymap)/sizeof(key_states);
+int key_num = 15;//sizeof(nge_keymap)/sizeof(key_states);
 
 SceCtrlData pad;
 

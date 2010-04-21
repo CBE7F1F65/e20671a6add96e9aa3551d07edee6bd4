@@ -181,10 +181,13 @@ bool GameInput::ReleaseInput()
 
 bool GameInput::UpdateInput(bool startstate)
 {
-	for (int j=0; j<M_PL_MATCHMAXPLAYER; j++)
+	int j=0;
+	for (j=0; j<M_PL_MATCHMAXPLAYER; j++)
 	{
 		gameinput[j].lastInput = gameinput[j].input;
 		gameinput[j].input = 0;
+	}
+	j = 0;
 		for (int i=0; i<GAMEINPUTKEYMAX; i++)
 		{
 			gameinput[j].input |= (hge->Input_GetDIKey(gameinput[j].keyKey[i])?1:0)<<i;
@@ -196,7 +199,7 @@ bool GameInput::UpdateInput(bool startstate)
 				gameinput[j].input |= 1<<KSI_DRAIN;
 			}
 		}
-	}
+	
 
 	//
 	SyncControlInputSelf();

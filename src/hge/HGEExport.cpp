@@ -1,3 +1,8 @@
+extern "C"
+{
+#include <gl/glut.h>
+#include <GL/gl.h>
+}
 #include "HGEExport.h"
 #include "zlib/zip.h"
 #include "zlib/unzip.h"
@@ -11,6 +16,12 @@ extern "C"
 #include "../nge_graphics.h"
 };
 //#include <stdlib.h>
+
+#ifndef WIN32
+#include <pspgu.h>
+#include <pspgum.h>
+#endif
+
 
 unsigned int g_seed=0;
 unsigned int g_seed_self=0;
@@ -61,6 +72,9 @@ void CALL HGEExport::Init(const char * apppath)
 	memset(lastKeyState, 0, sizeof(BYTE)*16);
 	lAnalogx = 0;
 	lAnalogy = 0;
+#ifdef WIN32
+	hSearch = 0;
+#endif
 }
 
 void CALL HGEExport::Release()
@@ -70,6 +84,13 @@ void CALL HGEExport::Release()
 		dictionary_del(inidic);
 		inidic = NULL;
 	}
+#ifdef WIN32
+	if (hSearch)
+	{
+		FindClose(hSearch);
+		hSearch = 0;
+	}
+#endif
 }
 
 char * CALL HGEExport::System_GetErrorMessage()
@@ -664,16 +685,68 @@ char * CALL HGEExport::Resource_MakePath(const char * filename)
 
 char * CALL HGEExport::Resource_EnumFiles(const char *wildcard/* =0 */)
 {
+#ifdef WIN32
+	if(wildcard)
+	{
+		if(hSearch) { FindClose(hSearch); hSearch=0; }
+		hSearch=FindFirstFile(Resource_MakePath(wildcard), &SearchData);
+		if(hSearch==INVALID_HANDLE_VALUE) { hSearch=0; return 0; }
+
+		if(!(SearchData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) return SearchData.cFileName;
+		else return Resource_EnumFiles();
+	}
+	else
+	{
+		if(!hSearch) return 0;
+		for(;;)
+		{
+			if(!FindNextFile(hSearch, &SearchData))	{ FindClose(hSearch); hSearch=0; return 0; }
+			if(!(SearchData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) return SearchData.cFileName;
+		}
+	}
+#endif
 	return NULL;
 }
 
 char * CALL HGEExport::Resource_EnumFolders(const char *wildcard/* =0 */)
 {
+#ifdef WIN32
+	if(wildcard)
+	{
+		if(hSearch) { FindClose(hSearch); hSearch=0; }
+		hSearch=FindFirstFile(Resource_MakePath(wildcard), &SearchData);
+		if(hSearch==INVALID_HANDLE_VALUE) { hSearch=0; return 0; }
+
+		if((SearchData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
+			strcmp(SearchData.cFileName,".") && strcmp(SearchData.cFileName,".."))
+			return SearchData.cFileName;
+		else return Resource_EnumFolders();
+	}
+	else
+	{
+		if(!hSearch) return 0;
+		for(;;)
+		{
+			if(!FindNextFile(hSearch, &SearchData))	{ FindClose(hSearch); hSearch=0; return 0; }
+			if((SearchData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
+				strcmp(SearchData.cFileName,".") && strcmp(SearchData.cFileName,".."))
+				return SearchData.cFileName;
+		}
+	}
+#endif
 	return NULL;
 }
 
 void CALL HGEExport::Ini_SetInt(const char *section, const char *name, int value)
 {
+#ifdef WIN32
+	char buf[256];
+
+	if(szIniFile[0]) {
+		sprintf(buf,"%d",value);
+		WritePrivateProfileString(section, name, buf, szIniFile);
+	}
+#else
 	if (inidic)
 	{
 		char bufferstr[M_STRMAX];
@@ -682,10 +755,21 @@ void CALL HGEExport::Ini_SetInt(const char *section, const char *name, int value
 		sprintf(buffer, "%d", value);
 		iniparser_set(inidic, bufferstr, buffer);
 	}
+#endif
 }
 
 int CALL HGEExport::Ini_GetInt(const char *section, const char *name, int def_val)
 {
+#ifdef WIN32
+	char buf[256];
+
+	if(szIniFile[0]) {
+		if(GetPrivateProfileString(section, name, "", buf, sizeof(buf), szIniFile))
+		{ return atoi(buf); }
+		else { return def_val; }
+	}
+	return def_val;
+#else
 	int iret = def_val;
 	if (inidic)
 	{
@@ -694,10 +778,19 @@ int CALL HGEExport::Ini_GetInt(const char *section, const char *name, int def_va
 		iret = iniparser_getint(inidic, bufferstr, def_val);
 	}
 	return iret;
+#endif
 }
 
 void CALL HGEExport::Ini_SetFloat(const char *section, const char *name, float value)
 {
+#ifdef WIN32
+	char buf[256];
+
+	if(szIniFile[0]) {
+		sprintf(buf,"%f",value);
+		WritePrivateProfileString(section, name, buf, szIniFile);
+	}
+#else
 	if (inidic)
 	{
 		char bufferstr[M_STRMAX];
@@ -706,10 +799,21 @@ void CALL HGEExport::Ini_SetFloat(const char *section, const char *name, float v
 		sprintf(buffer, "%f", value);
 		iniparser_set(inidic, bufferstr, buffer);
 	}
+#endif
 }
 
 float CALL HGEExport::Ini_GetFloat(const char *section, const char *name, float def_val)
 {
+#ifdef WIN32
+	char buf[256];
+
+	if(szIniFile[0]) {
+		if(GetPrivateProfileString(section, name, "", buf, sizeof(buf), szIniFile))
+		{ return (float)atof(buf); }
+		else { return def_val; }
+	}
+	return def_val;
+#else
 	float fret = def_val;
 	if (inidic)
 	{
@@ -722,20 +826,30 @@ float CALL HGEExport::Ini_GetFloat(const char *section, const char *name, float 
 		fret = (float)atof(bufferret);
 	}
 	return fret;
+#endif
 }
 
 void CALL HGEExport::Ini_SetString(const char *section, const char *name, const char *value)
 {
+#ifdef WIN32
+	if(szIniFile[0]) WritePrivateProfileString(section, name, value, szIniFile);
+#else
 	if (inidic)
 	{
 		char bufferstr[M_STRMAX];
 		sprintf(bufferstr, "%s_%s", section, name);
 		iniparser_set(inidic, bufferstr, (char *)value);
 	}
+#endif
 }
 
 char * CALL HGEExport::Ini_GetString(const char *section, const char *name, const char *def_val)
 {
+#ifdef WIN32
+	if(szIniFile[0]) GetPrivateProfileString(section, name, def_val, szIniString, sizeof(szIniString), szIniFile);
+	else strcpy(szIniString, def_val);
+	return szIniString;
+#else
 	if (inidic)
 	{
 		char bufferstr[M_STRMAX];
@@ -747,6 +861,7 @@ char * CALL HGEExport::Ini_GetString(const char *section, const char *name, cons
 		strcpy(szIniString, def_val);
 	}
 	return szIniString;
+#endif
 }
 
 int CALL HGEExport::Random_Seed(int seed)
@@ -1087,24 +1202,108 @@ void	CALL HGEExport::		Gfx_RenderTriple(const hgeTriple *triple)
 
 void	CALL HGEExport::		Gfx_RenderQuad(const hgeQuad *quad)
 {
-	image_p texture = (image_p)quad->tex;
-	RenderQuad(texture,
-		quad->v[0].tx*texture->texw, quad->v[0].ty*texture->texh,
-		(quad->v[1].tx-quad->v[0].tx)*texture->texw, (quad->v[3].ty-quad->v[0].ty)*texture->texh,
-		quad->v[0].x/2, quad->v[0].y/2,
-		0.5, 0.5,
-		(float)(quad->blend)/10000.0f, quad->v[0].col
-		);
+	RenderHGEQuad(quad);
 }
 
 void	CALL HGEExport::		Gfx_SetClipping(int x/*=0*/, int y/*=0*/, int w/*=0*/, int h/*=0*/)
 {
-
+	SetClip(x, y, w, h);
 }
 
-void	CALL HGEExport::		Gfx_SetTransform(float x/* =0 */, float y/* =0 */, float dx/* =0 */, float dy/* =0 */, float rot/* =0 */, float hscale/* =0 */, float vscale/* =0 */)
+void CALL HGEExport::_Gfx_TanslateTransformState(int * State, bool bGet)
 {
+	if (!State)
+	{
+		return;
+	}
+	switch (*State)
+	{
+	case HGEMATRIX_VIEW:
+#ifdef WIN32
+		if (bGet)
+		{
+			*State = GL_MODELVIEW_MATRIX;
+		}
+		else
+		{
+			*State = GL_MODELVIEW;
+		}
+#else
+		*State = GU_VIEW;
+#endif
+		break;
+	case HGEMATRIX_MODEL:
+#ifdef WIN32
+		if (bGet)
+		{
+			*State = GL_MODELVIEW_MATRIX;
+		}
+		else
+		{
 
+			*State = GL_MODELVIEW;
+		}
+#else
+		*State = GU_MODEL;
+#endif
+		break;
+	case HGEMATRIX_PROJECTION:
+#ifdef WIN32
+		if (bGet)
+		{
+			*State = GL_PROJECTION_MATRIX;
+		}
+		else
+		{
+
+			*State = GL_PROJECTION;
+		}
+#else
+		*State = GU_PROJECTION;
+#endif
+		break;
+	case HGEMATRIX_TEXTURE:
+#ifdef WIN32
+		if (bGet)
+		{
+			*State = GL_TEXTURE_MATRIX;
+		}
+		else
+		{
+			*State = GL_TEXTURE;
+		}
+#else
+		*State = GU_TEXTURE;
+#endif
+		break;
+	}
+}
+
+void CALL HGEExport::Gfx_SetTransform(int State, const HGEMATRIX * pMatrix)
+{
+	_Gfx_TanslateTransformState(&State);
+#ifdef WIN32
+	glMatrixMode(State);
+	glLoadIdentity();
+	glMultMatrixf((float*)pMatrix);
+#else
+	sceGumMatrixMode(State);
+	sceGumLoadIdentity();
+	sceGumMultMatrix((ScePspFMatrix4*)pMatrix);
+#endif
+}
+
+HGEMATRIX CALL HGEExport::Gfx_GetTransform(int State)
+{
+	_Gfx_TanslateTransformState(&State, true);
+	HGEMATRIX mat;
+#ifdef WIN32
+	glGetFloatv(State, (float*)&mat);
+#else
+	sceGumMatrixMode(State);
+	sceGumStoreMatrix((ScePspFMatrix4*)&mat);
+#endif
+	return mat;
 }
 
 HTEXTURE	CALL HGEExport::Texture_Create(int width, int height)
@@ -1152,11 +1351,21 @@ void		CALL HGEExport::Texture_Free(HTEXTURE tex)
 
 int			CALL HGEExport::Texture_GetWidth(HTEXTURE tex, bool bOriginal/* =false */)
 {
+	if (tex)
+	{
+		image_p texture = (image_p)tex;
+		return texture->texw;
+	}
 	return 0;
 }
 
 int			CALL HGEExport::Texture_GetHeight(HTEXTURE tex, bool bOriginal/* =false */)
 {
+	if (tex)
+	{
+		image_p texture = (image_p)tex;
+		return texture->texh;
+	}
 	return 0;
 }
 

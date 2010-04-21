@@ -64,7 +64,7 @@ float SpriteItemManager::GetTexW(int index)
 {
 	if (index < 0 || index >= BResource::pbres->spritenumber)
 	{
-		return 0;
+		return 1;
 	}
 	return BResource::pbres->spritedata[index].tex_w;
 }
@@ -73,7 +73,7 @@ float SpriteItemManager::GetTexH(int index)
 {
 	if (index < 0 || index >= BResource::pbres->spritenumber)
 	{
-		return 0;
+		return 1;
 	}
 	return BResource::pbres->spritedata[index].tex_h;
 }

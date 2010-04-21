@@ -1229,43 +1229,6 @@ int Export_Lua_HGE::LuaFn_hge_Gfx_SetTransform(LuaState * ls)
 	if (argscount > 1 && args[2].IsTable())
 	{
 	}
-	else if (argscount > 0)
-	{
-		float x = 0;
-		float y = 0;
-		float dx = 0;
-		float dy = 0;
-		float rot = 0;
-		float hscale = 0;
-		float vscale = 0;
-
-		x = args[1].GetFloat();
-		if (argscount > 1)
-		{
-			y = args[2].GetFloat();
-			if (argscount > 2)
-			{
-				dx = args[3].GetFloat();
-				if (argscount > 3)
-				{
-					dy = args[4].GetFloat();
-					if (argscount > 4)
-					{
-						rot = args[5].GetFloat();
-						if (argscount > 5)
-						{
-							hscale = args[6].GetFloat();
-							if (argscount > 6)
-							{
-								vscale = args[7].GetFloat();
-							}
-						}
-					}
-				}
-			}
-		}
-		hge->Gfx_SetTransform(x, y, dx, dy, rot, hscale, vscale);
-	}
 	return 0;
 }
 

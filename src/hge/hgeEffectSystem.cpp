@@ -4,6 +4,8 @@
 #include "../nge_timer.h"
 #include "HGEExport.h"
 
+#include "hgevector.h"
+
 //HGE * hgeEffectSystem::hge = NULL;
 
 void hgeEffectSystem::InitEffectSystem()
@@ -231,7 +233,7 @@ void hgeEffectSystem::Render(hge3DPoint *ptfar, DWORD colormask)
 			hgeSprite * _sprite = emitterItem->emitter.sprite;
 			if (_sprite)
 			{
-				_sprite->SetColor((*(DWORD *)&(obj->color))&colormask);
+				_sprite->SetColor((/**(DWORD *)&*/(obj->color))&colormask);
 				_sprite->SetZ(obj->z, obj->z + obj->zStretch, obj->z + obj->zStretch, obj->z, ptfar);
 				_sprite->RenderEx(obj->x, obj->y, obj->fHeadDirection, obj->fScaleX, obj->fScaleY);
 			}
@@ -450,6 +452,41 @@ void hgeEffectSystem::Update()
 			//Raditial & Tangential
 			if(obj->fSpeedRaditial || obj->fSpeedTangential)
 			{
+				hgeVector _obj3(obj->x, obj->y, obj->z);
+				hgeVector _ori3(x, y, z);
+				hgeVector _vec3 = _ori3 - _obj3;
+				_vec3.Normalize();
+				if (obj->fSpeedRaditial)
+				{
+					_obj3 += _vec3 * obj->fSpeedRaditial;
+				}
+				if(obj->fSpeedTangential)
+				{
+					float _x = 0.0f;
+					float _y = 0.0f;
+					float _z = 1.0f;
+					////////////////////////ROTATIONX////////////////////////
+					if(emitter->eei.fRotationX)
+					{
+						_y = sinf(emitter->eei.fRotationX);
+						_z = - cosf(emitter->eei.fRotationX);
+					}
+					////////////////////////ROTATIONY////////////////////////
+					if(emitter->eei.fRotationY)
+					{
+						_x = _z * sinf(emitter->eei.fRotationY);
+						_z = - _z * cosf(emitter->eei.fRotationY);
+					}
+					hgeVector _up(_x, _y, _z);
+					_vec3 = _vec3.Cross(&_up);
+					_vec3.Normalize();
+//					D3DXVec3Cross(&_vec3, &_vec3, &_up);
+//					D3DXVec3Normalize(&_vec3, &_vec3);
+					_obj3 += _vec3 * obj->fSpeedTangential;
+				}
+				obj->x = _obj3.x;
+				obj->y = _obj3.y;
+				obj->z = _obj3.z;
 				/*
 				D3DXVECTOR3 _obj3(obj->x, obj->y, obj->z);
 				D3DXVECTOR3 _ori3(x, y, z);
@@ -565,7 +602,7 @@ void hgeEffectSystem::UpdateValue(float * value, float * bufferValue, hgeEffectA
 	}
 }
 
-void hgeEffectSystem::UpdateColorValue(float * value, float * bufferValue, hgeEffectAffectorInfo * eai, int nAge)
+void hgeEffectSystem::UpdateColorValue(DWORD * value, DWORD * bufferValue, hgeEffectAffectorInfo * eai, int nAge)
 {
 	DWORD * col = (DWORD *)value;
 	DWORD * buffercol = (DWORD *)bufferValue;

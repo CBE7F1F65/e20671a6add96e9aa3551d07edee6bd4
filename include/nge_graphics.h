@@ -72,65 +72,6 @@ void DrawLine(float x1, float y1, float x2, float y2, int color,int dtype);
  */
 void DrawLineEx(pointf p1,pointf p2, int color,int dtype);
 /**
- * 画矩形线框的函数1，输入为位置和宽高
- *@param float dx,矩形左上角的x坐标
- *@param float dy,矩形左上角的y坐标
- *@param float width,矩形的宽
- *@param float height,矩形的高
- *@param int color,颜色与下面对应，例如下面用的5551，这里就用MAKE_RGBA5551
- *@param int dtype,显示模式，与上面的对应
- *@return 无
- */
-void DrawRect(float dx, float dy, float width, float height,int color,int dtype);
-/**
- * 画矩形线框的函数2，输入为矩形位置坐标
- *@param rectf rect,矩形位置坐标
- *@param int color,颜色与下面对应，例如下面用的5551，这里就用MAKE_RGBA5551
- *@param int dtype,显示模式，与上面的对应
- *@return 无
- */
-void DrawRectEx(rectf rect,int color,int dtype);
-/**
- * 画填充矩形的函数1，输入为位置和宽高
- *@param float dx,矩形左上角的x坐标
- *@param float dy,矩形左上角的y坐标
- *@param float width,矩形的宽
- *@param float height,矩形的高
- *@param int color,颜色与下面对应，例如下面用的5551，这里就用MAKE_RGBA5551
- *@param int dtype,显示模式，与上面的对应
- *@return 无
- */
-//void FillRect(float dx, float dy, float width, float height,int color,int dtype);
-/**
- * 画填充矩形的函数2，输入为矩形位置坐标
- *@param rectf rect,矩形位置坐标
- *@param int color,颜色与下面对应，例如下面用的5551，这里就用MAKE_RGBA5551
- *@param int dtype,显示模式，与上面的对应
- *@return 无
- */
-void FillRectEx(rectf rect,int color,int dtype);
-/**
- * 画填充渐变矩形的函数1，输入为位置和宽高
- *@param float dx,矩形左上角的x坐标
- *@param float dy,矩形左上角的y坐标
- *@param float width,矩形的宽
- *@param float height,矩形的高
- *@param int* colors,4个顶点的color,颜色与下面对应，例如下面用的5551，这里就用MAKE_RGBA5551
- *@param int dtype,显示模式，与上面的对应
- *@return 无
- */
-void FillRectGrad(float dx, float dy, float width, float height,int* colors,int dtype);
-/**
- * 画填充矩形的函数2，输入为矩形位置坐标
- *@param rectf rect,矩形位置坐标
- *@param int* colors,4个顶点的color,颜色与下面对应，例如下面用的5551，这里就用MAKE_RGBA5551
- *@param int dtype,显示模式，与上面的对应
- *@return 无
- */
-void FillRectGradEx(rectf rect,int* colors,int dtype);
-
-
-/**
  * 画图函数1，效率依次是ImageToScreen>DrawImage>DrawImageMask>RenderQuad;
  * sx,sy,sw,sh,构成待显示的图片范围，例如要显示一张图片200*200的图片的
  * 20，20到50宽50高的子图块，这里就填依次20,20,50,50。如果要显示原图,都填上0
@@ -156,49 +97,8 @@ void FillRectGradEx(rectf rect,int* colors,int dtype);
  *@param int mask,颜色遮罩
  *@return 无
  */
-void RenderQuad(image_p texture,float sx ,float sy ,float sw ,float sh ,float dx ,float dy ,float xscale  ,float yscale ,float angle ,int mask);
-/**
- * 画图函数2,sw,sh为0是画原图，dw，dh为0是显示sw和dh大小
- * 例子1:将200*200的图片tex显示在屏幕100，0处
- * DrawImage(tex,0,0,0,0,100,0,0,0);
- * 或者用严格方式：DrawImage(tex,0,0,200,200,100,0,200,200);
- *@param image_p texture,图片指针
- *@param float sx,图片x坐标
- *@param float sy,图片y坐标
- *@param float sw,图片宽
- *@param float sh,图片高
- *@param float dx,屏幕x坐标
- *@param float dy,屏幕y坐标
- *@param float dw,屏幕宽
- *@param float dh,屏幕高
- *@return 无
- */
-void DrawImage(image_p texture,float sx,float sy,float sw,float sh,float dx,float dy,float dw,float dh);
-/**
- * 画图函数3
- * 同上，只是多了个MASK
- *@param image_p texture,图片指针
- *@param float sx,图片x坐标
- *@param float sy,图片y坐标
- *@param float sw,图片宽
- *@param float sh,图片高
- *@param float dx,屏幕x坐标
- *@param float dy,屏幕y坐标
- *@param float dw,屏幕宽
- *@param float dh,屏幕高
- *@param int mask,颜色遮罩
- *@return 无
- */
-void DrawImageMask(image_p tex,float sx , float sy, float sw, float sh, float dx, float dy, float dw, float dh,int mask);
-/**
- * 画图函数4，最简单的画图函数,将图片画到dx,dy
- *@param image_p texture,图片指针
- *@param float dx,屏幕x坐标
- *@param float dy,屏幕y坐标
- *@return 无
- */
-void ImageToScreen(image_p texture,float dx,float dy);
 
+void RenderHGEQuad(const hgeQuad * quad);
 
 /**
  *将屏幕内容保存在image_p中
@@ -233,86 +133,6 @@ void SetTexBlend(int src_blend, int des_blend);
  */
 void ResetTexBlend();
 
-/*fix me 画大于512*512的图*/
-/*
-void DrawLargeImageMask(image_p tex,float sx , float sy, float sw, float sh, float dx, float dy, float dw, float dh,int mask);
-void DrawLargeImage(image_p tex,float sx,float sy,float sw,float sh, float dx, float dy, float dw, float dh);
-*/
-/**
- * 画圆形线框函数
- *@param float x,圆心横坐标
- *@param float y,圆心纵坐标
- *@param float radius,圆半径
- *@param int color,颜色
- *@param int dtype,颜色类型
- *@return
- */
-void DrawCircle(float x, float y, float radius, int color,int dtype);
-/**
- * 画实心圆函数
- *@param float x,圆心横坐标
- *@param float y,圆心纵坐标
- *@param float radius,圆半径
- *@param int color,颜色
- *@param int dtype,颜色类型
- *@return
- */
-void FillCircle(float x, float y, float radius, int color,int dtype);
-/**
- * 画椭圆线框函数
- *@param float x,圆心横坐标
- *@param float y,圆心纵坐标
- *@param float xradius,椭圆x半径
- *@param float yradius,椭圆y半径
- *@param int color,颜色
- *@param int dtype,颜色类型
- *@return
- */
-void DrawEllipse(float x,float y ,float xradius,float yradius,int color,int dtype);
-/**
- * 画实心椭圆函数
- *@param float x,圆心横坐标
- *@param float y,圆心纵坐标
- *@param float xradius,椭圆x半径
- *@param float yradius,椭圆y半径
- *@param int color,颜色
- *@param int dtype,颜色类型
- *@return
- */ 
-void FillEllipse(float x,float y ,float xradius,float yradius,int color,int dtype);
-/**
- * 画任意多边形线框函数
- * 注意顶点顺序是顺时针方向
- *@param float* x,顶点横坐标数组
- *@param float* y,顶点纵坐标数组
- *@param int count ,顶点个数
- *@param int color,颜色
- *@param int dtype,颜色类型
- *@return
- */ 
-void DrawPolygon(float* x, float* y, int count, int color,int dtype);
-/**
- * 画任意实心多边形函数
- * 注意顶点顺序是顺时针方向
- *@param float* x,顶点横坐标数组
- *@param float* y,顶点纵坐标数组
- *@param int count ,顶点个数
- *@param int color,颜色
- *@param int dtype,颜色类型
- *@return
- */ 
-void FillPolygon(float* x, float* y, int count, int color,int dtype);
-/**
- * 画渐进颜色任意实心多边形函数
- * 注意顶点顺序是顺时针方向
- *@param float* x,顶点横坐标数组
- *@param float* y,顶点纵坐标数组
- *@param int count ,顶点个数
- *@param int* colors,颜色数组注意与顶点个数相同
- *@param int dtype,颜色类型
- *@return
- */ 
-void FillPolygonGrad(float* x, float* y, int count, int* colors,int dtype);  
 #ifdef __cplusplus
 }
 #endif

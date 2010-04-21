@@ -5,7 +5,7 @@
 #include "Const.h"
 #include "BObject.h"
 
-#define EFFECTSYSMAX		0x40
+#define EFFECTSYSMAX		0x100
 #define EFFID_LEFTIDBEGIN	0x0
 #define EFFID_LEFTIDUNTIL	(EFFECTSYSMAX/2)
 #define EFFID_RIGHTIDBEGIN	EFFID_LEFTIDUNTIL

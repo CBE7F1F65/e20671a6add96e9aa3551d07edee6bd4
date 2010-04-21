@@ -3,6 +3,7 @@
 #include "../Header/Export_Lua_HDSS.h"
 #include "../../../src/hge/HGEExport.h"
 
+/*
 bool Scripter::Copy(vector<Script>::iterator * p, BYTE num, BYTE dstart)
 {
 	if (num == 0)
@@ -189,6 +190,7 @@ bool Scripter::Copy(vector<Script>::iterator * p, BYTE num, BYTE dstart)
 	}
 	return true;
 }
+*/
 
 #ifndef __NOTUSELUA
 bool Scripter::Execute_Lua(DWORD typeflag, DWORD name, DWORD con)

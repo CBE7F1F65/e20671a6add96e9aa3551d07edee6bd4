@@ -296,7 +296,6 @@ void hgeFont::RenderEx(float x, float y, int align, const char *string, float sc
 /************************************************************************/
 void hgeFont::Render(float x, float y, int align, const char *string)
 {
-	return;
 	int i;
 	float	fx=x;
 

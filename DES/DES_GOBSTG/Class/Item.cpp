@@ -199,8 +199,11 @@ void Item::action(BYTE playerindex)
 			else
 				speed = _ITEM_DRAINSLOWSPEED;
 			float dist = DIST(x, y, Player::p[playerindex].x, Player::p[playerindex].y);
-			x += speed * (Player::p[playerindex].x - x) / dist;
-			y += speed * (Player::p[playerindex].y - y) / dist;
+			if (dist)
+			{
+				x += speed * (Player::p[playerindex].x - x) / dist;
+				y += speed * (Player::p[playerindex].y - y) / dist;
+			}
 		}
 		else
 		{

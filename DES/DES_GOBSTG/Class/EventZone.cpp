@@ -97,7 +97,7 @@ bool EventZone::action()
 	timer++;
 	rx += rspeed;
 	ry += rspeed;
-	if (sprite && timer*5 > maxtime*4)
+	if (sprite && maxtime && timer*5 > maxtime*4)
 	{
 		BYTE alpha = INTER(0, 0xff, (maxtime-timer)*5.0f/(maxtime));
 		sprite->SetColor((alpha<<24)+0xffffff);

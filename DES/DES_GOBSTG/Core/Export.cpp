@@ -1,3 +1,5 @@
+#include <gl/glut.h>
+#include <GL/gl.h>
 #include "../Header/Export.h"
 #include "../Header/ConstResource.h"
 #include "../../../src/hge/HGEExport.h"
@@ -12,12 +14,12 @@ char Export::resbinname[M_PATHMAX];
 partInfo Export::partinfo[RPYPARTMAX];
 replayInfo Export::rpyinfo;
 int Export::password = 0;
-/*
-D3DXMATRIX Export::matView2DMode;
-D3DXMATRIX Export::matProj2DMode;
-D3DXMATRIX Export::matView[M_PL_MATCHMAXPLAYER];
-D3DXMATRIX Export::matProj[M_PL_MATCHMAXPLAYER];
-*/
+
+HGEMATRIX Export::matView2DMode;
+HGEMATRIX Export::matProj2DMode;
+HGEMATRIX Export::matView[M_PL_MATCHMAXPLAYER];
+HGEMATRIX Export::matProj[M_PL_MATCHMAXPLAYER];
+
 hge3DPoint Export::ptfar;
 
 Export::Export()
@@ -95,28 +97,84 @@ bool Export::clientInitial(bool usesound /* = false */, bool extuse /* = false *
 
 bool Export::clientAfterInitial()
 {
-	/*
-	matView2DMode = Export::Gfx_GetTransform(D3DTS_VIEW);
-	matProj2DMode = Export::Gfx_GetTransform(D3DTS_PROJECTION);
+
+	float scaleval = SCREEN_HEIGHT / M_CLIENT_HEIGHT;
+	float offsetval = (SCREEN_WIDTH - M_CLIENT_WIDTH*scaleval)/2.0f;
+
+	matView2DMode = hge->Gfx_GetTransform(HGEMATRIX_VIEW);
+	matView2DMode._11 = scaleval;
+	matView2DMode._22 = scaleval;
+	matView2DMode._33 = scaleval;
+	matView2DMode._41 = offsetval;
+	matProj2DMode = hge->Gfx_GetTransform(HGEMATRIX_PROJECTION);
+	HGELOG("View2DMode");
+	for (int i=0; i<4; i++)
+	{
+		for (int j=0; j<4; j++)
+		{
+			HGELOG("%f", matView2DMode.m[i][j]);
+		}
+	}
+	HGELOG("Proj2DMode");
+	for (int i=0; i<4; i++)
+	{
+		for (int j=0; j<4; j++)
+		{
+			HGELOG("%f", matProj2DMode.m[i][j]);
+		}
+	}
 
 	for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
 	{
-		D3DXMATRIX _matView(
-			1.0f, 0.0f, 0.0f, 0.0f,
-			0.0f, -1.0f, 0.0f, 0.0f,
-			0.0f, 0.0f, -1.0f, 0.0f,
-			-M_GAMESQUARE_CENTER_X_(i), M_GAMESQUARE_CENTER_Y, M_GAMESQUARE_HEIGHT/2.0f, 1.0f
-			);
+		HGEMATRIX _matView;
+
+		_matView.m[0][0] = scaleval;
+		_matView.m[0][1] = 0.0f;
+		_matView.m[0][2] = 0.0f;
+		_matView.m[0][3] = 0.0f;
+
+		_matView.m[1][0] = 0.0f;
+		_matView.m[1][1] = scaleval;
+		_matView.m[1][2] = 0.0f;
+		_matView.m[1][3] = 0.0f;
+
+		_matView.m[2][0] = 0.0f;
+		_matView.m[2][1] = 0.0f;
+		_matView.m[2][2] = scaleval;
+		_matView.m[2][3] = 0.0f;
+
+		_matView.m[3][0] = offsetval;
+		_matView.m[3][1] = 0.0f;
+		_matView.m[3][2] = 0.0f;
+		_matView.m[3][3] = 1.0f;
+
 		matView[i] = _matView;
-		D3DXMATRIX _matProj(
-			M_CLIENT_HEIGHT/M_CLIENT_WIDTH, 0.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f, 0.0f,
-			(M_GAMESQUARE_CENTER_X_(i)-M_CLIENT_CENTER_X)/(M_CLIENT_WIDTH/2), 0.0f, 0.0f, 1.0f,
-			-M_PROJECTIONMATRIX_OFFSET*(M_CLIENT_HEIGHT/M_CLIENT_HEIGHT), M_PROJECTIONMATRIX_OFFSET, 0.0f, -0.55f
-			);
+
+		HGEMATRIX _matProj;
+
+		_matProj.m[0][0] = scaleval;
+		_matProj.m[0][1] = 0.0f;
+		_matProj.m[0][2] = 0.0f;
+		_matProj.m[0][3] = 0.0f;
+
+		_matProj.m[1][0] = 0.0f;
+		_matProj.m[1][1] = -1.0f;
+		_matProj.m[1][2] = 0.0f;
+		_matProj.m[1][3] = 0.0f;
+
+		_matProj.m[2][0] = (M_CLIENT_CENTER_X-M_GAMESQUARE_CENTER_X_(i))/(M_CLIENT_HEIGHT/2)*scaleval;
+		_matProj.m[2][1] = 0.0f;
+		_matProj.m[2][2] = -1.0f;
+		_matProj.m[2][3] = -1.0f;
+
+		_matProj.m[3][0] = -SCREEN_HEIGHT/2;
+		_matProj.m[3][1] = SCREEN_HEIGHT/2;
+		_matProj.m[3][2] = SCREEN_HEIGHT/2;
+		_matProj.m[3][3] = SCREEN_HEIGHT/2;
+
 		matProj[i] = _matProj;
 	}
-	*/
+	
 
 	return true;
 }
@@ -131,15 +189,24 @@ void Export::clientSetMatrixUser(D3DXMATRIX matWorld, D3DXMATRIX matView, D3DXMA
 */
 void Export::clientSetMatrix(float _worldx, float _worldy, float _worldz, BYTE renderflag)
 {
-	/*
-	D3DXMATRIXA16 matWorld;
-	D3DXMatrixTranslation(&matWorld, _worldx, _worldy, _worldz);
-	Export::Gfx_SetTransform( D3DTS_WORLD, &matWorld );
 
-	if (Export::System_GetState(HGE_2DMODE) || renderflag == M_RENDER_NULL)
+/*
+	HGEMATRIX matWorld;
+	memset(&matWorld, 0, sizeof(HGEMATRIX));
+	matWorld._11 = 1;
+	matWorld._22 = 1;
+	matWorld._33 = 1;
+	matWorld._44 = 1;
+	matWorld._41 = _worldx;
+	matWorld._42 = _worldy;
+	matWorld._43 = _worldz;
+//	D3DXMatrixTranslation(&matWorld, _worldx, _worldy, _worldz);
+	hge->Gfx_SetTransform( HGEMATRIX_MODEL, &matWorld );*/
+
+	if (hge->System_GetState(HGE_2DMODE) || renderflag == M_RENDER_NULL)
 	{
-		Export::Gfx_SetTransform( D3DTS_VIEW, &matView2DMode );
-		Export::Gfx_SetTransform( D3DTS_PROJECTION, &matProj2DMode );
+		hge->Gfx_SetTransform( HGEMATRIX_VIEW, &matView2DMode );
+		hge->Gfx_SetTransform( HGEMATRIX_PROJECTION, &matProj2DMode );
 		return;
 	}
 
@@ -152,9 +219,9 @@ void Export::clientSetMatrix(float _worldx, float _worldy, float _worldz, BYTE r
 	{
 		index = 1;
 	}
-	Export::Gfx_SetTransform( D3DTS_VIEW, &matView[index] );
-	Export::Gfx_SetTransform( D3DTS_PROJECTION, &matProj[index] );
-	*/
+	hge->Gfx_SetTransform( HGEMATRIX_VIEW, &matView[index] );
+	hge->Gfx_SetTransform( HGEMATRIX_PROJECTION, &matProj[index] );
+	
 }
 
 bool Export::clientSet2DMode()

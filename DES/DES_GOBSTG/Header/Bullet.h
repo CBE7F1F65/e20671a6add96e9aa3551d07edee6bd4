@@ -5,7 +5,7 @@
 #include "BulletListActionConst.h"
 #include "Effectsys.h"
 
-#define BULLETMAX			0x200
+#define BULLETMAX			0x1000
 #define BULLETCOLORMAX		0x10
 #define BULLETTYPECOLORMAX	(BULLETTYPEMAX * BULLETCOLORMAX)
 

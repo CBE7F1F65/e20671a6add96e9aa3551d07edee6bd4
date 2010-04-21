@@ -202,7 +202,7 @@ public:
 
 	bool Parse(int varcount);
 
-	bool Copy(vector<Script>::iterator * p, BYTE num, BYTE dstart = 0);
+/*	bool Copy(vector<Script>::iterator * p, BYTE num, BYTE dstart = 0);*/
 	void * Value(vector<Script>::iterator * p, int i, BYTE force);
 	void * ValueI(vector<Script>::iterator * p, int i){return Value(p, i, SCR_FORCE_INT);};
 	void * ValueF(vector<Script>::iterator * p, int i){return Value(p, i, SCR_FORCE_FLOAT);};

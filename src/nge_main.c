@@ -10,9 +10,9 @@
 
 extern int NGE_main(int argc, char *argv[]);
 
-PSP_MODULE_INFO("NGE APP", 0, 1, 1);
+PSP_MODULE_INFO("h5nc", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(0);
-PSP_HEAP_SIZE_KB(18*1024);
+PSP_HEAP_SIZE_KB(-256);
 //PSP_MODULE_INFO("Blit Sample", 0, 1, 1);
 //PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 

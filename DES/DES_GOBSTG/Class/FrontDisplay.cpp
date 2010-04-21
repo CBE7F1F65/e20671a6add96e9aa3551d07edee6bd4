@@ -75,7 +75,6 @@ void FrontDisplay::BuildPostPrint(hgeFont * font, float x, float y, const char *
 
 void FrontDisplay::RenderPostPrint()
 {
-	return;
 	if (postprintlist.size())
 	{
 		for (list<fdPostPrint>::iterator it=postprintlist.begin(); it!=postprintlist.end(); it++)
@@ -249,7 +248,9 @@ void FrontDisplay::RenderHeadInfo(BYTE playerindex)
 		gameinfodisplay.charge->SetColor(color);
 		gameinfodisplay.charge->Render(px, py-tyoffset-10);
 		info.headdigitfont->SetColor(color);
-		info.headdigitfont->Printf(px, py-tyoffset-6, HGETEXT_CENTER, "%d / %d", ncharge, nchargemax);
+		char buffer[M_STRITOAMAX];
+		sprintf(buffer, "%d / %d", ncharge, nchargemax);
+		info.headdigitfont->Render(px, py-tyoffset-6, HGETEXT_CENTER, buffer);
 	}
 	if (gameinfodisplay.lastlifecountdown[playerindex])
 	{
@@ -294,7 +295,9 @@ void FrontDisplay::RenderHeadInfo(BYTE playerindex)
 		gameinfodisplay.gaugelevel->SetColor(color);
 		gameinfodisplay.gaugelevel->Render(px-16, py-tyoffset);
 		info.headdigitfont->SetColor(color);
-		info.headdigitfont->Printf(px+16, py-tyoffset-8, HGETEXT_CENTER, "%d", nchargemax);
+		char buffer[M_STRITOAMAX];
+		sprintf(buffer, "%d", nchargemax);
+		info.headdigitfont->Render(px+16, py-tyoffset-8, HGETEXT_CENTER, buffer);
 	}
 	if (gameinfodisplay.lilycountdown)
 	{
@@ -351,6 +354,7 @@ void FrontDisplay::RenderPanel()
 					usered = false;
 				}
 			}
+
 			int nComboHit = Player::p[i].nComboHit;
 			char buffer[M_STRITOAMAX];
 			sprintf(buffer, "%d%c", nComboHit, '0'+(usered?21:20));
@@ -361,9 +365,14 @@ void FrontDisplay::RenderPanel()
 					buffer[j] += 10;
 				}
 			}
-			info.spellpointdigitfont->Printf(spellpointx[i]+38, M_GAMESQUARE_TOP+16, HGETEXT_RIGHT, "%s", buffer);
-			int nSpellPoint = Player::p[i].nSpellPoint;
-			info.spellpointdigitfont->Printf(spellpointx[i]+38, M_GAMESQUARE_TOP+16, HGETEXT_LEFT, "%06d", nSpellPoint);
+			if (info.spellpointdigitfont)
+			{
+				info.spellpointdigitfont->Render(spellpointx[i]+38, M_GAMESQUARE_TOP+16, HGETEXT_RIGHT, buffer);
+				int nSpellPoint = Player::p[i].nSpellPoint;
+				sprintf(buffer, "%06d", nSpellPoint);
+				info.spellpointdigitfont->Render(spellpointx[i]+38, M_GAMESQUARE_TOP+16, HGETEXT_LEFT, buffer);
+			}
+
 
 			if (Player::p[i].winflag)
 			{
@@ -411,8 +420,10 @@ void FrontDisplay::RenderPanel()
 			}
 			if (info.spellpointdigitfont)
 			{
-				info.spellpointdigitfont->Printf(M_GAMESQUARE_LEFT_(i)+2, M_GAMESQUARE_BOTTOM-11, HGETEXT_LEFT, "%02d", Player::p[i].cardlevel);
-				info.spellpointdigitfont->Printf(M_GAMESQUARE_RIGHT_(i)-2, M_GAMESQUARE_BOTTOM-11, HGETEXT_RIGHT, "%02d", Player::p[i].bosslevel);
+				sprintf(buffer, "%02d", Player::p[i].cardlevel);
+				info.spellpointdigitfont->Render(M_GAMESQUARE_LEFT_(i)+2, M_GAMESQUARE_BOTTOM-11, HGETEXT_LEFT, buffer);
+				sprintf(buffer, "%02d", Player::p[i].bosslevel);
+				info.spellpointdigitfont->Render(M_GAMESQUARE_RIGHT_(i)-2, M_GAMESQUARE_BOTTOM-11, HGETEXT_RIGHT, buffer);
 			}
 		}
 		for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
@@ -450,17 +461,22 @@ void FrontDisplay::RenderPanel()
 	}
 	if(info.asciifont)
 	{
+		char buffer[M_STRMAX];
+
 #ifdef __DEBUG
-		info.asciifont->Printf(
+		sprintf(buffer, "%f %f",
+			hge->Timer_GetWorstFPS(35)/M_DEFAULT_RENDERSKIP,
+			hge->Timer_GetFPS()/M_DEFAULT_RENDERSKIP);
+		info.asciifont->Render(
 			400,
 			465,
 			0,
-			"%f %f",
-			hge->Timer_GetWorstFPS(35)/M_DEFAULT_RENDERSKIP,
-			hge->Timer_GetFPS()/M_DEFAULT_RENDERSKIP
+			buffer
 			);
-		info.asciifont->Printf(8, 465, 0, "%d %d", gametime, hge->System_GetState(HGE_FRAMECOUNTER));
-		info.asciifont->Printf(540, 1, 0, "%f",	hge->Timer_GetTime());
+		sprintf(buffer, "%d %d", gametime, hge->System_GetState(HGE_FRAMECOUNTER));
+		info.asciifont->Render(8, 465, 0, buffer);
+		sprintf(buffer, "%f",	hge->Timer_GetTime());
+		info.asciifont->Render(540, 1, 0, buffer);
 #endif
 		if (((Process::mp.IsInGame() && Player::CheckAble()) || Process::mp.state == STATE_OVER) && info.asciifont)
 		{
@@ -469,17 +485,17 @@ void FrontDisplay::RenderPanel()
 			{
 				usingtime = Process::mp.alltime;
 			}
-			char strfpsbuffer[M_STRMAX];
 			if (Process::mp.replaymode)
 			{
-				sprintf(strfpsbuffer, "%.2ffps(%.2f)", hge->Timer_GetFPS(35), Process::mp.replayFPS);
+				sprintf(buffer, "%.2ffps(%.2f)", hge->Timer_GetFPS(35), Process::mp.replayFPS);
 			}
 			else
 			{
-				sprintf(strfpsbuffer, "%.2ffps", hge->Timer_GetFPS(35));
+				sprintf(buffer, "%.2ffps", hge->Timer_GetFPS(35));
 			}
-			info.asciifont->Render(M_CLIENT_CENTER_X, M_CLIENT_BOTTOM-14, HGETEXT_CENTER, strfpsbuffer);
-			info.asciifont->Printf(M_CLIENT_CENTER_X, M_CLIENT_TOP, HGETEXT_CENTER, "%02d:%02d", usingtime/3600, (usingtime/60)%60);
+			info.asciifont->Render(M_CLIENT_CENTER_X, M_CLIENT_BOTTOM-14, HGETEXT_CENTER, buffer);
+			sprintf(buffer, "%02d:%02d", usingtime/3600, (usingtime/60)%60);
+			info.asciifont->Render(M_CLIENT_CENTER_X, M_CLIENT_TOP, HGETEXT_CENTER, buffer);
 		}
 	}
 }

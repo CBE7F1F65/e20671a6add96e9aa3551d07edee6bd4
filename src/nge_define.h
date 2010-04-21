@@ -349,8 +349,8 @@ typedef struct _fontproc{
 	} \
 }while(0);
 //for graphics
-#define SCREEN_WIDTH  480
-#define SCREEN_HEIGHT 272
+#define SCREEN_WIDTH  480.0f
+#define SCREEN_HEIGHT 272.0f
 #define SCREEN_BPP    32
 #define TEXTRUE_MAX_WIDTH 512
 #define TEXTRUE_MAX_HEIGHT 512
@@ -386,21 +386,21 @@ typedef struct{
 //input proc define
 #ifdef WIN32
 #include "../../win32depends/include/SDL.h"
-#define PSP_BUTTON_UP            SDLK_w
-#define PSP_BUTTON_DOWN          SDLK_s
-#define PSP_BUTTON_LEFT          SDLK_a
-#define PSP_BUTTON_RIGHT         SDLK_d
-#define PSP_BUTTON_TRIANGLE      SDLK_i
-#define PSP_BUTTON_CIRCLE        SDLK_l
-#define PSP_BUTTON_CROSS         SDLK_k
-#define PSP_BUTTON_SQUARE        SDLK_j
-#define PSP_BUTTON_LEFT_TRIGGER  SDLK_e
-#define PSP_BUTTON_RIGHT_TRIGGER SDLK_u
-#define PSP_BUTTON_SELECT        SDLK_v
-#define PSP_BUTTON_START         SDLK_b
-#define PSP_BUTTON_HOME          SDLK_n
-#define PSP_BUTTON_HOLD          SDLK_m  
-#define PSP_BUTTON_NOTE          SDLK_c  
+#define PSP_BUTTON_UP            SDLK_UP
+#define PSP_BUTTON_DOWN          SDLK_DOWN
+#define PSP_BUTTON_LEFT          SDLK_LEFT
+#define PSP_BUTTON_RIGHT         SDLK_RIGHT
+#define PSP_BUTTON_TRIANGLE      SDLK_LCTRL
+#define PSP_BUTTON_CIRCLE        SDLK_SPACE
+#define PSP_BUTTON_CROSS         SDLK_x
+#define PSP_BUTTON_SQUARE        SDLK_z
+#define PSP_BUTTON_LEFT_TRIGGER  SDLK_c
+#define PSP_BUTTON_RIGHT_TRIGGER SDLK_LSHIFT
+#define PSP_BUTTON_SELECT        SDLK_ESCAPE
+#define PSP_BUTTON_START         SDLK_RETURN
+#define PSP_BUTTON_HOME          SDLK_F4
+#define PSP_BUTTON_HOLD          SDLK_b  
+#define PSP_BUTTON_NOTE          SDLK_n  
 #else
 #define PSP_BUTTON_UP            _PSP_CTRL_UP
 #define PSP_BUTTON_DOWN          _PSP_CTRL_DOWN

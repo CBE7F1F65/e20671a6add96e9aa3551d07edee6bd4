@@ -6,7 +6,13 @@ int Process::processPreInitial()
 	Replay::Init();
 
 	bool rebuilddone = false;
-	if(true/*_access(CONFIG_STR_FILENAME, 00) == -1*/)
+	if(
+#ifdef WIN32
+		_access(CONFIG_STR_FILENAME, 00) == -1
+#else
+		true
+#endif
+		)
 	{
 rebuild:
 		if (rebuilddone)

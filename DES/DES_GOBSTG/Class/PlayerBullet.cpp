@@ -43,7 +43,7 @@ WORD PlayerBullet::beams;
 
 #define _PB_HEADARCPLUS			10
 
-#define PLAYERBULLETMAX		0x40
+#define PLAYERBULLETMAX		0x100
 
 #define _PBTEX_PLAYERBEGIN		10
 

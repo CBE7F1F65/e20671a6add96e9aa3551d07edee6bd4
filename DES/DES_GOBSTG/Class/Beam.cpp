@@ -288,7 +288,11 @@ void Beam::action(BYTE playerindex)
 			}
 			else
 			{
-				float factor = (vscale * texh - holdoffset) / speed;
+				float factor = (vscale * texh - holdoffset);
+				if (speed)
+				{
+					factor /= speed;
+				}
 				SetVector(Target::tar[holdtar].x, Target::tar[holdtar].y, Target::tar[holdtar].x + factor * xplus, Target::tar[holdtar].y + factor * yplus);
 			}
 		}

@@ -5,8 +5,8 @@
 #ifdef WIN32
 //win32
 #else
-#define printf pspDebugScreenPrintf
-#define _vsnprintf  vsnprintf
+//#define printf pspDebugScreenPrintf
+//#define _vsnprintf  vsnprintf
 #endif
 static int first_run = 0;
 /**
@@ -26,7 +26,7 @@ void nge_log (const char* pMessage, ...)
 		first_run = 1;
 	}
 	va_start (ArgPtr, pMessage);
-	_vsnprintf (Message, sizeof (Message), pMessage, ArgPtr);
+	vsnprintf (Message, sizeof (Message), pMessage, ArgPtr);
 	va_end (ArgPtr);
 	
 #ifdef _DEBUG_STDOUT
@@ -56,7 +56,7 @@ void nge_error (const char* pMessage, ...)
 		first_run = 1;
 	}
 	va_start (ArgPtr, pMessage);
-	_vsnprintf (Message, sizeof (Message), pMessage, ArgPtr);
+	vsnprintf (Message, sizeof (Message), pMessage, ArgPtr);
 	va_end (ArgPtr);
 #ifdef _DEBUG_STDOUT
 	printf (Message);

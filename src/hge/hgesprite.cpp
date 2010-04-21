@@ -58,6 +58,14 @@ void hgeSprite::NewSprite(HTEXTURE tex, float texx, float texy, float w, float h
 		tex_width = 1.0f;
 		tex_height = 1.0f;
 	}
+	if (tex_width == 0)
+	{
+		tex_width = 1.0f;
+	}
+	if (tex_height == 0)
+	{
+		tex_height = 1.0f;
+	}
 
 	if (w < 0 || h < 0)
 	{
@@ -116,7 +124,8 @@ void hgeSprite::Render(float x, float y, bool use2dmode)
 	/************************************************************************/
 	/* This condition is added by h5nc (h5nc@yahoo.com.cn)                  */
 	/************************************************************************/
-	
+	RenderEx(x, y, 0);
+/*
 	if (use2dmode)
 	{
 		RenderEx(x, y, 0);
@@ -135,14 +144,47 @@ void hgeSprite::Render(float x, float y, bool use2dmode)
 	quad.v[2].x = tempx2; quad.v[2].y = tempy2;
 	quad.v[3].x = tempx1; quad.v[3].y = tempy2;
 
-	hge->Gfx_RenderQuad(&quad);
+	hge->Gfx_RenderQuad(&quad);*/
+
 }
 
 
 void hgeSprite::RenderEx(float x, float y, float rot, float hscale, float vscale, bool use2dmode)
 {
+//	image_p texture = (image_p)quad.tex;
+/*
+	if (!texture)
+	{
+		return;
+	}
+	float texx, texy, texw, texh;
+	texx = quad.v[0].tx*texture->texw;
+	texy = quad.v[0].ty*texture->texh;
+	texw = (quad.v[1].tx - quad.v[0].tx)*texture->texw;
+	texh = (quad.v[3].ty - quad.v[0].ty)*texture->texh;
+	if (!vscale)
+	{
+		vscale = hscale;
+	}
+	float dx = x-hotX;
+	float dy = y-hotY;
+	///////////
+	dx *= 0.566666667f;
+	dy *= 0.566666667f;
+	hscale *= 0.566666667f;
+	vscale *= 0.566666667f;*/
+
+
 	float tx1, ty1, tx2, ty2;
 	float sint, cost;
+
+/*
+	float tscale = 0.566666667f;
+	x *= tscale;
+	y *= tscale;
+	hscale *= tscale;
+	vscale *= tscale;*/
+
 
 	if(vscale==0) vscale=hscale;
 
@@ -159,7 +201,7 @@ void hgeSprite::RenderEx(float x, float y, float rot, float hscale, float vscale
 
 	if (rot != 0.0f)
 	{
-/*
+
 		cost = cosf(rot);
 		sint = sinf(rot);
 			
@@ -173,13 +215,7 @@ void hgeSprite::RenderEx(float x, float y, float rot, float hscale, float vscale
 		quad.v[2].y  = tx2*sint + ty2*cost + y;	
 
 		quad.v[3].x  = tx1*cost - ty2*sint + x;
-		quad.v[3].y  = tx1*sint + ty2*cost + y;*/
-		quad.v[0].x = tx1 + x; quad.v[0].y = ty1 + y;
-		quad.v[1].x = tx2 + x; quad.v[1].y = ty1 + y;
-		quad.v[2].x = tx2 + x; quad.v[2].y = ty2 + y;
-		quad.v[3].x = tx1 + x; quad.v[3].y = ty2 + y;
-		quad.blend = rot * 10000;
-	
+		quad.v[3].y  = tx1*sint + ty2*cost + y;
 	}
 	else
 	{
@@ -190,6 +226,7 @@ void hgeSprite::RenderEx(float x, float y, float rot, float hscale, float vscale
 	}
 
 	hge->Gfx_RenderQuad(&quad);
+
 }
 
 
@@ -285,7 +322,8 @@ void hgeSprite::SetFlip(bool bX, bool bY, bool bHotSpot)
 void hgeSprite::SetTexture(HTEXTURE tex)
 {
 	float tx1,ty1,tx2,ty2;
-	float tw,th;
+	float tw=1;
+	float th=1;
 
 	quad.tex=tex;
 
@@ -295,11 +333,6 @@ void hgeSprite::SetTexture(HTEXTURE tex)
 	{
 		tw = texture->texw;
 		th = texture->texh;
-	}
-	else
-	{
-		tw = 1.0f;
-		th = 1.0f;
 	}
 
 	if(tw!=tex_width || th!=tex_height)
