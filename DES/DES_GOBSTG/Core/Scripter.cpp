@@ -238,9 +238,9 @@ bool Scripter::Resize()
 }
 
 #ifndef __NOTUSELUA
-bool Scripter::LoadAll_Lua(HTEXTURE * texset)
+bool Scripter::LoadAll_Lua()
 {
-	Export_Lua::InitHGE(texset);
+	Export_Lua::InitHGE();
 	Export_Lua::LuaRegistFunction();
 	Export_Lua::LuaRegistConst();
 	int iret = Export_Lua::ReadLuaFileTable();
@@ -265,7 +265,7 @@ bool Scripter::LoadAll_Lua(HTEXTURE * texset)
 }
 #endif
 
-bool Scripter::LoadAll(HTEXTURE * texset)
+bool Scripter::LoadAll()
 {
 	control.clear();
 	stage.clear();
@@ -285,7 +285,7 @@ bool Scripter::LoadAll(HTEXTURE * texset)
 	FillCustomConstDesc();
 
 #ifndef __NOTUSELUA
-	return LoadAll_Lua(texset);
+	return LoadAll_Lua();
 #endif
 /*
 	binoffset = 0;

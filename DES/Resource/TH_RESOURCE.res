@@ -4,7 +4,7 @@ Signature=h5nc
 FileType=129
 
 [Font]
-FontName=MS Gothic
+FontName=Font/msgothic.ttc
 
 [DataFile]
 BinFile=TH_BIN.databin

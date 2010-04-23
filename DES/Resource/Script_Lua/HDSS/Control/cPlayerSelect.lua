@@ -1,4 +1,26 @@
+function _CEPlayerSelect_LoadAllFace()
+	
+	local playercount = game.GetPlayerContentTable();
+	for i=0, playercount-1 do
+		game.LoadTextureSet(LConst_texset_FaceStart+i);
+	end
+	
+end
+
+function _CEPlayerSelect_FreeAllFace()
+	
+	local playercount = game.GetPlayerContentTable();
+	for i=0, playercount-1 do
+		game.FreeTextureSet(LConst_texset_FaceStart+i);
+	end
+	
+end
+
 function CEPlayerSelect_Init()
+	game.LoadTextureSet(LConst_texset_Front);
+	game.LoadTextureSet(LConst_texset_SelectItem);
+	game.LoadTextureSet(LConst_texset_MatchSelect);
+	_CEPlayerSelect_LoadAllFace();
 	hdssMUSICCHANGE(LConst_musicid_title);
 end
 
@@ -104,7 +126,7 @@ function CEPlayerSelect_SetSelect(bleft, x)
 		hdss.Call(
 			HDSS_SELBUILD,
 			{
-				selsysplayerid, i, siid, x + i * TotalW / 4, TotalCenterY, 0.75
+				selsysplayerid, i, siid, x + i * TotalW / 4, TotalCenterY, 1.5
 			},
 			{
 				0, 0,
@@ -144,6 +166,7 @@ function CEPlayerSelect_CloseUsed(bcloseall)
 end
 
 function CEPlayerSelect_ExitState(tostate, bcloseall)
+	_CEPlayerSelect_FreeAllFace();
 	CEPlayerSelect_CloseUsed(bcloseall);
 	hdssSETSTATE(tostate);
 end
@@ -164,7 +187,7 @@ function CEPlayerSelect_DispatchSelect(bleft, x, bothercomplete)
 	if complete then
 		
 		local siid = game.GetPlayerContentTable(select);
-		hdssBGVALUE(0, uibgid, siid, x, TotalCenterY, -0.75, -0.75, global.ARGB(0xff, 0));
+		hdssBGVALUE(0, uibgid, siid, x, TotalCenterY, -1.5, -1.5, global.ARGB(0xff, 0));
 		local pindex = _CEPlayerSelect_GetPIndex(bleft);
 		hdssSETCHARA(pindex, select);		
 		ret = 1;

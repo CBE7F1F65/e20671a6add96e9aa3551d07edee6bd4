@@ -37,26 +37,33 @@ void hgeSprite::_SpriteInit()
 		quad.v[3].col = 0xffffffff;
 
 	quad.blend=BLEND_DEFAULT;
+	externtex = false;
 
 }
 
 /************************************************************************/
 /* This function is added by h5nc (h5nc@yahoo.com.cn)                   */
 /************************************************************************/
-void hgeSprite::NewSprite(HTEXTURE tex, float texx, float texy, float w, float h)
+void hgeSprite::NewSprite(HTEXTURE tex, float texx, float texy, float w, float h, bool _externtex)
 {
 //	float texx1, texy1, texx2, texy2;
-	image_p texture = (image_p)tex;
+	externtex = _externtex;
+	if (!hge->texinfo && !externtex)
+	{
+		return;
+	}
+	image_p texture = externtex?(image_p)tex:(image_p)hge->texinfo[tex].tex;
 
-	if(texture)
+
+	if(externtex)
 	{
 		tex_width = texture->texw;
 		tex_height = texture->texh;
 	}
 	else
 	{
-		tex_width = 1.0f;
-		tex_height = 1.0f;
+		tex_width = hge->texinfo[tex].texw;
+		tex_height = hge->texinfo[tex].texh;
 	}
 	if (tex_width == 0)
 	{
@@ -108,10 +115,10 @@ hgeSprite::~hgeSprite()
 /************************************************************************/
 /* This function is modified by h5nc (h5nc@yahoo.com.cn)                */
 /************************************************************************/
-hgeSprite::hgeSprite(HTEXTURE texture, float texx, float texy, float w, float h)
+hgeSprite::hgeSprite(HTEXTURE texture, float texx, float texy, float w, float h, bool _externtex)
 {
 	_SpriteInit();
-	NewSprite(texture, texx, texy, w, h);
+	NewSprite(texture, texx, texy, w, h, _externtex);
 }
 
 hgeSprite::hgeSprite(const hgeSprite &spr)
@@ -225,7 +232,7 @@ void hgeSprite::RenderEx(float x, float y, float rot, float hscale, float vscale
 		quad.v[3].x = tx1 + x; quad.v[3].y = ty2 + y;
 	}
 
-	hge->Gfx_RenderQuad(&quad);
+	hge->Gfx_RenderQuad(&quad, externtex);
 
 }
 
@@ -237,7 +244,7 @@ void hgeSprite::RenderStretch(float x1, float y1, float x2, float y2)
 	quad.v[2].x = x2; quad.v[2].y = y2;
 	quad.v[3].x = x1; quad.v[3].y = y2;
 
-	hge->Gfx_RenderQuad(&quad);
+	hge->Gfx_RenderQuad(&quad, externtex);
 }
 
 
@@ -248,7 +255,7 @@ void hgeSprite::Render4V(float x0, float y0, float x1, float y1, float x2, float
 	quad.v[2].x = x2; quad.v[2].y = y2;
 	quad.v[3].x = x3; quad.v[3].y = y3;
 
-	hge->Gfx_RenderQuad(&quad);
+	hge->Gfx_RenderQuad(&quad, externtex);
 }
 
 
@@ -319,20 +326,31 @@ void hgeSprite::SetFlip(bool bX, bool bY, bool bHotSpot)
 }
 
 
-void hgeSprite::SetTexture(HTEXTURE tex)
+void hgeSprite::SetTexture(HTEXTURE tex, bool _externtex)
 {
+	externtex = _externtex;
+	if (!hge->texinfo && !externtex)
+	{
+		return;
+	}
 	float tx1,ty1,tx2,ty2;
 	float tw=1;
 	float th=1;
 
 	quad.tex=tex;
 
-	image_p texture = (image_p)tex;
+	image_p texture = externtex?(image_p)tex:(image_p)hge->texinfo[tex].tex;
 
-	if(tex)
+
+	if(externtex)
 	{
 		tw = texture->texw;
 		th = texture->texh;
+	}
+	else
+	{
+		tw = hge->texinfo[tex].texw;
+		th = hge->texinfo[tex].texh;
 	}
 
 	if(tw!=tex_width || th!=tex_height)

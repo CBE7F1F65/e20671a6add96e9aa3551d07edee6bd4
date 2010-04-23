@@ -23,7 +23,7 @@ public:
 	Export_Lua();
 	~Export_Lua();
 public:
-	static void InitHGE(HTEXTURE * texset = NULL);
+	static void InitHGE();
 
 	static void Release(LuaState * ls = NULL);
 
@@ -94,7 +94,6 @@ public:
 
 public:
 	static LuaStateOwner state;
-	static HTEXTURE * texset;
 };
 
 #endif

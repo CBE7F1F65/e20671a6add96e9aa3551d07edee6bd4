@@ -29,7 +29,18 @@ LTable_PlayerWinLoseChat	=
 function CEClear_CloseUsed()
 end
 
+function CEClear_Init()
+	for i=0, 1 do
+		local chara = hdss.Get(HDSS_CHARA, i);
+		game.LoadTextureSet(LConst_texset_FaceStart+chara);
+	end
+end
+
 function CEClear_ExitState(tostate)
+	for i=0, 1 do
+		local chara = hdss.Get(HDSS_CHARA, i);
+		game.FreeTextureSet(LConst_texset_FaceStart+chara);
+	end
 	CEClear_CloseUsed();
 	hdssSETSTATE(tostate);
 	hdssCLEARALL();
@@ -48,7 +59,7 @@ function ControlExecute_cClear(timer)
 	end
 	
 	if timer == 1 then
-		
+		CEClear_Init();
 		--
 		if _DEBUG_MatchAndLog > 0 then
 			local filename = _DEBUG_GetSaveReplayName();

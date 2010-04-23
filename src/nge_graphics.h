@@ -98,7 +98,7 @@ void DrawLineEx(pointf p1,pointf p2, int color,int dtype);
  *@return 无
  */
 
-void RenderHGEQuad(const hgeQuad * quad);
+void RenderHGEQuad(const hgeQuad * quad, image_p texture);
 
 /**
  *将屏幕内容保存在image_p中

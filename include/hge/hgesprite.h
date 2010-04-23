@@ -26,21 +26,21 @@ public:
 	/* This function is added by h5nc (h5nc@yahoo.com.cn)                   */
 	/************************************************************************/
 	hgeSprite();
-	hgeSprite(HTEXTURE tex, float x, float y, float w, float h);
+	hgeSprite(HTEXTURE tex, float x, float y, float w, float h, bool externtex=false);
 	hgeSprite(const hgeSprite &spr);
 	~hgeSprite();
 	
 	/************************************************************************/
 	/* This function is added by h5nc (h5nc@yahoo.com.cn)                   */
 	/************************************************************************/
-	void		NewSprite(HTEXTURE tex, float x, float y, float w, float h);
+	void		NewSprite(HTEXTURE tex, float x, float y, float w, float h, bool externtex=false);
 	
 	void		Render(float x, float y, bool use2dmode=false);
 	void		RenderEx(float x, float y, float rot, float hscale=1.0f, float vscale=0.0f, bool use2dmode=false);
 	void		RenderStretch(float x1, float y1, float x2, float y2);
 	void		Render4V(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3);
 
-	void		SetTexture(HTEXTURE tex);
+	void		SetTexture(HTEXTURE tex, bool externtex=false);
 	void		SetTextureRect(float x, float y, float w, float h, bool adjSize = true);
 	void		SetColor(DWORD col, int i=-1);
 	/************************************************************************/
@@ -88,6 +88,7 @@ public:
 	/************************************************************************/
 	float		scale3d;
 	bool		bXFlip, bYFlip, bHSFlip;
+	bool		externtex;
 };
 
 

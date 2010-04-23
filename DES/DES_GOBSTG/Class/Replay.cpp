@@ -212,6 +212,7 @@ exit:
 	{
 		strcpy(filename, "");
 	}
+	hge->Resource_RemovePack(treplayfilename);
 	return bret;
 }
 
@@ -361,6 +362,7 @@ void Replay::Save(const char * replayfilename)
 		strcpy(_item.filename, treplayfilename);
 		_rpyfilenamelist.push_back(_item);
 	}
+	hge->Resource_RemovePack(treplayfilename);
 
 	free(_rpydata);
 }

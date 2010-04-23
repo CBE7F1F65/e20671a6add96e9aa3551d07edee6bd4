@@ -24,12 +24,12 @@ Fontsys::~Fontsys()
 
 void Fontsys::ReleaseTargetAndSprite()
 {
-/*
+
 	if (tar)
 	{
 		hge->Target_Free(tar);
 		tar = NULL;
-	}*/
+	}
 
 	SpriteItemManager::FreeSprite(&sprite);
 }
@@ -107,7 +107,7 @@ bool Fontsys::GfxRestore()
 	{
 		HD3DFONT _usingfont = (*it)->usingfont;
 		(*it)->SignUp(NULL, _usingfont);
-//		(*it)->sprite->SetTexture(Export::Target_GetTexture((*it)->tar));
+		(*it)->sprite->SetTexture(hge->Target_GetTexture((*it)->tar));
 	}
 	return true;
 }
@@ -211,7 +211,6 @@ int Fontsys::strTranslate(char * dtext, const char * stext, int * maxchar)
 
 void Fontsys::SignUp(const char * _text, HD3DFONT _font)
 {
-	return;
 	HTEXTURE tex;
 
 	if (_text != NULL)
@@ -226,13 +225,41 @@ void Fontsys::SignUp(const char * _text, HD3DFONT _font)
 		_font = font;
 	}
 	usingfont = _font;
+	if (!usingfont)
+	{
+		return;
+	}
 
-//	int fontheight = hge->Gfx_RenderTextToTarget(&tex, tar, _font, text, 0, 0, FONTSYS_TARGETWIDTH, FONTSYS_TARGETHEIGHT);
-	int fontheight = hge->Gfx_RenderText(_font, text, 0, 0, FONTSYS_TARGETWIDTH, FONTSYS_TARGETHEIGHT);
-	tex = NULL;
+	tex = hge->Texture_Create(maxcharinline*25, lines*25);
+	char temptext[M_STRMAX];
+	strcpy(temptext, text);
+
+	int fontheight = 0;
+	while (strlen(temptext))
+	{
+		char tsubtext[M_STRMAX];
+		int i=0;
+		for (; i<strlen(temptext); i++)
+		{
+			if (temptext[i] == '\n')
+			{
+				break;
+			}
+			tsubtext[i] = temptext[i];
+		}
+		tsubtext[i] = 0;
+		fontheight += hge->Gfx_RenderTextToTarget(&tex, &tar, _font, tsubtext, 0, fontheight, FONTSYS_TARGETWIDTH, FONTSYS_TARGETHEIGHT);
+		if (i >= strlen(temptext))
+		{
+			break;
+		}
+		strcpy(tsubtext, &temptext[i+1]);
+		strcpy(temptext, tsubtext);
+	}
 
 //	float w = strlen(text) * M_FONTWIDTH;
 //	float h = lines * M_FONTHEIGHT;
+
 	float w = (fontheight / lines) * 0.55f * (maxcharinline+1);
 	float h = fontheight;
 	if (w > FONTSYS_TARGETWIDTH)
@@ -249,7 +276,7 @@ void Fontsys::SignUp(const char * _text, HD3DFONT _font)
 	if (tex)
 	{
 		sprite = SpriteItemManager::CreateNullSprite();
-		SpriteItemManager::SetSpriteData(sprite, tex, 0, 0, w, h);
+		SpriteItemManager::SetSpriteData(sprite, tex, 0, 0, w, h, false, false, true);
 		sprite->SetBlendMode(BLEND_DEFAULT);
 	}
 
@@ -277,7 +304,6 @@ void Fontsys::SignUp(const char * _text, HD3DFONT _font)
 
 void Fontsys::Render(float x, float y, float shadow, float hscale, float vscale, BYTE alignflag)
 {
-	return;
 	if (!sprite)
 	{
 		return;

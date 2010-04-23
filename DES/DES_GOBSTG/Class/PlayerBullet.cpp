@@ -17,7 +17,6 @@ int PlayerBullet::locked[M_PL_MATCHMAXPLAYER];
 int PlayerBullet::activelocked[M_PL_MATCHMAXPLAYER];
 
 hgeSprite * PlayerBullet::sprite[PLAYERSHOOTTYPEMAX][PLAYERBULLETTYPE];
-HTEXTURE * PlayerBullet::tex;
 
 DWORD PlayerBullet::bcol0;
 DWORD PlayerBullet::bcol1;
@@ -56,9 +55,8 @@ PlayerBullet::~PlayerBullet()
 {
 }
 
-void PlayerBullet::Init(HTEXTURE * _tex)
+void PlayerBullet::Init()
 {
-	tex = _tex;
 	Release();
 
 	for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)

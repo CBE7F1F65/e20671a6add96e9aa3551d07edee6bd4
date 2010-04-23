@@ -78,7 +78,7 @@ public:
 	static void keyupproc(int keycode);
 
 	static bool clientInitial(bool usesound = false, bool extuse = false);
-	static bool clientAfterInitial();
+	static bool clientAfterInitial(hgeTextureInfo * texset);
 	static hge3DPoint * GetFarPoint(BYTE renderflag);
 	static void clientSetMatrix(float worldx = 0, float worldy = 0, float worldz = 0, BYTE renderflag=M_RENDER_NULL);
 //	static void clientSetMatrixUser(D3DXMATRIX matWorld, D3DXMATRIX matView, D3DXMATRIX matProj);

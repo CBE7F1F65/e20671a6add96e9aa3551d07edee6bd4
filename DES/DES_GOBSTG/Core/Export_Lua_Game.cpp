@@ -14,6 +14,9 @@ bool Export_Lua_Game::_LuaRegistFunction(LuaObject * obj)
 	LuaObject _gameobj;
 	_gameobj = obj->CreateTable("game");
 
+	_gameobj.Register("LoadTextureSet", LuaFn_Game_LoadTextureSet);
+	_gameobj.Register("FreeTextureSet", LuaFn_Game_FreeTextureSet);
+
 	_gameobj.Register("Random_Int", LuaFn_Game_Random_Int);
 	_gameobj.Register("Random_Float", LuaFn_Game_Random_Float);
 	_gameobj.Register("SetLastIP", LuaFn_Game_SetLastIP);
@@ -45,6 +48,34 @@ bool Export_Lua_Game::_LuaRegistFunction(LuaObject * obj)
 	_gameobj.Register("GetOneMatchOverInfo", LuaFn_Game_GetOneMatchOverInfo);
 
 	return true;
+}
+
+int Export_Lua_Game::LuaFn_Game_LoadTextureSet(LuaState * ls)
+{
+	LuaStack args(ls);
+
+	int argscount = args.Count();
+	int _texset = -1;
+	if (argscount > 0)
+	{
+		_texset = args[1].GetInteger();
+	}
+	ls->PushBoolean(Process::mp.LoadTextureSet(_texset));
+	return 1;
+}
+
+int Export_Lua_Game::LuaFn_Game_FreeTextureSet(LuaState * ls)
+{
+	LuaStack args(ls);
+
+	int argscount = args.Count();
+	int _texset = -1;
+	if (argscount > 0)
+	{
+		_texset = args[1].GetInteger();
+	}
+	ls->PushBoolean(Process::mp.FreeTextureSet(_texset));
+	return 1;
 }
 
 int Export_Lua_Game::LuaFn_Game_Random_Int(LuaState * ls)

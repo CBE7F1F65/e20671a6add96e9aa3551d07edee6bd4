@@ -214,7 +214,7 @@ int image_save_tga(image_p pimage,const char* filename,uint8 alpha,uint8 rle);
  *@param int displaymode,显示模式,(DISPLAY_PIXEL_FORMAT_XXX的一种)
  *@return image_p pimage,返回image指针
  */
-image_p image_create(int w,int h,int displaymode);
+image_p image_create(int w,int h,int displaymode, uint8 dontswizzle);
 /**
  *释放一个image
  *@param image_p pimage,待释放的image指针

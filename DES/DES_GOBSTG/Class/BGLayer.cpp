@@ -11,8 +11,6 @@ BGLayer BGLayer::ubg[M_PL_MATCHMAXPLAYER][UBGLAYERMAX];
 
 WORD BGLayer::setindex = 0;
 
-HTEXTURE * BGLayer::tex = NULL;
-
 BGLayer::BGLayer()
 {
 	exist	= false;
@@ -24,7 +22,7 @@ BGLayer::~BGLayer()
 	SpriteItemManager::FreeSprite(&sprite);
 }
 
-void BGLayer::Init(HTEXTURE * _tex)
+void BGLayer::Init()
 {
 	for (int j=0; j<M_PL_MATCHMAXPLAYER; j++)
 	{
@@ -42,7 +40,6 @@ void BGLayer::Init(HTEXTURE * _tex)
 		}
 	}
 	setindex = 0;
-	tex = _tex;
 }
 
 void BGLayer::KillOtherLayer(BYTE playerindex)
@@ -82,14 +79,14 @@ void BGLayer::valueSet(int siID, float cenx, float ceny, float w, float h, DWORD
 	zSpeed = 0;
 
 	spriteData * _sd = SpriteItemManager::CastSprite(siID);
-	HTEXTURE _tex = tex[_sd->tex];
+	HTEXTURE _tex = _sd->tex;
 
 	float _x = cenx;
 	float _y = ceny;
-	float tx = (float)_sd->tex_x;
-	float ty = (float)_sd->tex_y;
-	tw = (float)_sd->tex_w;
-	th = (float)_sd->tex_h;
+	float tx = _sd->tex_x;
+	float ty = _sd->tex_y;
+	tw = _sd->tex_w;
+	th = _sd->tex_h;
 	if (tw < 0 || th < 0)
 	{
 		tw = hge->Texture_GetWidth(_tex) - tx;

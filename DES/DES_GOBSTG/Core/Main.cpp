@@ -51,7 +51,7 @@ int GameStart(int seed=0)
 	initExceptionHandler();
 #endif
 	Export::clientInitial(true);
-	Export::clientAfterInitial();
+	Export::clientAfterInitial(Process::mp.texinfo);
 
 	gametime = 0;
 	Process::mp.state = STATE_INIT;

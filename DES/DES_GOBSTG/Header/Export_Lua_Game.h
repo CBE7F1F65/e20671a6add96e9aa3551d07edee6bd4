@@ -9,6 +9,9 @@ public:
 	static bool _LuaRegistConst(LuaObject * obj);
 	static bool _LuaRegistFunction(LuaObject * obj);
 
+	static int LuaFn_Game_LoadTextureSet(LuaState * ls);
+	static int LuaFn_Game_FreeTextureSet(LuaState * ls);
+
 	static int LuaFn_Game_Random_Int(LuaState * ls);
 	static int LuaFn_Game_Random_Float(LuaState * ls);
 	static int LuaFn_Game_SetLastIP(LuaState * ls);

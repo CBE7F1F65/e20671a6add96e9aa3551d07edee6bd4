@@ -36,6 +36,10 @@ void font_destory(PFont pf)
 	if(pf == NULL)
 		return;
 	procs = pf->procs;
+	if (!procs)
+	{
+		return;
+	}
 	if(procs->DestroyFont != NULL)
 		procs->DestroyFont(pf);
 }

@@ -244,7 +244,7 @@ void hgeFont::ChangeSprite(BYTE chr, hgeSprite * sprite, float pre_a, float post
 	HTEXTURE tex = sprite->GetTexture();
 	if (tex)
 	{
-		ChangeSprite(chr, sprite->GetTexture(), tex_x, tex_y, tex_w, tex_h, pre_a, post_c);
+		ChangeSprite(chr, tex, tex_x, tex_y, tex_w, tex_h, pre_a, post_c);
 	}
 }
 

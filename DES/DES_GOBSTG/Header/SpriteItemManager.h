@@ -26,7 +26,7 @@ public:
 	SpriteItemManager();
 	~SpriteItemManager();
 
-	static void Init(HTEXTURE * tex);
+	static void Init(hgeTextureInfo * tex);
 	static void Release();
 	static hgeSprite * CreateSprite(int index);
 	static bool CreateSprite(int index, hgeSprite ** sprite);
@@ -38,7 +38,7 @@ public:
 	static spriteData * CastSprite(int index);
 
 	static hgeSprite * CreateNullSprite();
-	static bool SetSpriteData(hgeSprite * sprite, HTEXTURE tex, float texx, float texy, float texw, float texh, bool flipx=false, bool flipy=false);
+	static bool SetSpriteData(hgeSprite * sprite, HTEXTURE tex, float texx, float texy, float texw, float texh, bool flipx=false, bool flipy=false, bool externtex=false);
 	static bool SetSpriteTextureRect(hgeSprite * sprite, float texx, float texy, float texw, float texh);
 	static bool SetSpriteFlip(hgeSprite * sprite, bool flipx=false, bool flipy=false);
 	static bool SetSpriteHotSpot(hgeSprite * sprite, float hotx, float hoty);
@@ -54,7 +54,7 @@ public:
 	static void FreeFrontSprite(int ID=-1);
 	static void RenderFrontSprite();
 
-	static bool SetSprite(int index, hgeSprite * sprite, HTEXTURE * tex);
+	static bool SetSprite(int index, hgeSprite * sprite);
 
 	static HTEXTURE GetTexture(int index);
 	static float GetTexX(int index);
@@ -65,7 +65,7 @@ public:
 	static bool ptFace(int index, hgeSprite * sprite);
 
 public:
-	static HTEXTURE * tex;
+	static hgeTextureInfo * texinfo;
 
 	static int yesIndex;
 	static int noIndex;

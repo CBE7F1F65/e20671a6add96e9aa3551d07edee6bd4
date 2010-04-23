@@ -2,7 +2,7 @@
 #define _TARGET_H
 #include "Const.h"
 
-#define TARGETMAX			0x40
+#define TARGETMAX			0x100
 
 class Target
 {

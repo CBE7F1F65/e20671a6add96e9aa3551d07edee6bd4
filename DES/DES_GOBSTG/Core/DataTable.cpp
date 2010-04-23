@@ -124,14 +124,19 @@ bool _DataTable::PackageTableDefine()
 
 bool _DataTable::TextureTableDefine()
 {
-	ZeroMemory(BResource::pbres->resdata.texfilename, sizeof(char) * TEXMAX * M_PATHMAX);
-	_READSTRINGBUFFERLINE(3);
+	ZeroMemory(BResource::pbres->texturedata, sizeof(textureData) * TEXMAX);
+	_READSTRINGBUFFERLINE(6);
 	while (!feof(file))
 	{
 		_BREAKCOMMENTBUFFER;
 		fscanf(file, "%d", &tindex);
 		_CHECKEOF_DATATABLE;
-		fscanf(file, "%s", BResource::pbres->resdata.texfilename[tindex]);
+		textureData * item = &(BResource::pbres->texturedata[tindex]);
+		fscanf(file, "%s%d%f%f",
+			item->texfilename, 
+			&(item->texset),
+			&(item->texw),
+			&(item->texh));
 	}
 	return true;
 }
@@ -435,7 +440,7 @@ bool _DataTable::SpriteDefineFile()
 		_CHECKEOF_DATATABLE;
 		spriteData * item = &(BResource::pbres->spritedata[tindex]);
 
-		fscanf(file, "%s%d%d%d%d%d", 
+		fscanf(file, "%s%d%f%f%f%f", 
 			item->spritename, 
 			&(item->tex),
 			&(item->tex_x), 

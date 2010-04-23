@@ -132,6 +132,8 @@ public:
 	static HTEXTURE tex;
 	static WORD index;
 	static VectorList<Bullet>bu[M_PL_MATCHMAXPLAYER];
+
+	static int rendercount[M_PL_MATCHMAXPLAYER];
 };
 
 #endif

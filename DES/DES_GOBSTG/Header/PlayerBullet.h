@@ -32,7 +32,7 @@ public:
 	PlayerBullet();
 	~PlayerBullet();
 
-	static void Init(HTEXTURE * tex);
+	static void Init();
 	static void BuildShoot(BYTE playerindex, BYTE playerID, int usetimer, bool bchargeshoot=false);
 	static int Build(BYTE playerindex, int shootdataID, bool explode=false, float xoffset=0, float yoffset=0);
 	static void ClearItem();
@@ -86,7 +86,6 @@ public:
 
 	static hgeSprite * sprite[PLAYERSHOOTTYPEMAX][PLAYERBULLETTYPE];
 	static DWORD bcol0, bcol1, bcol2, bcol3;
-	static HTEXTURE * tex;
 	static int locked[M_PL_MATCHMAXPLAYER];
 	static int activelocked[M_PL_MATCHMAXPLAYER];
 	static WORD beams;

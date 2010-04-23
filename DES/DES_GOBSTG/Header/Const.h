@@ -42,6 +42,9 @@
 #define HGELOG			hge->System_Log
 #define HGELOG_ERRSTR	"**********ERROR**********"
 
+#define TURNOFFFLAG_NONE	0x00
+#define TURNOFFFLAG_LAYERSET	0x01
+#define TURNOFFFLAG_EFFECTSYS	0x02
 
 #define M_PROJECTIONMATRIX_OFFSET	0.5f
 

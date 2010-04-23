@@ -1,6 +1,21 @@
+function _CEStart_LoadTextureSet(chara)
+	for i, it in pairs(LTable_TextureSet_AllMatching[chara+1]) do
+		game.LoadTextureSet(it);
+	end
+end
+
 function ControlExecute_cStart(timer)
 	if timer == 1 then
 		
+		game.LoadTextureSet(LConst_texset_Front);
+		game.LoadTextureSet(LConst_texset_SelectItem);
+		game.LoadTextureSet(LConst_texset_Matching);
+		for i=0, 1 do
+			_CEStart_LoadTextureSet(hdss.Get(HDSS_CHARA, i));
+		end
+		local scene = hdss.Get(HDSS_GETSCENE);
+		game.LoadTextureSet(LTable_TextureSet_Scene[scene+1]);
+	
 		local scene = hdss.Get(HDSS_GETSCENE);
 		local col = global.ARGB(0xff, 0);
 		local baseangle = hdss.Get(HDSS_ATAN2, TotalH, TotalW);

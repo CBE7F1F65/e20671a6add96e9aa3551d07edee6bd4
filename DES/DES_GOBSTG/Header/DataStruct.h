@@ -16,6 +16,13 @@ struct musicData{
 	LONGLONG alllength;
 };
 
+struct textureData{
+	char texfilename[M_PATHMAX];
+	int texset;
+	float texw;
+	float texh;
+};
+
 struct uiStringData 
 {
 	char filename[M_STRMAX];
@@ -48,7 +55,7 @@ struct uiStringData
 struct resourceData
 {
 	//resource file
-	char texfilename[TEXMAX][M_PATHMAX];
+//	char texfilename[TEXMAX][M_PATHMAX];
 	char sefilename[SEMAX][M_PATHMAX];
 	char effectsysfilename[EFFECTSYSTYPEMAX][M_PATHMAX];
 	char packagefilename[PACKAGEMAX][M_PATHMAX];
@@ -187,10 +194,10 @@ struct playerData
 struct spriteData 
 {
 	char spritename[M_STRMAX];
-	int tex_x;
-	int tex_y;
-	int tex_w;
-	int tex_h;
+	float tex_x;
+	float tex_y;
+	float tex_w;
+	float tex_h;
 	int tex;
 };
 

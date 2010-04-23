@@ -112,7 +112,7 @@ bool BResource::Fill()
 		CreateDirectory(resdata.datafoldername, NULL);
 	}
 */
-	strcpy(resdata.effectsysfoldername, Data::data.sRead(DATA_RESOURCEFILE, sec, Data::data.nLinkType(RESDATAN_EFFECTSYSFOLDER), RESDEFAULT_DATAFOLDER));
+	strcpy(resdata.effectsysfoldername, Data::data.sRead(DATA_RESOURCEFILE, sec, Data::data.nLinkType(RESDATAN_EFFECTSYSFOLDER), RESDEFAULT_EFFECTFOLDER));
 /*
 	if(_access(resdata.effectsysfoldername, 00) == -1)
 	{
@@ -355,6 +355,7 @@ bool BResource::Pack(void * pStrdesc, void * pCustomConstData)
 //		RSIZE_SPRITE + 
 		RSIZE_PLAYERSHOOT + 
 		RSIZE_PLAYERGHOST + 
+		RSIZE_TEXTURE +
 		RSIZE_SPRITENUMBER +
 		RSIZE_SPRITE;
 	BYTE * content = (BYTE *)malloc(size);
@@ -405,6 +406,9 @@ bool BResource::Pack(void * pStrdesc, void * pCustomConstData)
 	memcpy(content+offset, playerghostdata, RSIZE_PLAYERGHOST);
 	offset += RSIZE_PLAYERGHOST;
 
+	memcpy(content+offset, texturedata, RSIZE_TEXTURE);
+	offset += RSIZE_TEXTURE;
+
 	memcpy(content+offset, &spritenumber, RSIZE_SPRITENUMBER);
 	offset += RSIZE_SPRITENUMBER;
 	memcpy(content+offset, spritedata, RSIZE_SPRITE);
@@ -423,7 +427,8 @@ bool BResource::Pack(void * pStrdesc, void * pCustomConstData)
 	memfile.size = size;
 
 	bool ret = false;
-	ret = hge->Resource_CreatePack(hge->Resource_MakePath(Data::data.resbinname), Data::data.password, &memfile, NULL);
+	ret = hge->Resource_CreatePack(Data::data.resbinname, Data::data.password, &memfile, NULL);
+	hge->Resource_RemovePack(Data::data.resbinname);
 
 	free(content);
 
@@ -436,8 +441,9 @@ bool BResource::Gain(void * pStrdesc, void * pCustomConstData)
 	DWORD size;
 	bool ret = false;
 
-	hge->Resource_AttachPack(Data::data.resourcefilename, Data::data.password);
+	hge->Resource_AttachPack(Data::data.resbinname, Data::data.password);
 	content = hge->Resource_Load(Data::data.resbinname, &size);
+	hge->Resource_RemovePack(Data::data.resbinname);
 	if(content)
 	{
 //		spelldata.clear();
@@ -466,6 +472,9 @@ bool BResource::Gain(void * pStrdesc, void * pCustomConstData)
 			offset += RSIZE_PLAYERSHOOT;
 			memcpy(playerghostdata, content+offset, RSIZE_PLAYERGHOST);
 			offset += RSIZE_PLAYERGHOST;
+
+			memcpy(texturedata, content+offset, RSIZE_TEXTURE);
+			offset += RSIZE_TEXTURE;
 
 			memcpy(&spritenumber, content+offset, RSIZE_SPRITENUMBER);
 			offset += RSIZE_SPRITENUMBER;
@@ -524,6 +533,34 @@ bool BResource::LoadAllPackage()
 		}
 	}
 	return true;
+}
+
+HTEXTURE BResource::LoadTexture(int i)
+{
+	if (i < 0 || i >= TEXMAX)
+	{
+		return NULL;
+	}
+	HTEXTURE texret = NULL;
+	if(strlen(texturedata[i].texfilename))
+	{
+		texret = hge->Texture_Load(texturedata[i].texfilename);
+	}
+
+	if(texret == NULL)
+	{
+#ifdef __DEBUG
+		HGELOG("%s\nFailed in loading Texture File %s.(To be assigned to Index %d).", HGELOG_ERRSTR, texturedata[i].texfilename, i);
+#endif
+		texret = hge->Texture_Create(0, 0);
+	}
+#ifdef __DEBUG
+	else
+	{
+		HGELOG("Succeeded in loading Texture File %s.(Assigned to Index %d).", texturedata[i].texfilename, i);
+	}
+#endif
+	return texret;
 }
 
 void BResource::CopyData()

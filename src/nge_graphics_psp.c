@@ -430,9 +430,8 @@ void ResetClip()
 	sceGuScissor(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void RenderHGEQuad(const hgeQuad * quad)
+void RenderHGEQuad(const hgeQuad * quad, image_p texture)
 {
-	image_p texture = (image_p)quad->tex;
 	struct VertexUV *vertices;
 	int i;
 
@@ -496,7 +495,7 @@ image_p ScreenToImage()
 	uint8 *line;
 	sceDisplayWaitVblankStart();  // if framebuf was set with PSP_DISPLAY_SETBUF_NEXTFRAME, wait until it is changed
     sceDisplayGetFrameBuf(&temp, &width, &format, PSP_DISPLAY_SETBUF_NEXTFRAME);
-	pimage = image_create(SCREEN_WIDTH,SCREEN_HEIGHT,DISPLAY_PIXEL_FORMAT_8888);
+	pimage = image_create(SCREEN_WIDTH,SCREEN_HEIGHT,DISPLAY_PIXEL_FORMAT_8888, 0);
 	if(pimage == NULL)
 		return NULL;
 	vram32 = (uint32*) temp;

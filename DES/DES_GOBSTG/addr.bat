@@ -1,0 +1,1 @@
+e:\cygwin\usr\local\pspdev\bin\psp-addr2line.exe -fe e:\NGE2\DES\DES_GOBSTG\th09x.elf %1

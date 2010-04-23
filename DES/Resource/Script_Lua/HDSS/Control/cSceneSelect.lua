@@ -1,4 +1,11 @@
 function CESceneSelect_Init()
+	game.LoadTextureSet(LConst_texset_Front);
+	game.LoadTextureSet(LConst_texset_SelectItem);
+	game.LoadTextureSet(LConst_texset_MatchSelect);
+	for i=0, 1 do
+		local chara = hdss.Get(HDSS_CHARA, i);
+		game.LoadTextureSet(LConst_texset_FaceStart+chara);
+	end
 	hdssMUSICCHANGE(LConst_musicid_title);
 end
 
@@ -87,6 +94,7 @@ function CESceneSelect_ExitState(tostate)
 	CESceneSelect_CloseUsed();
 	hdssSETSTATE(tostate);
 	if tostate == STATE_START then
+		game.FreeTextureSet();
 		hdssSTARTPREP();
 	end
 end

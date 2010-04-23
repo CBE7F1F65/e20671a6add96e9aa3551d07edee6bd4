@@ -95,8 +95,10 @@ bool Export::clientInitial(bool usesound /* = false */, bool extuse /* = false *
 	
 }
 
-bool Export::clientAfterInitial()
+bool Export::clientAfterInitial(hgeTextureInfo * texset)
 {
+
+	hge->Gfx_SetTextureInfo(texset);
 
 	float scaleval = SCREEN_HEIGHT / M_CLIENT_HEIGHT;
 	float offsetval = (SCREEN_WIDTH - M_CLIENT_WIDTH*scaleval)/2.0f;
@@ -107,6 +109,7 @@ bool Export::clientAfterInitial()
 	matView2DMode._33 = scaleval;
 	matView2DMode._41 = offsetval;
 	matProj2DMode = hge->Gfx_GetTransform(HGEMATRIX_PROJECTION);
+/*
 	HGELOG("View2DMode");
 	for (int i=0; i<4; i++)
 	{
@@ -123,6 +126,7 @@ bool Export::clientAfterInitial()
 			HGELOG("%f", matProj2DMode.m[i][j]);
 		}
 	}
+*/
 
 	for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
 	{
@@ -351,6 +355,7 @@ bool Export::rpyLoad(const char * filename, replayInfo * _rpyinfo, partInfo * _p
 
 	hge->Resource_AttachPack(filename, password ^ REPLAYPASSWORD_XORMAGICNUM);
 	content = hge->Resource_Load(hge->Resource_GetPackFirstFileName(filename), &_size);
+	hge->Resource_RemovePack(filename);
 	if(content)
 	{
 		memcpy(_rpyinfo ? _rpyinfo : &rpyinfo, content+RPYOFFSET_RPYINFO, RPYSIZE_RPYINFO);
@@ -418,6 +423,7 @@ bool Export::packFile(const char * zipname, const char * filename)
 		memfile.size = _size;
 		if(hge->Resource_CreatePack(zipname, password, &memfile, NULL))
 			ret = true;
+		hge->Resource_RemovePack(zipname);
 		hge->Resource_Free(_content);
 	}
 	return ret;
@@ -436,6 +442,7 @@ int Export::effLoad(const char * filename, hgeEffectSystem * eff, HTEXTURE * tex
 {
 	if(!eff)
 		return -1;
+	eff->InitEffectSystem();
 	return eff->Load(filename, 0, tex);
 }
 
@@ -452,6 +459,7 @@ bool Export::unpackFile(const char * zipname, const char * filename)
 	}
 
 	_content = hge->Resource_Load(filename, &_size);
+	hge->Resource_RemovePack(zipname);
 	if(_content)
 	{
 		char pathbuffer[M_STRMAX];

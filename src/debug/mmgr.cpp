@@ -141,8 +141,13 @@ static		bool		alwaysValidateAll      = false;
 static		bool		alwaysLogAll           = true;
 static		bool		alwaysWipeAll          = true;
 static		bool		cleanupLogOnFirstRun   = true;
+static		char		szlogfilepath[260] = {0};
 static	const	unsigned int	paddingSize            = 4;	// alignment of memory must be on 16byte for most use on PSP
 #endif
+
+#define _MMGR_LOGFILENAME	"memory.log"
+#define _MMGR_LEAKFILENAME	"memleaks.log"
+#define _MMGR_REPORTFILENAME	"memreport.log"
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 // We define our own assert, because we don't want to bring up an assertion dialog, since that allocates RAM. Our new assert
@@ -204,14 +209,22 @@ static		unsigned int	reservoirBufferSize    = 0;
 // ---------------------------------------------------------------------------------------------------------------------------------
 // Local functions only
 // ---------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef WIN32
+#include <Windows.h>
+#endif
 static	void	doCleanupLogOnFirstRun()
 {
 	if (cleanupLogOnFirstRun)
 	{
-		unlink("memory.log");
-		unlink("memleaks.log");
-		unlink("memreport.log");
+		GetCurrentDirectory(260, szlogfilepath);
+		strcat(szlogfilepath, "\\");
+		char filename[260];
+		sprintf(filename, "%s%s", szlogfilepath, _MMGR_LOGFILENAME);
+		unlink(filename);
+		sprintf(filename, "%s%s", szlogfilepath, _MMGR_LEAKFILENAME);
+		unlink(filename);
+		sprintf(filename, "%s%s", szlogfilepath, _MMGR_REPORTFILENAME);
+		unlink(filename);
 		cleanupLogOnFirstRun = false;
 	}
 }
@@ -416,7 +429,9 @@ static	void	m_log(const char *format, ...)
 
 	// Open the log file
 
-	FILE	*fp = fopen("memory.log", "ab");
+	char filename[260];
+	sprintf(filename, "%s%s", szlogfilepath, _MMGR_LOGFILENAME);
+	FILE	*fp = fopen(filename, "ab");
 
 	if (!fp) return;
 
@@ -462,8 +477,10 @@ static	void	dumpLeakReport()
 {
 	// Open the report file
 	m_log( "Creating Leak Report..." );
-	
-	FILE	*fp = fopen("memleaks.log", "ab");
+
+	char filename[260];
+	sprintf(filename, "%s%s", szlogfilepath, _MMGR_LEAKFILENAME);
+	FILE	*fp = fopen(filename, "ab");
 
 	if (!fp) { m_log( "Error opening file for Memory Report." ); return; }
 
@@ -1266,7 +1283,8 @@ void	m_dumpMemoryReport()
 	FILE	*fp = NULL;
 	
 	
-	char filename[] = "memreport.log";
+	char filename[260];
+	sprintf(filename, "%s%s", szlogfilepath, _MMGR_REPORTFILENAME);
 	
 	fp = fopen(filename, "w+b");
 

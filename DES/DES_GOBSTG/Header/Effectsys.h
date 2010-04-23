@@ -20,6 +20,7 @@ public:
 	~Effectsys();
 
 	static bool Init(HTEXTURE * tex, const char * foldername, char name[][M_PATHMAX]);
+	static void Release();
 	static void ClearAll();
 	static void Action();
 	static void RenderAll(BYTE playerindex);

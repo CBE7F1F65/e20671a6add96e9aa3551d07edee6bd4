@@ -3,8 +3,8 @@ PSPDIR=$(shell psp-config --psp-prefix)
 TARGET_LIB = libnge2.a
 OBJS = helper/iniparser.o helper/dictionary.o \
        libnge2.o nge_charsets.o nge_debug_log.o nge_timer.o \
-       nge_font_hzk.o nge_image_load.o  nge_font.o nge_gif_animation.o \
-       nge_io_file.o nge_misc.o nge_rle.o nge_main.o nge_gif_show.o \
+       nge_font_hzk.o nge_image_load.o  nge_font.o \
+       nge_io_file.o nge_misc.o nge_rle.o nge_main.o \
        nge_graphics_psp.o nge_input_proc.o nge_font_freetype.o \
        nge_vram.o audiosystem/libcoolaudio.o audiosystem/play_ogg_psp.o \
        audiosystem/play_mp3_psp.o audiosystem/play_pcm_psp.o movieplay/nge_movie.o \
@@ -15,7 +15,7 @@ OBJS = helper/iniparser.o helper/dictionary.o \
        hge/zlib/adler32.o hge/zlib/compress.o hge/zlib/crc32.o hge/zlib/deflate.o hge/zlib/gzio.o hge/zlib/infback.o hge/zlib/inffast.o hge/zlib/inflate.o hge/zlib/inftrees.o hge/zlib/ioapi.o hge/zlib/mztools.o hge/zlib/trees.o hge/zlib/uncompr.o hge/zlib/unzip.o hge/zlib/zip.o hge/zlib/zutil.o
 INCDIR = psp/include psp/include/freetype2
 LIBDIR = psp/lib 
-CFLAGS = -G0 -w -DNGE2_NET -D_DEBUG_LOG -D_DEBUG_STDOUT -g
+CFLAGS = -G0 -w -DNGE2_NET -D_DEBUG_LOG -D_DEBUG_STDOUT -DMMGR -g
 LIBS += -ljpeg -lpng -lz
 CXXFLAGS = $(CFLAGS) -fno-rtti 
 ASFLAGS = $(CFLAGS)

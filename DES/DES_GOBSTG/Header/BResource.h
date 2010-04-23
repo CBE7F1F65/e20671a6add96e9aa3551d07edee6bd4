@@ -16,6 +16,7 @@
 #define RSIZE_SPRITENUMBER	(sizeof(int))
 #define RSIZE_PLAYERSHOOT	(sizeof(playershootData) * PLAYERSHOOTTYPEMAX)
 #define RSIZE_PLAYERGHOST	(sizeof(playerghostData) * PLAYERGHOSTTYPEMAX)
+#define RSIZE_TEXTURE		(sizeof(textureData) * TEXMAX)
 
 class BResource
 {
@@ -35,6 +36,7 @@ public:
 	bool SetDataFile();
 	bool LoadPackage(int packindex);
 	bool LoadAllPackage();
+	HTEXTURE LoadTexture(int i);
 
 	void ReleaseCustomConst();
 	void MallocCustomConst();
@@ -54,6 +56,7 @@ public:
 	playershootData playershootdata[PLAYERSHOOTTYPEMAX];
 	playerghostData playerghostdata[PLAYERGHOSTTYPEMAX];
 	customconstData * customconstdata;
+	textureData texturedata[TEXMAX];
 
 	static BResource * pbres;
 };

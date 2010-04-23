@@ -118,15 +118,18 @@ public:
 	bool	CALL		Input_GetDIKey(int key, BYTE stateType = DIKEY_PRESSED) ;
 	bool	CALL		Input_SetDIKey(int key, bool set = true) ;
 	
+	void	CALL		Gfx_SetTextureInfo(hgeTextureInfo * texinfo);
 	void	CALL		Gfx_Clear(DWORD color) ;		
 	void	CALL		Gfx_RenderLine(float x1, float y1, float x2, float y2, DWORD color=0xFFFFFFFF, float z=0) ;		
 	void	CALL		Gfx_RenderTriple(const hgeTriple *triple) ;		
-	void	CALL		Gfx_RenderQuad(const hgeQuad *quad) ;
+	void	CALL		Gfx_RenderQuad(const hgeQuad *quad, bool extuse=false) ;
 	void	CALL		Gfx_SetClipping(int x=0, int y=0, int w=0, int h=0) ;
 	void	CALL		_Gfx_TanslateTransformState(int * State, bool bGet=false);
 	void	CALL	Gfx_SetTransform(int State, const HGEMATRIX * pMatrix);
 	HGEMATRIX CALL	Gfx_GetTransform(int State);
-						
+
+	void		CALL	Target_Free(HTARGET target);
+	HTEXTURE	CALL	Target_GetTexture(HTARGET target);
 	HTEXTURE	CALL	Texture_Create(int width, int height) ;			
 	HTEXTURE	CALL	Texture_Load(const char *filename, DWORD size=0, bool bMipmap=false) ;			
 	void	CALL	Texture_Free(HTEXTURE tex) ;		
@@ -136,6 +139,7 @@ public:
 	HD3DFONT	CALL	Font_Load(const char * fontStyle,int height) ;
 	void		CALL	Font_Free(HD3DFONT font) ;
 	int			CALL	Gfx_RenderText(HD3DFONT font, const char * text, float x, float y, float w, float h, DWORD color = 0xffffffff) ;
+	int			CALL	Gfx_RenderTextToTarget(HTEXTURE * tex, HTARGET *tar, HD3DFONT font, const char * text, float x, float y, float w, float h, DWORD color = 0xffffffff);
 
 private:
 	void _PostError(char * errorstr);
@@ -145,6 +149,9 @@ private:
 
 
 public:
+
+	hgeTextureInfo * texinfo;
+
 	bool	bActive;
 	char	szResourcePath[_MAX_PATH];
 	char	szAppPath[_MAX_PATH];

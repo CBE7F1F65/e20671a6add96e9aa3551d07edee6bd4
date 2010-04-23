@@ -1,5 +1,5 @@
 #ifdef WIN32
-#include <vld.h>
+//#include <vld.h>
 #endif
 
 #include "../Header/processPrep.h"
@@ -17,10 +17,11 @@ Process::Process()
 	ZeroMemory(&channelsyncinfo, sizeof(hgeChannelSyncInfo));
 	retvalue	= PGO;
 	errorcode	= PROC_ERROR_INIFILE;
-	ZeroMemory(tex, sizeof(HTEXTURE) * TEXMAX);
+	ZeroMemory(texinfo, sizeof(hgeTextureInfo) * TEXMAX);
 
 	musicID = -1;
 	screenmode = 0;
+	turnoffflag = 0;
 
 	for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
 	{
@@ -38,7 +39,6 @@ Process::~Process()
 
 void Process::Release()
 {
-	NGE_Quit();
 	GameInput::ReleaseInput();
 	if (!errorcode)
 	{
@@ -47,6 +47,7 @@ void Process::Release()
 		hge->Ini_SetInt(RESCONFIGS_VOLUME, RESCONFIGN_VOLSE, sevol);
 
 		hge->Ini_SetInt(RESCONFIGS_CUSTOM, RESCONFIGN_SCREENMODE, screenmode);
+		hge->Ini_SetInt(RESCONFIGS_CUSTOM, RESCONFIGN_TURNOFFFLAG, turnoffflag);
 
 		hge->Ini_SetInt(RESCONFIGS_CUSTOM, RESCONFIGN_LASTMATCHCHARA_1_1, lastmatchchara[0][0]);
 		hge->Ini_SetInt(RESCONFIGS_CUSTOM, RESCONFIGN_LASTMATCHCHARA_1_2, lastmatchchara[0][1]);
@@ -72,6 +73,7 @@ void Process::Release()
 	FrontDisplay::fdisp.Release();
 	Enemy::Release();
 	SpriteItemManager::Release();
+	Effectsys::Release();
 	hgeEffectSystem::Release();
 	Replay::ReleaseList();
 
@@ -94,9 +96,9 @@ void Process::Release()
 	}
 	for(int i=0;i<TEXMAX;i++)
 	{
-		if(tex[i])
-			hge->Texture_Free(tex[i]);
-		tex[i] = NULL;
+		if(texinfo[i].tex)
+			hge->Texture_Free(texinfo[i].tex);
+		texinfo[i].tex = NULL;
 	}
 	if (texInit)
 	{
@@ -104,13 +106,14 @@ void Process::Release()
 		texInit = NULL;
 	}
 	hge->Stream_Free(stream);
+	NGE_Quit();
 }
 
 void Process::ClearAll()
 {
 	SelectSystem::ClearAll();
 	Effectsys::ClearAll();
-	BGLayer::Init(tex);
+	BGLayer::Init();
 	Enemy::ClearAll();
 //	Ghost::ClearAll();
 	Target::ClearAll();
@@ -188,6 +191,44 @@ void Process::WorldShake()
 			}
 		}
 	}
+}
+
+bool Process::LoadTextureSet(int texset/* =-1 */)
+{
+	bool bret = true;
+	for (int i=0; i<TEXMAX; i++)
+	{
+		if (!texinfo[i].tex && BResource::pbres->texturedata[i].texset > 0)
+		{
+			if (texset < 0 || BResource::pbres->texturedata[i].texset == texset)
+			{
+				texinfo[i].tex = BResource::pbres->LoadTexture(i);
+				if (!texinfo[i].tex && bret)
+				{
+					bret = false;
+				}
+				texinfo[i].texw = hge->Texture_GetWidth(i);
+				texinfo[i].texh = hge->Texture_GetHeight(i);
+			}
+		}
+	}
+	return bret;
+}
+
+bool Process::FreeTextureSet(int texset/* =-1 */)
+{
+	for (int i=TEX_WHITE+1; i<TEXMAX; i++)
+	{
+		if (texinfo[i].tex)
+		{
+			if (texset < 0 || BResource::pbres->texturedata[i].texset == texset)
+			{
+				hge->Texture_Free(texinfo[i].tex);
+				texinfo[i].tex = NULL;
+			}
+		}
+	}
+	return true;
 }
 
 void Process::musicChange(int ID, bool force)

@@ -11,6 +11,7 @@ extern "C"
 #include "../helper/dictionary.h"
 #include "../helper/iniparser.h"
 #include "../nge_timer.h"
+#include "../nge_font.h"
 #include "../nge_io_file.h"
 #include "../nge_image_load.h"
 #include "../nge_graphics.h"
@@ -40,8 +41,8 @@ HGEExport::~HGEExport()
 
 void CALL HGEExport::Init(const char * apppath)
 {
+	texinfo = NULL;
 	inidic = NULL;
-	inidic = dictionary_new(1);
 	b2DMode = true;
 	bActive = true;
 	nHGEFPS = -1;
@@ -81,7 +82,7 @@ void CALL HGEExport::Release()
 {
 	if (inidic)
 	{
-		dictionary_del(inidic);
+		iniparser_freedict(inidic);
 		inidic = NULL;
 	}
 #ifdef WIN32
@@ -218,7 +219,15 @@ void CALL HGEExport::System_SetStateString(hgeStringState state, const char *val
 		break;
 	case HGE_TITLE:
 		break;
-	case HGE_INIFILE:		if(value) strcpy(szIniFile,Resource_MakePath(value));
+	case HGE_INIFILE:		if(value)
+							{
+								strcpy(szIniFile,Resource_MakePath(value));
+								if (inidic)
+								{
+									iniparser_freedict(inidic);
+								}
+								inidic = iniparser_load(szIniFile);
+							}
 							else szIniFile[0]=0;
 							break;
 	case HGE_LOGFILE:		if(value)
@@ -295,6 +304,7 @@ BYTE * CALL HGEExport::Resource_Load(const char* filename, DWORD * size)
 	unz_file_info file_info;
 	int done, i;
 	BYTE * ptr;
+	int ifile;
 
 	if(size)
 		*size = 0;
@@ -360,7 +370,7 @@ BYTE * CALL HGEExport::Resource_Load(const char* filename, DWORD * size)
 
 	// Load from file
 _fromfile:
-	int ifile = io_fopen(Resource_MakePath(filename), IO_RDONLY/*"rb"*/);
+	ifile = io_fopen(Resource_MakePath(filename), IO_RDONLY/*"rb"*/);
 #ifdef __DEBUG
 	System_Log("Loading Resource: %s...", Resource_MakePath(filename));
 #endif
@@ -410,7 +420,6 @@ bool CALL HGEExport::Resource_AttachPack(const char *filename, int password)
 		if(!strcmp(szName,resItem->filename)) return true;
 		resItem=resItem->next;
 	}
-
 	zip=unzOpen(szName);
 	if(!zip) return false;
 	unzClose(zip);
@@ -651,9 +660,15 @@ char * CALL HGEExport::Resource_MakePath(const char * filename)
 
 	if(!filename)
 		strcpy(szTmpFilename, szAppPath);
+#ifndef WIN32
+	else if (!strncmp(filename, szResourcePath, strlen(szResourcePath)))
+	{
+		strcpy(szTmpFilename, filename);
+	}
+#else
 	else if(filename[0]=='\\' || filename[0]=='/' || filename[1]==':')
 		strcpy(szTmpFilename, filename);
-
+#endif
 	else
 	{
 		char szTmp[256];
@@ -678,7 +693,6 @@ char * CALL HGEExport::Resource_MakePath(const char * filename)
 		}
 		if(szTmp) strcat(szTmpFilename, szTmp);
 	}
-
 	for(i=0; szTmpFilename[i]; i++) { if(szTmpFilename[i]=='/') szTmpFilename[i]='\\'; }
 	return szTmpFilename;
 }
@@ -1185,6 +1199,11 @@ bool CALL HGEExport::Input_SetDIKey(int key, bool set /* = true */)
 	return true;
 }
 
+void	CALL HGEExport::Gfx_SetTextureInfo(hgeTextureInfo * _texinfo)
+{
+	texinfo = _texinfo;
+}
+
 void	CALL HGEExport::		Gfx_Clear(DWORD color)
 {
 
@@ -1200,9 +1219,22 @@ void	CALL HGEExport::		Gfx_RenderTriple(const hgeTriple *triple)
 
 }
 
-void	CALL HGEExport::		Gfx_RenderQuad(const hgeQuad *quad)
+void	CALL HGEExport::		Gfx_RenderQuad(const hgeQuad *quad, bool extuse)
 {
-	RenderHGEQuad(quad);
+	HTEXTURE tex = quad->tex;
+	if (!extuse)
+	{
+		if (!texinfo)
+		{
+			return;
+		}
+		tex = texinfo[tex].tex;
+	}
+	if (!tex)
+	{
+		return;
+	}
+	RenderHGEQuad(quad, (image_p)tex);
 }
 
 void	CALL HGEExport::		Gfx_SetClipping(int x/*=0*/, int y/*=0*/, int w/*=0*/, int h/*=0*/)
@@ -1308,7 +1340,22 @@ HGEMATRIX CALL HGEExport::Gfx_GetTransform(int State)
 
 HTEXTURE	CALL HGEExport::Texture_Create(int width, int height)
 {
+	if (width && height)
+	{
+		image_p pTex = image_create(width, height, DISPLAY_PIXEL_FORMAT_8888, 0);
+		return (HTEXTURE)pTex;
+	}
 	return NULL;
+}
+
+void CALL HGEExport::Target_Free(HTARGET target)
+{
+	Texture_Free((HTEXTURE)target);
+}
+
+HTEXTURE CALL HGEExport::Target_GetTexture(HTARGET target)
+{
+	return (HTEXTURE)target;
 }
 
 HTEXTURE	CALL HGEExport::Texture_Load(const char *filename, DWORD size/* =0 */, bool bMipmap/* =false */)
@@ -1323,7 +1370,7 @@ HTEXTURE	CALL HGEExport::Texture_Load(const char *filename, DWORD size/* =0 */, 
 		data=Resource_Load(filename, &_size);
 		if(!data) return NULL;
 	}
-	image_p pTex = image_load_buf((const char*)data, _size, DISPLAY_PIXEL_FORMAT_8888, 1);
+	image_p pTex = image_load_buf((const char*)data, _size, DISPLAY_PIXEL_FORMAT_8888, 0);
 
 	if (!pTex)
 	{	
@@ -1347,36 +1394,87 @@ HTEXTURE	CALL HGEExport::Texture_Load(const char *filename, DWORD size/* =0 */, 
 void		CALL HGEExport::Texture_Free(HTEXTURE tex)
 {
 	image_free((image_p)tex);
+
+	CTextureList *texItem=textures, *texPrev=0;
+
+	while(texItem)
+	{
+		if(texItem->tex==tex)
+		{
+			if(texPrev) texPrev->next=texItem->next;
+			else textures=texItem->next;
+			delete texItem;
+			break;
+		}
+		texPrev=texItem;
+		texItem=texItem->next;
+	}
 }
 
 int			CALL HGEExport::Texture_GetWidth(HTEXTURE tex, bool bOriginal/* =false */)
 {
-	if (tex)
+	if (texinfo && texinfo[tex].tex)
 	{
-		image_p texture = (image_p)tex;
-		return texture->texw;
+		return texinfo[tex].texw;
+/*
+		image_p texture = (image_p)texinfo[tex].tex;
+		return texture->texw;*/
+
 	}
 	return 0;
 }
 
 int			CALL HGEExport::Texture_GetHeight(HTEXTURE tex, bool bOriginal/* =false */)
 {
-	if (tex)
+	if (texinfo && texinfo[tex].tex)
 	{
-		image_p texture = (image_p)tex;
-		return texture->texh;
+/*
+		image_p texture = (image_p)texinfo[tex].tex;
+		return texture->texh;*/
+		return texinfo[tex].texh;
+
 	}
 	return 0;
 }
 
-HD3DFONT    CALL HGEExport::Font_Load(const char * fontStyle,int height)
+HD3DFONT    CALL HGEExport::Font_Load(const char * fontStyle, int height)
 {
-	return NULL;
+	PFont pf = create_font_freetype(fontStyle, height, DISPLAY_PIXEL_FORMAT_8888);
+	return (HD3DFONT)pf;
 }
 
 void		CALL HGEExport::Font_Free(HD3DFONT font)
 {
+	if (font)
+	{
+		font_destory((PFont)font);
+	}
+}
 
+int CALL HGEExport::Gfx_RenderTextToTarget(HTEXTURE * tex, HTARGET *tar, HD3DFONT font, const char * text, float x, float y, float w, float h, DWORD color /* = 0xffffffff */)
+{
+	if (!font || !tex ||!tar)
+	{
+		return 0;
+	}
+	image_p texret = (image_p)(*tex);/*(image_p)Texture_Create(w, h)*/;
+	if (!texret)
+	{
+		return 0;
+	}
+
+	PFont pf = PFont(font);
+	font_setcolor(pf, color);
+	font_drawtext(pf, text, strlen(text), texret, x, y, FONT_SHOW_SHADOW);
+	if (texret)
+	{
+		*tar = (HTARGET)texret;
+	}
+	int width;
+	int height;
+	int base;
+	font_textsize(pf, text, strlen(text), &width, &height, &base);
+	return height;
 }
 
 int			CALL HGEExport::Gfx_RenderText(HD3DFONT font, const char * text, float x, float y, float w, float h, DWORD color /* = 0xffffffff */)

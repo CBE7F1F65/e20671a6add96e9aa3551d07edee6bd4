@@ -77,6 +77,9 @@ public:
 
 	void	ClearAll();
 
+	bool LoadTextureSet(int texset=-1);
+	bool FreeTextureSet(int texset=-1);
+
 
 public:
 	union{
@@ -110,11 +113,12 @@ public:
 	};
 
 	//texture
-	HTEXTURE	tex[TEXMAX];
+	hgeTextureInfo	texinfo[TEXMAX];
 
 	//read ini
 	char	username[M_PL_MATCHMAXPLAYER][RPYINFO_USERNAMEMAX];
 	int		screenmode;
+	int		turnoffflag;
 	int		bgmvol;
 	int		sevol;
 	int		lastmatchchara[M_PL_MATCHMAXPLAYER][M_PL_ONESETPLAYER];

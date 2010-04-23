@@ -410,6 +410,7 @@ bool Data::Init(BYTE type)
 		memfile.size = _size;
 
 		hge->Resource_CreatePack(fname, password, &memfile, NULL);
+		hge->Resource_RemovePack(fname);
 
 		free(_content);
 	}
@@ -422,6 +423,7 @@ bool Data::Init(BYTE type)
 		memfile.size = 0;
 
 		hge->Resource_CreatePack(nowfilename, password, &memfile, NULL);
+		hge->Resource_RemovePack(nowfilename);
 
 		iWrite(type, sLinkType(DATAS_HEADER), nLinkType(DATAN_GAMEVERSION), GAME_VERSION);
 		sWrite(type, sLinkType(DATAS_HEADER), nLinkType(DATAN_SIGNATURE), GAME_SIGNATURE);
@@ -446,6 +448,7 @@ bool Data::SetFile(const char * _filename, BYTE type)
 		BYTE * content = NULL;
 		DWORD size;
 		content = hge->Resource_Load(binname, &size);
+		hge->Resource_RemovePack(nowfilename);
 		if (content)
 		{
 			MemToList(content, size);
@@ -642,8 +645,9 @@ bool Data::CheckHeader(BYTE type)
 		}
 		BYTE * _content = NULL;
 		DWORD _size;
-		hge->Resource_AttachPack(fname, password);
+		bool tbret = hge->Resource_AttachPack(fname, password);
 		_content = hge->Resource_Load(bname, &_size);
+		hge->Resource_RemovePack(fname);
 		bool bret = CheckMemHeader(_content, _size, type);
 		hge->Resource_Free(_content);
 		if(!bret)
@@ -681,6 +685,7 @@ bool Data::SaveBin()
 	{
 		ret = false;
 	}
+	hge->Resource_RemovePack(nowfilename);
 
 	bin.clear();
 	free(_bin);

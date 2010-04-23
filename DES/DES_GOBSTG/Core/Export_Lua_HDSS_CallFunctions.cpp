@@ -1545,7 +1545,10 @@ int _HDSSCallGet::Call_BGSETUP(LuaState * ls)
 			}
 		}
 
-		BGLayer::BGLayerSetup(_playerindex, _setID, _sID, _bForce);
+		if (!(Process::mp.turnoffflag & TURNOFFFLAG_LAYERSET))
+		{
+			BGLayer::BGLayerSetup(_playerindex, _setID, _sID, _bForce);
+		}
 	}
 	return 0;
 }

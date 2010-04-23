@@ -23,8 +23,6 @@ BYTE Enemy::nEnemyNow[M_PL_MATCHMAXPLAYER][ENEMY_NMAXSETMAX];
 #define _SCOREDISPLAYMAX		(ENEMYMAX*2)
 VectorList<ScoreDisplay> Enemy::scoredisplay[M_PL_MATCHMAXPLAYER];
 
-HTEXTURE * Enemy::tex = NULL;
-
 #define _ENEMYDELETE_LEFT_(X)	(M_GAMESQUARE_LEFT_(X)-M_GAMESQUARE_EDGE)
 #define _ENEMYDELETE_RIGHT_(X)	(M_GAMESQUARE_RIGHT_(X)+M_GAMESQUARE_EDGE)
 #define _ENEMYDELETE_TOP		(M_GAMESQUARE_TOP-M_GAMESQUARE_EDGE)
@@ -43,10 +41,9 @@ Enemy::~Enemy()
 	SpriteItemManager::FreeSprite(&sprite);
 }
 
-void Enemy::Init(HTEXTURE * _tex)
+void Enemy::Init()
 {
 	Release();
-	tex = _tex;
 	for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
 	{
 		en[i].init(ENEMYMAX);

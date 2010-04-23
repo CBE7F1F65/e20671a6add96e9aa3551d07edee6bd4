@@ -15,11 +15,11 @@ function ePlayerInSpellStop(playerindex, bSpell, spellPlayerID, oplayerID, stopt
 		end
 		
 		if stoptimer < stopmaxtime-2 then
-			local vscale = 1.0;
+			local vscale = 2.0;
 			local alpha = 0xff;
 			if stoptimer < stopmaxtime/4 then
 				local intervalue = stoptimer / (stopmaxtime/4);
-				vscale = hdssINTER(4.0, 1.0, intervalue);
+				vscale = hdssINTER(8.0, 2.0, intervalue);
 				alpha = hdssINTER(0, 0xff, intervalue);
 			end
 			
@@ -30,10 +30,10 @@ function ePlayerInSpellStop(playerindex, bSpell, spellPlayerID, oplayerID, stopt
 			local col = global.ARGB(alpha, 0xffffff);
 			
 			x = x - 16;
-			hdssFRONTSPRITE(LConst_game_FrontSprite_SpellCutInLeftID, siid, x, 160, 0, 1, vscale, col);
+			hdssFRONTSPRITE(LConst_game_FrontSprite_SpellCutInLeftID, siid, x, 160, 0, 2, vscale, col);
 			siid = siid + 1;
 			x = x + 144;
-			hdssFRONTSPRITE(LConst_game_FrontSprite_SpellCutInRightID, siid, x, 160, 0, 1, vscale, col);
+			hdssFRONTSPRITE(LConst_game_FrontSprite_SpellCutInRightID, siid, x, 160, 0, 2, vscale, col);
 		else
 			hdssFREEFRONTSPRITE(LConst_game_FrontSprite_SpellCutInLeftID);
 			hdssFREEFRONTSPRITE(LConst_game_FrontSprite_SpellCutInRightID);

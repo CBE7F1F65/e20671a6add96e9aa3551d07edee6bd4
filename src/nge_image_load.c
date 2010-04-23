@@ -195,6 +195,12 @@ image_p image_load_png_buf(const char* mbuf, int bsize, int displaymode)
 	}
 	size = texw * texh * bpb;
 	buffer = (uint8*) malloc(size);
+	if (!buffer)
+	{
+		SAFE_FREE(line);
+		png_destroy_read_struct(&png_ptr, png_infopp_NULL, png_infopp_NULL);
+		return 0;
+	}
 	memset(buffer,0,size);
     if (buffer){
 	        p32 = (uint32*) buffer;
@@ -238,6 +244,10 @@ image_p image_load_png_buf(const char* mbuf, int bsize, int displaymode)
     
 	if (done){
 		pimage = (image_p)malloc(sizeof(image_t));
+		if (!pimage)
+		{
+			return NULL;
+		}
 		memset(pimage,0,sizeof(image_t));
 		pimage->data = (uint8 *)buffer;
 		pimage->w    = width;
@@ -1956,13 +1966,19 @@ void swizzle_swap(image_p pimage)
 #else
 void swizzle_swap(image_p pimage)
 {
+
 	int bsize = pimage->texw*pimage->texh*pimage->bpb;
 	uint8* buffer = (uint8*)malloc(bsize);
+	if (!buffer)
+	{
+		return;
+	}
 	memset(buffer,0,bsize);
 	swizzle_fast(buffer,pimage->data,pimage->texw*pimage->bpb,pimage->texh);
 	SAFE_FREE(pimage->data);
 	pimage->data = buffer;
 	pimage->swizzle = 1;
+
 }
 #endif
 
@@ -1977,6 +1993,7 @@ void unswizzle_swap(image_p pimage)
 //Thanks to Raphael 
 static void unswizzle_fast(const uint8* out, const uint8* in, const int width, const int height)
 {
+
 	int blockx, blocky;
 	int j;
 	
@@ -2011,17 +2028,24 @@ static void unswizzle_fast(const uint8* out, const uint8* in, const int width, c
 		}
 		ydst += dst_row;
 	}
+
 }
 
 void unswizzle_swap(image_p pimage)
 {
+
 	int bsize = pimage->texw*pimage->texh*pimage->bpb;
 	uint8* buffer = (uint8*)malloc(bsize);
+	if (!buffer)
+	{
+		return;
+	}
 	memset(buffer,0,bsize);
 	unswizzle_fast(buffer,pimage->data,pimage->texw*pimage->bpb,pimage->texh);
 	SAFE_FREE(pimage->data);
 	pimage->data = buffer;
 	pimage->swizzle = 0;
+
 }
 
 
@@ -2040,7 +2064,7 @@ image_p image_load(const char* filename, int displaymode,int swizzle)
 	if(flags[0]==(char)0x89&&flags[1]=='P'&&flags[2]=='N'&&flags[3]=='G'){
 		pimage = image_load_png(filename,displaymode);
 		if(pimage == NULL){
-			nge_print("png file error!\n");
+			nge_print("png file error! %s\n", filename);
 			return NULL;
 		}
 		if(swizzle == 1){
@@ -2294,11 +2318,16 @@ image_p image_load_colorkey_fp(int handle,int fsize, int autoclose,int displaymo
 
 
 
-image_p image_create(int w,int h,int displaymode)
+image_p image_create(int w,int h,int displaymode, uint8 dontswizzle)
 {
 	image_p pimage = (image_p)malloc(sizeof(image_t));
 	int size;
+	if (!pimage)
+	{
+		return NULL;
+	}
 	memset(pimage,0,sizeof(image_t));
+	pimage->dontswizzle = dontswizzle;
 	pimage->w = w;
 	pimage->h = h;
 	pimage->texw = roundpower2(w);
@@ -2312,6 +2341,10 @@ image_p image_create(int w,int h,int displaymode)
 	pimage->texid = image_tid++;
 	size = pimage->texw*pimage->texh*pimage->bpb;
 	pimage->data = (uint8*)malloc(size);
+	if (!pimage->data)
+	{
+		return NULL;
+	}
 	memset(pimage->data,0,size);
 	return pimage;
 }

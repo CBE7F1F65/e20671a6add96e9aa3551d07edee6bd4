@@ -327,7 +327,7 @@ void PlayerGhost::action()
 		headangle = 0;
 	}
 
-	SpriteItemManager::SetSprite(_pgd->siid, sprite, Process::mp.tex);
+	SpriteItemManager::SetSprite(_pgd->siid, sprite);
 	if (flag & PGFLAG_SYNCPLAYER)
 	{
 		int siidoffset = Player::p[playerindex].nowframeindex;

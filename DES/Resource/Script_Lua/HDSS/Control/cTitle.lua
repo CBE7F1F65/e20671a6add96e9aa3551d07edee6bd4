@@ -1,4 +1,7 @@
 function CETitle_Init()
+	game.FreeTextureSet();
+	game.LoadTextureSet(LConst_texset_Front);
+	game.LoadTextureSet(LConst_texset_Title);
 	hdssMUSICCHANGE(LConst_musicid_title);
 end
 
@@ -53,6 +56,7 @@ function CETitle_SetupSelect(selsysid)
 end
 
 function CETitle_ExitState(tostate)
+	game.FreeTextureSet(LConst_texset_Title);
 	hdssSETSTATE(tostate)
 end
 

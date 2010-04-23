@@ -54,8 +54,6 @@ struct ftInfoSet
 	hgeFont * spellpointdigitfont;
 	hgeFont * headdigitfont;
 	HD3DFONT normalfont;
-	HD3DFONT smallfont;
-	HD3DFONT tinyfont;
 
 	hgeSprite * cutin;
 	hgeSprite * plchat_1;

@@ -61,7 +61,7 @@ public:
 	BGLayer();
 	~BGLayer();
 
-	static void Init(HTEXTURE * tex);
+	static void Init();
 	static void KillOtherLayer(BYTE playerindex);
 	static void Action(bool active);
 	static void ActionSpecial();
@@ -104,7 +104,6 @@ public:
 
 	static BGLayerSet bglayerset[M_PL_MATCHMAXPLAYER][BGLAYERSETMAX];
 	static WORD setindex;
-	static HTEXTURE * tex;
 
 	static BGLayer ubg[M_PL_MATCHMAXPLAYER][UBGLAYERMAX];
 };

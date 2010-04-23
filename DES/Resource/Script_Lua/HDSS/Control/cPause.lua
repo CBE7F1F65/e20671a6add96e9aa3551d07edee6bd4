@@ -73,6 +73,7 @@ function CEPause_ExitState(tostate, bPrep)
 		hdssSTARTPREP();
 	end
 	if tostate ~= STATE_START then
+		game.FreeTextureSet();
 		hdssCLEARALL();
 	end
 end

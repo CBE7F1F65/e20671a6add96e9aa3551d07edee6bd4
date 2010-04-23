@@ -1,4 +1,7 @@
 function CEMatchSelect_Init()
+	game.LoadTextureSet(LConst_texset_Front);
+	game.LoadTextureSet(LConst_texset_SelectItem);
+	game.LoadTextureSet(LConst_texset_MatchSelect);
 	hdssMUSICCHANGE(LConst_musicid_title);
 end
 
@@ -245,6 +248,7 @@ function CEMatchSelect_DispatchSelect_Latency(selsyslatencyid, latency)
 end
 
 function CEMatchSelect_DisplayIP(ipx, ipport)
+	game.FreeTextureSet(LConst_texset_MatchSelect);
 	local ipd0, ipd1, ipd2, ipd3 = global.GetARGB(ipx);
 	local strip = string.format("%d.%d.%d.%d:%d", ipd0, ipd1, ipd2, ipd3, ipport);
 	hdss.Call(

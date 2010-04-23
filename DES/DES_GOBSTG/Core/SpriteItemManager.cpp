@@ -3,7 +3,7 @@
 #include "../Header/BResource.h"
 #include "../../../src/hge/HGEExport.h"
 
-HTEXTURE * SpriteItemManager::tex;
+hgeTextureInfo * SpriteItemManager::texinfo;
 int SpriteItemManager::nullIndex = 0;
 int SpriteItemManager::yesIndex = 0;
 int SpriteItemManager::noIndex = 0;
@@ -22,9 +22,9 @@ SpriteItemManager::~SpriteItemManager()
 
 }
 
-void SpriteItemManager::Init(HTEXTURE * _tex)
+void SpriteItemManager::Init(hgeTextureInfo * _texinfo)
 {
-	tex = _tex;
+	texinfo = _texinfo;
 	FreeFrontSprite();
 }
 
@@ -35,11 +35,11 @@ void SpriteItemManager::Release()
 
 HTEXTURE SpriteItemManager::GetTexture(int index)
 {
-	if (index < 0 || index >= BResource::pbres->spritenumber || !tex)
+	if (index < 0 || index >= BResource::pbres->spritenumber || !texinfo)
 	{
 		return NULL;
 	}
-	return tex[BResource::pbres->spritedata[index].tex];
+	return BResource::pbres->spritedata[index].tex;
 }
 
 float SpriteItemManager::GetTexX(int index)
@@ -144,7 +144,7 @@ spriteData * SpriteItemManager::CastSprite(int index)
 	return NULL;
 }
 
-bool SpriteItemManager::SetSprite(int index, hgeSprite * sprite, HTEXTURE * tex)
+bool SpriteItemManager::SetSprite(int index, hgeSprite * sprite)
 {
 	if (!sprite)
 	{
@@ -160,9 +160,9 @@ bool SpriteItemManager::SetSprite(int index, hgeSprite * sprite, HTEXTURE * tex)
 	{
 		return false;
 	}
-	SetSpriteData(sprite, tex[_sd->tex], _sd->tex_x, _sd->tex_y, 
-		_sd->tex_w < 0 ? hge->Texture_GetWidth(tex[_sd->tex])-_sd->tex_x : _sd->tex_w, 
-		_sd->tex_h < 0 ? hge->Texture_GetHeight(tex[_sd->tex])-_sd->tex_y : _sd->tex_h);
+	SetSpriteData(sprite, _sd->tex, _sd->tex_x, _sd->tex_y, 
+		_sd->tex_w < 0 ? hge->Texture_GetWidth(_sd->tex)-_sd->tex_x : _sd->tex_w, 
+		_sd->tex_h < 0 ? hge->Texture_GetHeight(_sd->tex)-_sd->tex_y : _sd->tex_h);
 	return true;
 }
 
@@ -280,7 +280,7 @@ void SpriteItemManager::SetFrontSpriteFadeoutTime(int ID, int fadeouttime)
 hgeSprite * SpriteItemManager::CreateNullSprite()
 {
 	hgeSprite * sprite;
-	if (!tex)
+	if (!texinfo)
 	{
 		return NULL;
 	}
@@ -291,7 +291,7 @@ hgeSprite * SpriteItemManager::CreateNullSprite()
 hgeSprite * SpriteItemManager::CreateSprite(int index)
 {
 	hgeSprite * sprite;
-	if (!tex)
+	if (!texinfo)
 	{
 		return NULL;
 	}
@@ -301,21 +301,25 @@ hgeSprite * SpriteItemManager::CreateSprite(int index)
 	{
 		return sprite;
 	}
-	SetSpriteData(sprite, tex[BResource::pbres->spritedata[index].tex], BResource::pbres->spritedata[index].tex_x, BResource::pbres->spritedata[index].tex_y, BResource::pbres->spritedata[index].tex_w, BResource::pbres->spritedata[index].tex_h);
+//	SetSpriteData(sprite, tex[BResource::pbres->spritedata[index].tex], BResource::pbres->spritedata[index].tex_x, BResource::pbres->spritedata[index].tex_y, BResource::pbres->spritedata[index].tex_w, BResource::pbres->spritedata[index].tex_h);
+	SetSpriteData(sprite, BResource::pbres->spritedata[index].tex, BResource::pbres->spritedata[index].tex_x, BResource::pbres->spritedata[index].tex_y, BResource::pbres->spritedata[index].tex_w, BResource::pbres->spritedata[index].tex_h);
 	return sprite;
 }
 
-bool SpriteItemManager::SetSpriteData(hgeSprite * sprite, HTEXTURE _tex, float texx, float texy, float texw, float texh, bool flipx/* =false */, bool flipy/* =false */)
+bool SpriteItemManager::SetSpriteData(hgeSprite * sprite, HTEXTURE _tex, float texx, float texy, float texw, float texh, bool flipx/* =false */, bool flipy/* =false */, bool externtex/* =false */)
 {
-	if (!sprite)
+	if (!sprite || !texinfo)
 	{
 		return false;
 	}
-	if (!_tex)
+/*
+	if (!tex[_tex])
 	{
-		_tex = tex[TEX_WHITE];
-	}
-	sprite->SetTexture(_tex);
+//		_tex = tex[TEX_WHITE];
+		_tex = TEX_WHITE;
+	}*/
+
+	sprite->SetTexture(_tex, externtex);
 	if (!SetSpriteTextureRect(sprite, texx, texy, texw, texh))
 	{
 		return false;
@@ -377,7 +381,7 @@ bool SpriteItemManager::ChangeSprite(int index, hgeSprite * sprite)
 	{
 		return false;
 	}
-	SetSpriteData(sprite, tex[BResource::pbres->spritedata[index].tex], BResource::pbres->spritedata[index].tex_x, BResource::pbres->spritedata[index].tex_y, BResource::pbres->spritedata[index].tex_w, BResource::pbres->spritedata[index].tex_h);
+	SetSpriteData(sprite, BResource::pbres->spritedata[index].tex, BResource::pbres->spritedata[index].tex_x, BResource::pbres->spritedata[index].tex_y, BResource::pbres->spritedata[index].tex_w, BResource::pbres->spritedata[index].tex_h);
 	return true;
 }
 
@@ -416,7 +420,7 @@ void SpriteItemManager::FreeSprite(hgeSprite ** sprite)
 
 bool SpriteItemManager::ptFace(int index, hgeSprite * sprite)
 {
-	if (!sprite || !tex)
+	if (!sprite || !texinfo)
 	{
 		return false;
 	}

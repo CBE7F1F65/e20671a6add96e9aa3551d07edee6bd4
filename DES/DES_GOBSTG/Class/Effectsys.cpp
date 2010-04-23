@@ -77,8 +77,17 @@ void Effectsys::RenderAll(BYTE playerindex)
 	}
 }
 
+void Effectsys::Release()
+{
+	for (int i=0; i<EFFECTSYSTYPEMAX; i++)
+	{
+		efftype[i].FreeList();
+	}
+}
+
 bool Effectsys::Init(HTEXTURE * tex, const char * foldername, char name[][M_PATHMAX])
 {
+	Release();
 	char buffer[M_STRMAX];
 	for(int i=0;i<EFFECTSYSTYPEMAX;i++)
 	{
@@ -146,6 +155,10 @@ void Effectsys::valueSet(WORD ID, BYTE playerindex, BObject & owner)
 
 void Effectsys::chaseSet(int _chasetimer, BYTE _tarAim)
 {
+	if (tarAim >= TARGETMAX)
+	{
+		return;
+	}
 	chasetimer = _chasetimer;
 	tarAim = _tarAim;
 }

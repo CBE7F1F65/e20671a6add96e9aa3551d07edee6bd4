@@ -105,6 +105,7 @@ int hgeEffectSystem::Load(const char * filename, HTEXTURE tex /* = 0 */, HTEXTUR
 		return -1;
 	memcpy(&(ebi), _content + _offset, sizeof(hgeEffectBasicInfo));
 	texnum = ebi.tex;
+/*
 	if (tex == 0)
 	{
 		if(texnum < 0 || !texset[texnum])
@@ -117,7 +118,9 @@ int hgeEffectSystem::Load(const char * filename, HTEXTURE tex /* = 0 */, HTEXTUR
 	else
 	{
 		ebi.tex = tex;
-	}
+	}*/
+	ebi.tex = texnum;
+
 	_offset += sizeof(hgeEffectBasicInfo);
 	while(_offset < _size)
 	{

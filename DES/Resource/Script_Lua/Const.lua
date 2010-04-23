@@ -108,3 +108,19 @@ LConst_effid_sendex_21_out	=	89
 LConst_ShootCharge_EnemyDelay	=	32
 
 LConst_musicid_title	=	6
+
+
+
+LConst_texset_Front = 3
+LConst_texset_SelectItem = 4
+
+LConst_texset_Title = 5
+LConst_texset_MatchSelect = 6
+LConst_texset_Replay = 7
+
+LConst_texset_Matching	=	8
+LConst_texset_MatchingStart = 100
+LConst_texset_FaceStart = 200
+LConst_texset_DrainStart = 600
+LConst_texset_SceneStart = 800
+LConst_texset_SpellStart = 900

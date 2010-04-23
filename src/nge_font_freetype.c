@@ -67,6 +67,11 @@ PFont create_font_freetype(const char* fname, int height,int disp)
 	}
 	FT_Init_FreeType( &pf->library );
 	FT_New_Face( pf->library, fname, 0, &pf->face );
+	if (!pf->face)
+	{
+		font_destory(pf);
+		return NULL;
+	}
 	FT_Set_Char_Size( pf->face,height<< 6, height << 6, 96, 96); 
 	pf->procs = &freetype2_procs;
 	pf->size = height;
@@ -181,6 +186,10 @@ static void freetype2_gettextsize(PFont pfont, const void *text, int cc,
 		value = (uint16*)text;
 	}
 	face = pf->face;
+	if (!face)
+	{
+		return;
+	}
 	size = face->size;
 	/*
 	* Starting point
@@ -302,18 +311,24 @@ static void freetype2_drawtext(PFont pfont, image_p pimage, int x, int y,
 		pimage->dontswizzle = 1;
 	}
 	pimage->modified =1;
-	for (i =0;i<cc;i++) {
-		FT_Load_Glyph( pf->face, FT_Get_Char_Index( pf->face, value[i] ), FT_LOAD_DEFAULT );
-		if(pf->flags == FLAGS_FREETYPE_BOLDER)
-			FT_GlyphSlot_Embolden(pf->face->glyph);
-		FT_Get_Glyph( pf->face->glyph, &glyph );
-		FT_Render_Glyph( pf->face->glyph, ft_render_mode_normal ); 
-		FT_Glyph_To_Bitmap( &glyph, ft_render_mode_normal, 0, 1 ); 
-		bitmap_glyph = (FT_BitmapGlyph)glyph; 
-		bitmap=&bitmap_glyph->bitmap;
-		draw_one_word(pf,bitmap,pimage,pen_x + pf->face->glyph->bitmap_left,pen_y - pf->face->glyph->bitmap_top );
-		pen_x  +=(pf->face->glyph->advance.x+pf->fix_width*72) >> 6  ;
-		FT_Done_Glyph( glyph );
+	if (pf->face)
+	{
+		if (pf->face->glyph)
+		{
+			for (i =0;i<cc;i++) {
+				FT_Load_Glyph( pf->face, FT_Get_Char_Index( pf->face, value[i] ), FT_LOAD_DEFAULT );
+				if(pf->flags == FLAGS_FREETYPE_BOLDER)
+					FT_GlyphSlot_Embolden(pf->face->glyph);
+				FT_Get_Glyph( pf->face->glyph, &glyph );
+				FT_Render_Glyph( pf->face->glyph, ft_render_mode_normal ); 
+				FT_Glyph_To_Bitmap( &glyph, ft_render_mode_normal, 0, 1 ); 
+				bitmap_glyph = (FT_BitmapGlyph)glyph; 
+				bitmap=&bitmap_glyph->bitmap;
+				draw_one_word(pf,bitmap,pimage,pen_x + pf->face->glyph->bitmap_left,pen_y - pf->face->glyph->bitmap_top );
+				pen_x  +=(pf->face->glyph->advance.x+pf->fix_width*72) >> 6  ;
+				FT_Done_Glyph( glyph );
+			}
+		}
 	}
 	//if (buffer[j * pitch + i / 8] & (0x80 >> (i % 8))) 
 	if(need_free){

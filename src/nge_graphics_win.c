@@ -216,9 +216,8 @@ int TexImage2D(image_p pimg)
 	return 1;
 }
 
-void RenderHGEQuad(const hgeQuad * quad)
+void RenderHGEQuad(const hgeQuad * quad, image_p texture)
 {
-	image_p texture = (image_p)quad->tex;
 	int i;
 	uint8 r, g, b, a;
 	if((texture->modified==1)||texture->texid != m_tex_in_ram){
@@ -240,7 +239,7 @@ void RenderHGEQuad(const hgeQuad * quad)
 
 image_p ScreenToImage()
 {
-	image_p pimage = image_create(SCREEN_WIDTH,SCREEN_HEIGHT,DISPLAY_PIXEL_FORMAT_8888);
+	image_p pimage = image_create(SCREEN_WIDTH,SCREEN_HEIGHT,DISPLAY_PIXEL_FORMAT_8888, 0);
 	if(pimage == NULL)
 		return NULL;
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

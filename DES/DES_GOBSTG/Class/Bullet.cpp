@@ -14,6 +14,8 @@
 #include "../header/GameAI.h"
 #include "../header/Process.h"
 
+#define _BULLETRENDERMAX	256
+
 RenderDepth Bullet::renderDepth[M_PL_MATCHMAXPLAYER][BULLETTYPEMAX];
 
 int Bullet::_actionList[M_PL_MATCHMAXPLAYER][BULLETACTIONMAX];
@@ -21,6 +23,8 @@ hgeSprite * Bullet::sprite[BULLETTYPECOLORMAX];
 
 VectorList<Bullet> Bullet::bu[M_PL_MATCHMAXPLAYER];
 HTEXTURE Bullet::tex;
+
+int Bullet::rendercount[M_PL_MATCHMAXPLAYER];
 
 WORD Bullet::index;
 
@@ -108,7 +112,7 @@ void Bullet::BuildLine(BYTE playerindex, int num, int baseangle, float space, in
 
 int Bullet::Build(BYTE playerindex, float x, float y, int angle, float speed, BYTE type, BYTE color, int fadeinTime, float avoid, BYTE tarID)
 {
-	if (bu[playerindex].getSize() == BULLETMAX)
+	if (bu[playerindex].getSize() == BULLETMAX || rendercount[playerindex] >= _BULLETRENDERMAX)
 	{
 		return -1;
 	}
@@ -188,6 +192,7 @@ void Bullet::Action()
 
 void Bullet::RenderAll(BYTE playerindex)
 {
+	rendercount[playerindex] = 0;
 	if (bu[playerindex].getSize())
 	{
 		for (int i=0; i<BULLETTYPEMAX; i++)
@@ -200,6 +205,7 @@ void Bullet::RenderAll(BYTE playerindex)
 					bentered = true;
 					if (bu[playerindex].isValid() && (*bu[playerindex]).getRenderDepth() == i)
 					{
+						rendercount[playerindex]++;
 						(*bu[playerindex]).Render();
 					}
 				}

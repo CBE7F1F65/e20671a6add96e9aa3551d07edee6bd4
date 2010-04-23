@@ -110,7 +110,7 @@ public:
 
 	void FillCustomConstDesc();
 
-	bool LoadAll(HTEXTURE * texset);
+	bool LoadAll();
 	bool LoadScript(const char * filename);
 	bool Resize();
 
@@ -260,7 +260,7 @@ public:
 
 #ifndef __NOTUSELUA
 public:
-	bool LoadAll_Lua(HTEXTURE * tex);
+	bool LoadAll_Lua();
 	bool Execute_Lua(DWORD typeflag, DWORD name, DWORD con);
 #endif
 };

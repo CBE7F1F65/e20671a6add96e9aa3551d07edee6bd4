@@ -11,7 +11,6 @@
 #endif
 
 LuaStateOwner Export_Lua::state;
-HTEXTURE * Export_Lua::texset = NULL;
 
 Export_Lua::Export_Lua()
 {
@@ -26,14 +25,10 @@ void Export_Lua::Release(LuaState * ls /* = NULL */)
 {
 }
 
-void Export_Lua::InitHGE(HTEXTURE * _texset)
+void Export_Lua::InitHGE()
 {
 	Release();
 	state->OpenLibs();
-	if (_texset != NULL)
-	{
-		texset = _texset;
-	}
 }
 
 
@@ -227,6 +222,7 @@ int Export_Lua::PackLuaFiles(LuaState * ls)
 		memfile.filename = DEFAULT_BINLUAFILE;
 		memfile.size = size;
 		hge->Resource_CreatePack(DEFAULT_BINSCRIPTFILE, M_SCRIPT_PASSWORD, &memfile, NULL);
+		hge->Resource_RemovePack(DEFAULT_BINSCRIPTFILE);
 	}
 	hge->Resource_Free(memfile.data);
 
@@ -252,6 +248,7 @@ int Export_Lua::LoadPackedLuaFiles(LuaState * ls)
 	hge->Resource_AttachPack(DEFAULT_BINSCRIPTFILE, M_SCRIPT_PASSWORD);
 	DWORD size = 0;
 	BYTE * content = hge->Resource_Load(DEFAULT_BINLUAFILE, &size);
+	hge->Resource_RemovePack(DEFAULT_BINSCRIPTFILE);
 	if (!content)
 	{
 		return -1;

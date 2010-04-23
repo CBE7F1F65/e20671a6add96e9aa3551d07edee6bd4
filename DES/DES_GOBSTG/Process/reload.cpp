@@ -9,7 +9,7 @@ bool Process::reload()
 	SetCurrentDirectory(hge->Resource_MakePath(""));
 #endif
 
-	BGLayer::Init(tex);
+	BGLayer::Init();
 	Enemy::ClearAll();
 //	Ghost::ClearAll();
 	Target::ClearAll();
@@ -44,12 +44,12 @@ bool Process::reload()
 /*		rendertar[i] = hge->Target_Create(M_CLIENT_WIDTH, M_CLIENT_HEIGHT, false);*/
 	}
 	GameAI::Init();
-	Bullet::Init(tex[TEX_BULLET]);
-	Enemy::Init(tex);
+	Bullet::Init(TEX_BULLET);
+	Enemy::Init();
 	Item::Init();
 	Beam::Init();
-	PlayerBullet::Init(tex);
-	SpriteItemManager::Init(tex);
+	PlayerBullet::Init();
+	SpriteItemManager::Init(texinfo);
 	EffectSp::Init();
 
 	FrontDisplay::fdisp.Init();
