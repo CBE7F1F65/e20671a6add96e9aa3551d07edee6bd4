@@ -15,7 +15,7 @@ OBJS = helper/iniparser.o helper/dictionary.o \
        hge/zlib/adler32.o hge/zlib/compress.o hge/zlib/crc32.o hge/zlib/deflate.o hge/zlib/gzio.o hge/zlib/infback.o hge/zlib/inffast.o hge/zlib/inflate.o hge/zlib/inftrees.o hge/zlib/ioapi.o hge/zlib/mztools.o hge/zlib/trees.o hge/zlib/uncompr.o hge/zlib/unzip.o hge/zlib/zip.o hge/zlib/zutil.o
 INCDIR = psp/include psp/include/freetype2
 LIBDIR = psp/lib 
-CFLAGS = -G0 -w -DNGE2_NET -D_DEBUG_LOG -D_DEBUG_STDOUT -DMMGR -g
+CFLAGS = -G0 -w -DNGE2_NET
 LIBS += -ljpeg -lpng -lz
 CXXFLAGS = $(CFLAGS) -fno-rtti 
 ASFLAGS = $(CFLAGS)

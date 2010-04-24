@@ -1,46 +1,10 @@
-LTable_PlayerWinLoseChat	=	
-{				
-	{0,	"約束通り、お賽銭もらったわよ。",	"これはシャレになれないわね。"},
-	{0,	"もう終わり？大したことじゃなかったぜ。",	"も、もう一回勝負しろ！"},
-	{0,	"仕事の邪魔しないでくれる？",	"これはまた、困ったね。"},
-	{0,	"つまらないものを斬ってしまった。",	"まだまだ修行の不足だ。"},
-	{0,	"いい記事になりそう～。",	"さぁ、今日のところ帰るしかないな。"},
-	{0,	"うまかったよ。",	"あらら、ららららら～。"},
-	{0,	"毒でしびれたか。",	"よくも耐えられたね。"},
-	{0,	"やれやれ、本気を出さなくても勝てるね。",	"眩暈がくる。風邪かな。"},
-	{0,	"歌って踊ってうれしいや。",	"音をずらしたかな。"},
-	{0,	"鳥の歌を甘く見ないでくれ。",	"負けても平気だもん～。"},
-	{0,	"あなたも楽しかったか。",	"ううぅ。少し時間をくれ。"},
-	{0,	"冷静になれば負けるはずがない。",	"冷静になりすぎてミスをした。"},
-	{0,	"狡兎三窟って知ってる？",	"ひど～い。"},
-	{0,	"やっぱり満開の花が好き。",	"花を枯らせるやつは許さない。"},
-	{0,	"目とあった時点でもう遅かったよ。",	"もう勘弁してくれよ。"},
-	{0,	"何か質問あるかしら？",	"あきれたわ。"},
-	{0,	"あなたは有罪です。",	"証拠不足で困ります。"},
-	{0,	"向こうまで送ってあげるよ。",	"まだまだ未練があるのでは？"},
-	{0,	"夜じゃなくても太陽がない限り吸血鬼は無敵だぞ。",	"急に眠くなってきた。帰ろう。"},
-	{0,	"約束通リ、オ賽銭モラッタワヨ。",	"コレハしゃれニナレナイワネ。"},
-	{0,	"モウ終ワリ？大シタコトジャナカッタゼ。",	"モ、モウ一回勝負シロ！"},
-	{0,	"命を大切しないやつは死んじゃえばいいのに。",	"ふぅ～。"},
-	{0,	"私はいつも本気です。",	"負けてしまいました。"},
-	{0,	"捏造のネタに負けないよ。",	"これだから外を出るのがいやなのよ。"},
-}
-
 function CEClear_CloseUsed()
 end
 
 function CEClear_Init()
-	for i=0, 1 do
-		local chara = hdss.Get(HDSS_CHARA, i);
-		game.LoadTextureSet(LConst_texset_FaceStart+chara);
-	end
 end
 
 function CEClear_ExitState(tostate)
-	for i=0, 1 do
-		local chara = hdss.Get(HDSS_CHARA, i);
-		game.FreeTextureSet(LConst_texset_FaceStart+chara);
-	end
 	CEClear_CloseUsed();
 	hdssSETSTATE(tostate);
 	hdssCLEARALL();
@@ -86,14 +50,7 @@ function ControlExecute_cClear(timer)
 	end
 		
 	
-	if chati == 0 then
-		hdssCHATON(-1, -1, csbegin);
-	elseif chati == 1 then
-		hdssCHAT(-1, csbegin, 0);
-	elseif chati == 2 then
-		hdssCHAT(-1, csafter, 1);
-	elseif chati == 3 then
-		hdssCHATOFF();
+	if timer == 120 then
 		CEClear_ExitState(STATE_OVER);
 	end
 end

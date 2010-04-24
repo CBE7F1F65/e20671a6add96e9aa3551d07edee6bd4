@@ -13,6 +13,8 @@ BYTE SE::vol;
 
 bool SE::Initial()
 {
+	return true;
+
 	char buffer[M_STRMAX];
 	for(int i = 0;i < SEMAX;i++)
 	{
@@ -68,9 +70,10 @@ void SE::play()
 		{
 			int pan = (int)((se[i].sum / se[i].counter) * M_SE_PAN);
 
-			if(hge->Channel_IsPlaying(se[i].chn))
-				hge->Channel_SetPos(se[i].chn, 0);
-			else if (se[i].eff)
+//			if(hge->Channel_IsPlaying(se[i].chn))
+//				hge->Channel_SetPos(se[i].chn, 0);
+//			else
+				if (se[i].eff)
 			{
 				se[i].chn = hge->Effect_PlayEx(se[i].eff, vol/3, pan);
 			}

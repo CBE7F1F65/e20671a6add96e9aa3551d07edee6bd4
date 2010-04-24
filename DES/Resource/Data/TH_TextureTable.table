@@ -6,6 +6,7 @@ Comment	Index	Texture	TexSet	TexW	TexH
 -	4	Graphic/Sprite/Enemy/enemy.png	8	512	512
 -	6	Graphic/Other/front.png	3	512	512
 -	7	Graphic/Other/selectitem.png	4	512	512
+-	8	Graphic/Scene/scenename.png	2	256	256
 #		Player(10~59)			
 -	10	Graphic/Sprite/Player/Player/pl_01.png	100	256	256
 -	11	Graphic/Sprite/Player/Player/pl_02.png	101	256	256
@@ -33,16 +34,17 @@ Comment	Index	Texture	TexSet	TexW	TexH
 -	33	Graphic/Sprite/Player/Player/pl_24.png	123	256	256
 #		PlayerEx(50~109)			
 -	50	Graphic/Sprite/Player/Player/pl_01_ex.png	100	256	256
--	51	Graphic/Sprite/Player/Player/pl_02_ex.png	101	256	256
+-	51	Graphic/Sprite/Player/Player/pl_02_ex.png	701	256	256
 -	53	Graphic/Sprite/Player/Player/pl_04_ex.png	103	256	256
--	54	Graphic/Sprite/Player/Player/pl_05_ex.png	104	256	256
+-	54	Graphic/Sprite/Player/Player/pl_05_ex.png	704	256	256
 -	56	Graphic/Sprite/Player/Player/pl_07_ex.png	106	256	256
 -	63	Graphic/Sprite/Player/Player/pl_14_ex.png	113	256	256
 -	64	Graphic/Sprite/Player/Player/pl_15_ex.png	114	256	256
 -	66	Graphic/Sprite/Player/Player/pl_17_ex.png	116	256	256
+-	69	Graphic/Sprite/Player/Player/pl_01_ex.png	119	256	256
 -	71	Graphic/Sprite/Player/Player/pl_22_ex.png	121	256	256
 -	73	Graphic/Sprite/Player/Player/pl_24_ex.png	123	256	256
--	82	Graphic/Sprite/Player/Player/pl_15_ex_2.png	104	128	128
+-	82	Graphic/Sprite/Player/Player/pl_15_ex_2.png	114	128	128
 #		Face(110~159)			
 -	110	Graphic/Sprite/Face/face_01.png	200	128	256
 -	111	Graphic/Sprite/Face/face_02.png	201	128	256

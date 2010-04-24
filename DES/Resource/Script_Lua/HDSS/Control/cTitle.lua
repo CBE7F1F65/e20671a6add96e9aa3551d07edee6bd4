@@ -28,9 +28,9 @@ function CETitle_SetupSelect(selsysid)
 	
 	local _siusetable =
 	{
-		{SI_Title_Start,	"åùëÈ§ÚÈ_ º§∑§ﬁ§π°£"},
-		{SI_Title_Replay,	"•Í•◊•Ï•§§ÚËaŸp§∑§ﬁ§π°£"},
-		{SI_Title_Quit,		"§§§Ì§§§Ì§»ΩK¡À§∑§ﬁ§π°£"}
+		{SI_Title_Start},
+--		{SI_Title_Replay},
+--		{SI_Title_Quit}
 	}
 	for j, it in pairs(_siusetable) do
 		local i = j-1;
@@ -40,17 +40,14 @@ function CETitle_SetupSelect(selsysid)
 			{
 				selsysid, i, it[1], x, y
 			},
-			tableSelectOffset,
-			{
-				it[2], LConst_selsys_ucol, LConst_selsys_dcol, LConst_selsys_shadow, infox - x, infoy - y, 1, 0, LConst_selsys_align, true
-			}
+			tableSelectOffset
 		)
 	end
 	
 	hdss.Call(
 		HDSS_SELSETUP,
 		{
-			selsysid, 3, 0, 0, KSI_UP, KSI_DOWN, KSI_FIRE
+			selsysid, 1, 0, 0, KSI_UP, KSI_DOWN, KSI_FIRE
 		}
 	)
 end
@@ -63,27 +60,7 @@ end
 function CETitle_DispatchSelect(selsysid)
 	local complete, select = hdss.Get(HDSS_SELCOMPLETE, selsysid);
 	if complete then
-		if select == 0 then
-			CETitle_ExitState(STATE_MATCH_SELECT);
-		elseif select == 1 then
-			CETitle_ExitState(STATE_REPLAY);
-		elseif select == 2 then
-			hdssRETURN(PQUIT);
-		end
-	else
-		if hdss.Get(HDSS_CHECKKEY, 0, KSI_QUICK, DIKEY_DOWN) then
-			hdssSE(SE_SYSTEM_CANCEL)
-			if select == 2 then
-				hdssRETURN(PQUIT);
-			else
-				hdss.Call(
-					HDSS_SELSETUP,
-					{
-						selsysid, 3, 2, 0
-					}
-				)
-			end
-		end
+		CETitle_ExitState(STATE_MATCH_SELECT);
 	end
 end
 

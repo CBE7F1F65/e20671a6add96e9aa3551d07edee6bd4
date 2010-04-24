@@ -267,8 +267,8 @@ int  PCM_Play (void) {
 int  PCM_PlayStop (void) {
 	if ( !pcm_init )
 		return 0;
-	if ( pcm_play )
-		return pcm_play;
+//	if ( pcm_play )
+//		return pcm_play;
 	sceIoLseek32(pcm_file_handle, pcm_data_start, PSP_SEEK_SET);
 	pcm_current_sample = 0;
 	pcm_clean = 1;

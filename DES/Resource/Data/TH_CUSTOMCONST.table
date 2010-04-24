@@ -71,6 +71,7 @@ Comment	CustomConst	Name	Value
 -	170	CC_PlayerID_MarisaII	20
 -	171	CC_PlayerID_Yukari	21
 -	172	CC_PlayerID_Sanae	22
+-	173	CC_PlayerID_Hatate	23
 #		SE(200~249)	
 -	200	CC_SE_Bullet_1	90
 -	201	CC_SE_Bullet_2	91

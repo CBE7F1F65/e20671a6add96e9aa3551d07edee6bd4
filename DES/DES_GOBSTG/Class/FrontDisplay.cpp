@@ -326,25 +326,32 @@ void FrontDisplay::RenderPanel()
 	if (panelstate)
 	{
 		float spellpointx[M_PL_MATCHMAXPLAYER];
-		spellpointx[0] = M_GAMESQUARE_RIGHT_0-panel.spellpoint->GetWidth();
-		spellpointx[1] = M_GAMESQUARE_LEFT_1;
+		float sidescale = 1.35f;
+		for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
+		{
+			spellpointx[i] = M_GAMESQUARE_SIDEEDGE_X_(i) - panel.spellpoint->GetWidth()*sidescale/2;
+		}
+		float spellpointy = M_GAMESQUARE_CENTER_Y+16*sidescale;
+
 		float winindix[M_PL_MATCHMAXPLAYER][2];
 		float winindiw = panel.winindi->GetWidth();
 		float winindih = panel.winindi->GetHeight();
 		for (int i=0; i<2; i++)
 		{
-			winindix[0][i] = M_GAMESQUARE_LEFT_0 + winindiw * (i+1);
-			winindix[1][i] = M_GAMESQUARE_RIGHT_1 - winindiw * (i+1);
+			for (int j=0; j<M_PL_MATCHMAXPLAYER; j++)
+			{
+				winindix[j][i] = M_GAMESQUARE_SIDEEDGE_X_(j) + SIGN(i)*panel.winindi->GetWidth()*sidescale/2;
+			}
 		}
 
 		for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
 		{
-			panel.spellpoint->Render(spellpointx[i], M_GAMESQUARE_TOP);
+			panel.spellpoint->RenderEx(spellpointx[i], spellpointy, 0, sidescale);
 			spriteData * _spd = SpriteItemManager::CastSprite(panel.combobarindex);
 			float fcombogage = ((float)Player::p[i].nComboGage) / PLAYER_COMBOGAGEMAX;
 			SpriteItemManager::SetSpriteTextureRect(panel.combobar, _spd->tex_x, _spd->tex_y, _spd->tex_w*fcombogage, _spd->tex_h);
 			SpriteItemManager::SetSpriteHotSpot(panel.combobar, 0, 0);
-			panel.combobar->Render(spellpointx[i]+2, M_GAMESQUARE_TOP+30);
+			panel.combobar->RenderEx(spellpointx[i]+2*sidescale, spellpointy+30*sidescale, 0, sidescale);
 
 			bool usered = true;
 			if (Player::p[i].nComboGage < PLAYER_COMBOALERT && Player::p[i].nComboGage > PLAYER_COMBORESET)
@@ -367,19 +374,20 @@ void FrontDisplay::RenderPanel()
 			}
 			if (info.spellpointdigitfont)
 			{
-				info.spellpointdigitfont->Render(spellpointx[i]+38, M_GAMESQUARE_TOP+16, HGETEXT_RIGHT, buffer);
+				info.spellpointdigitfont->RenderEx(spellpointx[i]+38*sidescale, spellpointy+16*sidescale, HGETEXT_RIGHT, buffer, sidescale);
 				int nSpellPoint = Player::p[i].nSpellPoint;
 				sprintf(buffer, "%06d", nSpellPoint);
-				info.spellpointdigitfont->Render(spellpointx[i]+38, M_GAMESQUARE_TOP+16, HGETEXT_LEFT, buffer);
+				info.spellpointdigitfont->RenderEx(spellpointx[i]+38*sidescale, spellpointy+16*sidescale, HGETEXT_LEFT, buffer, sidescale);
 			}
 
 
+			float winindiy = winindih + M_GAMESQUARE_CENTER_Y;
 			if (Player::p[i].winflag)
 			{
-				panel.winindi->RenderEx(winindix[i][0], M_GAMESQUARE_TOP+winindih, ARC(panel.winindiheadangle));
+				panel.winindi->RenderEx(winindix[i][0], winindiy, ARC(panel.winindiheadangle), sidescale);
 				if (i == Player::IsMatchEnd())
 				{
-					panel.winindi->RenderEx(winindix[i][1], M_GAMESQUARE_TOP+winindih, ARC(panel.winindiheadangle));
+					panel.winindi->RenderEx(winindix[i][1], winindiy, ARC(panel.winindiheadangle), sidescale);
 				}
 			}
 
@@ -402,20 +410,22 @@ void FrontDisplay::RenderPanel()
 			panel.slot->Render(M_GAMESQUARE_LEFT_(i)+16, M_GAMESQUARE_BOTTOM);
 			panel.slotback->Render(M_GAMESQUARE_LEFT_(i), M_GAMESQUARE_BOTTOM);
 			float tempx;
+			float tempy = M_GAMESQUARE_CENTER_Y - 16*sidescale;
+			float lifiindix[M_PL_MATCHMAXPLAYER];
 			for (int j=0; j<PLAYER_DEFAULTINITLIFE/2; j++)
 			{
-				tempx = panel.lifeindi[FDISP_LIFEINDI_FULL]->GetWidth() * (j-(PLAYER_DEFAULTINITLIFE/2)/2) + M_GAMESQUARE_CENTER_X_(i);
+				tempx = panel.lifeindi[FDISP_LIFEINDI_FULL]->GetWidth() * (j-(PLAYER_DEFAULTINITLIFE/2)/2)*sidescale + M_GAMESQUARE_SIDEEDGE_X_(i);
 				if (Player::p[i].nLife > j * 2 + 1)
 				{
-					panel.lifeindi[FDISP_LIFEINDI_FULL]->Render(tempx, M_GAMESQUARE_TOP);
+					panel.lifeindi[FDISP_LIFEINDI_FULL]->RenderEx(tempx, tempy, 0, sidescale);
 				}
 				else if (Player::p[i].nLife > j * 2)
 				{
-					panel.lifeindi[FDISP_LIFEINDI_HALF]->Render(tempx, M_GAMESQUARE_TOP);
+					panel.lifeindi[FDISP_LIFEINDI_HALF]->RenderEx(tempx, tempy, 0, sidescale);
 				}
 				else
 				{
-					panel.lifeindi[FDISP_LIFEINDI_EMPTY]->Render(tempx, M_GAMESQUARE_TOP);
+					panel.lifeindi[FDISP_LIFEINDI_EMPTY]->RenderEx(tempx, tempy, 0, sidescale);
 				}
 			}
 			if (info.spellpointdigitfont)

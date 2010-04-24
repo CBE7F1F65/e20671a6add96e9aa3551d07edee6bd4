@@ -21,10 +21,10 @@ function Scene_s23(playerindex, timer)
 					playerindex, i, SI_Scene_23_1+1-i
 				},
 				{
-					cenx-3200, 2400, -2000, 6400, 6400, 15500, 0, 0
+					cenx-320, 0, 0, 640, 640, 0, 0, 0
 				},
 				{
-					-0.001-i*0.006
+					0.001+i*0.006
 				}
 			)
 		end

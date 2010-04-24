@@ -2,6 +2,7 @@ function CESceneSelect_Init()
 	game.LoadTextureSet(LConst_texset_Front);
 	game.LoadTextureSet(LConst_texset_SelectItem);
 	game.LoadTextureSet(LConst_texset_MatchSelect);
+	game.LoadTextureSet(LConst_texset_SceneSelect);
 	for i=0, 1 do
 		local chara = hdss.Get(HDSS_CHARA, i);
 		game.LoadTextureSet(LConst_texset_FaceStart+chara);
@@ -28,25 +29,21 @@ function CESceneSelect_SetSelect(selsyssceneid, pushkeyid)
 		8, 8
 	}
 	
+	local scale = 1.5;
+	
 	hdss.Call(
 		HDSS_SELBUILD,
 		{
-			selsyssceneid, 0, -1, TotalCenterX, ystart
+			selsyssceneid, 0, SI_SceneName_Default, TotalCenterX, ystart, scale
 		},
-		tableSelectOffset,
-		{
-			"ÒŽ¶¨¤ÎˆöËù", LConst_selsys_ucol, LConst_selsys_dcol, LConst_selsys_shadow, 0, 0, 0.75
-		}
+		tableSelectOffset
 	)
 	hdss.Call(
 		HDSS_SELBUILD,
 		{
-			selsyssceneid, 1, -1, TotalCenterX, ystart + yoffset
+			selsyssceneid, 1, SI_SceneName_Random, TotalCenterX, ystart + yoffset, scale
 		},
-		tableSelectOffset,
-		{
-			"¤É¤Ã¤«", LConst_selsys_ucol, LConst_selsys_dcol, LConst_selsys_shadow, 0, 0, 0.75
-		}
+		tableSelectOffset
 	)
 
 	for i=0, scenecount-1 do
@@ -59,12 +56,9 @@ function CESceneSelect_SetSelect(selsyssceneid, pushkeyid)
 		hdss.Call(
 			HDSS_SELBUILD,
 			{
-				selsyssceneid, i+2, -1, TotalCenterX, ystart + (i+2) * yoffset
+				selsyssceneid, i+2, SI_SceneName_01+i, TotalCenterX, ystart + (i+2) * yoffset, scale
 			},
-			tableSelectOffset,
-			{
-				scenename, ucol, dcol, LConst_selsys_shadow, 0, 0, 0.65, 0.75
-			}
+			tableSelectOffset
 		)
 	end
 	hdss.Call(
@@ -83,6 +77,7 @@ function CESceneSelect_SetSelect(selsyssceneid, pushkeyid)
 end
 
 function CESceneSelect_CloseUsed()
+	game.FreeTextureSet(LConst_texset_SceneSelect);
 	hdssBGOFF(0, LConst_uibg_player1id, LConst_uibg_player2id);
 	for i=0, 11 do
 		hdssFREEFRONTSPRITE(i);

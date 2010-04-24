@@ -73,10 +73,10 @@ int  PCM_Volume(int volume)
 int  PCM_Load (const char *name)
 {
 	/* Initialize variables */
-	audio_rate = 22050;
-	audio_format = AUDIO_S16;
+	audio_rate = 44100;
+	audio_format = AUDIO_S16SYS;
 	audio_channels = 2;
-	audio_buffers = 4096;
+	audio_buffers = 1024;
 	
 	/* Open the audio device */
 	if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers) < 0) {

@@ -110,7 +110,7 @@ LConst_ShootCharge_EnemyDelay	=	32
 LConst_musicid_title	=	6
 
 
-
+LConst_texset_SceneSelect	=	2
 LConst_texset_Front = 3
 LConst_texset_SelectItem = 4
 

@@ -44,6 +44,8 @@ public:
 	inline bool			CALL		System_GetState(hgeBoolState   state) { return System_GetStateBool  (state); }
 	inline int			CALL		System_GetState(hgeIntState    state) { return System_GetStateInt   (state); }
 	inline const char*	CALL		System_GetState(hgeStringState state) { return System_GetStateString(state); }		
+
+	void	CALL	System_Update();
 									
 	BYTE*	CALL	Resource_Load(const char *filename, DWORD *size=0) ;		
 	void	CALL	Resource_Free(void *res) ;					

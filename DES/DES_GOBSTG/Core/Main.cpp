@@ -65,7 +65,10 @@ int GameStart(int seed=0)
 	//	Export::Random_Seed(Process::mp.seed);
 	while (true)
 	{
+		hge->System_Update();
+#ifdef __DEBUG
 		ShowFps();
+#endif
 		InputProc();
 		FrameFunc();
 		RenderFunc();

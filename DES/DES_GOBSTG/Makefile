@@ -4,7 +4,7 @@ BUILD_PRX = 1
 PSP_FW_VERSION=371  
 INCDIR = ../../include
 LIBDIR = ../../lib
-CFLAGS = -G0 -w -O2 -D_DEBUG_LOG -D__DEBUG -g
+CFLAGS = -G0 -w -O2
 CXXFLAGS = $(CFLAGS) -fno-rtti
 ASFLAGS = $(CFLAGS)
 LDFLAGS =
@@ -12,6 +12,7 @@ LIBS +=  -lnge2 -lluaplus -lfreetype -lpng -lz -ljpeg -lg -lstdc++  -lpspmpeg -l
 
 EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = TH09x
+PSP_EBOOT_ICON = icon.png
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 PSPBIN = $(PSPSDK)/../bin

@@ -130,7 +130,7 @@ int Process::render()
 		_Render(M_RENDER_RIGHT);
 //		hge->Gfx_EndScene();
 	}
-	hge->Gfx_SetClipping(M_SIDE_EDGE, 0, SCREEN_WIDTH-M_SIDE_EDGE*2, SCREEN_HEIGHT);
+	hge->Gfx_SetClipping(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 //	hge->Gfx_BeginScene();
 //	hge->Gfx_Clear(0x00000000);

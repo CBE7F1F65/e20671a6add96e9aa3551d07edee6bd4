@@ -133,10 +133,11 @@ function CEPlayerSelect_SetSelect(bleft, x)
 				-4, -4,
 				0, 0,
 				8, 8
-			},
-			{
-				strname, ucol, dcol, LConst_selsys_shadow, (TotalCenterX-x)/2, -80, 1.2
 			}
+--			,
+--			{
+--				strname, ucol, dcol, LConst_selsys_shadow, (TotalCenterX-x)/2, -80, 1.2
+--			}
 		)
 	end
 	local playerindex = 1;

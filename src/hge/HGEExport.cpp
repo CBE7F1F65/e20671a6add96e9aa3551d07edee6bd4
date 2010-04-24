@@ -13,6 +13,7 @@ extern "C"
 #include "../nge_timer.h"
 #include "../nge_font.h"
 #include "../nge_io_file.h"
+#include "../audiosystem/play_pcm.h"
 #include "../nge_image_load.h"
 #include "../nge_graphics.h"
 };
@@ -293,6 +294,28 @@ const char* CALL HGEExport::System_GetStateString(hgeStringState state) {
 	return NULL;
 }
 
+void CALL HGEExport::System_Update()
+{
+	static uint64 lastTime = (uint64)Timer_GetCurrentSystemTime();
+	uint64 frequency = 0;
+	uint64 nowtime = nge_get_tick_longlong(&frequency);
+	if (frequency)
+	{
+		fDeltaTime = ((double)nowtime - (double)lastTime) / (double)frequency;
+	}
+	else
+	{
+		fDeltaTime = 0;
+	}
+	fTime += fDeltaTime;
+	if (fDeltaTime)
+	{
+		fFPS = 1 / fDeltaTime;
+	}
+	nFrameCounter++;
+	lastTime = nowtime;
+}
+
 BYTE * CALL HGEExport::Resource_Load(const char* filename, DWORD * size)
 {
 	static char *res_err="Can't load resource: %s";
@@ -371,30 +394,18 @@ BYTE * CALL HGEExport::Resource_Load(const char* filename, DWORD * size)
 	// Load from file
 _fromfile:
 	ifile = io_fopen(Resource_MakePath(filename), IO_RDONLY/*"rb"*/);
-#ifdef __DEBUG
-	System_Log("Loading Resource: %s...", Resource_MakePath(filename));
-#endif
 	if (!ifile)
 	{
 		return 0;
 	}
+	DWORD _size = io_fsize(ifile);
 	if (size)
 	{
-		*size = io_fsize(ifile);
+		*size = _size;
 	}
-	BYTE * content = (BYTE *)malloc(*size*sizeof(BYTE));
-	io_fread((void*)content, 1, *size*sizeof(BYTE), ifile);
+	BYTE * content = (BYTE *)malloc(_size*sizeof(BYTE));
+	io_fread((void*)content, 1, _size*sizeof(BYTE), ifile);
 	io_fclose(ifile);
-#ifdef __DEBUG
-	if (content)
-	{
-		System_Log("Succeeded.");
-	}
-	else
-	{
-		System_Log("Failed.");
-	}
-#endif
 	return content;
 }
 
@@ -765,7 +776,7 @@ void CALL HGEExport::Ini_SetInt(const char *section, const char *name, int value
 	{
 		char bufferstr[M_STRMAX];
 		char buffer[M_STRITOAMAX];
-		sprintf(bufferstr, "%s_%s", section, name);
+		sprintf(bufferstr, "%s:%s", section, name);
 		sprintf(buffer, "%d", value);
 		iniparser_set(inidic, bufferstr, buffer);
 	}
@@ -788,7 +799,7 @@ int CALL HGEExport::Ini_GetInt(const char *section, const char *name, int def_va
 	if (inidic)
 	{
 		char bufferstr[M_STRMAX];
-		sprintf(bufferstr, "%s_%s", section, name);
+		sprintf(bufferstr, "%s:%s", section, name);
 		iret = iniparser_getint(inidic, bufferstr, def_val);
 	}
 	return iret;
@@ -809,7 +820,7 @@ void CALL HGEExport::Ini_SetFloat(const char *section, const char *name, float v
 	{
 		char bufferstr[M_STRMAX];
 		char buffer[M_STRITOAMAX];
-		sprintf(bufferstr, "%s_%s", section, name);
+		sprintf(bufferstr, "%s:%s", section, name);
 		sprintf(buffer, "%f", value);
 		iniparser_set(inidic, bufferstr, buffer);
 	}
@@ -834,7 +845,7 @@ float CALL HGEExport::Ini_GetFloat(const char *section, const char *name, float 
 		char bufferstr[M_STRMAX];
 		char bufferdef[M_STRITOAMAX];
 		char bufferret[M_STRITOAMAX];
-		sprintf(bufferstr, "%s_%s", section, name);
+		sprintf(bufferstr, "%s:%s", section, name);
 		sprintf(bufferdef, "%f", def_val);
 		strcpy(bufferret, iniparser_getstring(inidic, bufferstr, bufferdef));
 		fret = (float)atof(bufferret);
@@ -851,7 +862,7 @@ void CALL HGEExport::Ini_SetString(const char *section, const char *name, const 
 	if (inidic)
 	{
 		char bufferstr[M_STRMAX];
-		sprintf(bufferstr, "%s_%s", section, name);
+		sprintf(bufferstr, "%s:%s", section, name);
 		iniparser_set(inidic, bufferstr, (char *)value);
 	}
 #endif
@@ -867,7 +878,7 @@ char * CALL HGEExport::Ini_GetString(const char *section, const char *name, cons
 	if (inidic)
 	{
 		char bufferstr[M_STRMAX];
-		sprintf(bufferstr, "%s_%s", section, name);
+		sprintf(bufferstr, "%s:%s", section, name);
 		strcpy(szIniString, iniparser_getstring(inidic, bufferstr, (char *)def_val));
 	}
 	else
@@ -969,21 +980,50 @@ float CALL HGEExport::Timer_GetWorstFPS(int mod)
 
 HEFFECT CALL HGEExport::Effect_Load(const char *filename, DWORD size/* =0 */)
 {
-	return NULL;
+	HEFFECT eff;
+	music_ops * mp3effect = (music_ops *)malloc(sizeof(music_ops));
+	if (!mp3effect)
+	{
+		return NULL;
+	}
+	eff = (HEFFECT)mp3effect;
+	MP3PlayInit(mp3effect);
+	if (mp3effect->load(Resource_MakePath(filename)) != 1)
+	{
+		Effect_Free(eff);
+		eff = NULL;
+	}
+	return eff;
 }
 
 void CALL HGEExport::Effect_Free(HEFFECT eff)
 {
-
+	if (eff)
+	{
+		music_ops * mp3effect = (music_ops *)eff;
+		free(mp3effect);
+	}
 }
 
 HCHANNEL CALL HGEExport::Effect_Play(HEFFECT eff)
 {
+	if (eff)
+	{
+		music_ops * mp3effect = (music_ops *)eff;
+		mp3effect->playstop();
+		return (HCHANNEL)eff;
+	}
 	return NULL;
 }
 
 HCHANNEL CALL HGEExport::Effect_PlayEx(HEFFECT eff, int volume/* =100 */, int pan/* =0 */, float pitch/* =1.0f */, bool loop/* =false */)
 {
+	if (eff)
+	{
+		music_ops * waveeffect = (music_ops *)eff;
+		int iret = waveeffect->playstop();
+		return (HCHANNEL)eff;
+	}
 	return NULL;
 }
 
@@ -1493,7 +1533,7 @@ void HGEExport::_PostError(char * errorstr)
 
 LONGLONG HGEExport::Timer_GetCurrentSystemTime()
 {
-	return nge_get_tick_longlong();
+	return nge_get_tick_longlong(NULL);
 }
 
 void HGEExport::_SetFXVolume(int vol)

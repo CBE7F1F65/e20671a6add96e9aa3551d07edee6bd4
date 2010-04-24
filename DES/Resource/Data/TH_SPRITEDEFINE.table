@@ -254,7 +254,7 @@ Comment	Index	SI_Name	Tex	Tex_x	Tex_y	Tex_w	Tex_h
 -	309	SI_Item_Ex	7	288	464	16	16
 -	310	SI_Item_Point	7	304	464	16	16
 -	311	SI_Player_ShotItem	7	320	480	32	32
-#		Panel(320~399)					
+#		Panel(320~349)					
 -	320	SI_FrontPanel_Left_0	6	496	0	16	448
 -	321	SI_FrontPanel_Right_0	6	448	0	16	448
 -	322	SI_FrontPanel_Top_0	6	0	0	320	16
@@ -272,6 +272,33 @@ Comment	Index	SI_Name	Tex	Tex_x	Tex_y	Tex_w	Tex_h
 -	335	SI_FrontPanel_LifeIndi_Half	6	416	0	16	16
 -	336	SI_FrontPanel_LifeIndi_Empty	6	432	0	16	16
 -	337	SI_Front_Text	6	368	240	72	264
+#		SceneName(350~399)					
+-	350	SI_SceneName_Default	8	0	0	128	16
+-	351	SI_SceneName_Random	8	0	16	128	16
+-	352	SI_SceneName_01	8	0	32	128	16
+-	353	SI_SceneName_02	8	0	48	128	16
+-	354	SI_SceneName_03	8	0	64	128	16
+-	355	SI_SceneName_04	8	0	80	128	16
+-	356	SI_SceneName_05	8	0	96	128	16
+-	357	SI_SceneName_06	8	0	112	128	16
+-	358	SI_SceneName_07	8	0	128	128	16
+-	359	SI_SceneName_08	8	0	144	128	16
+-	360	SI_SceneName_09	8	0	160	128	16
+-	361	SI_SceneName_10	8	0	176	128	16
+-	362	SI_SceneName_11	8	0	192	128	16
+-	363	SI_SceneName_12	8	0	208	128	16
+-	364	SI_SceneName_13	8	0	224	128	16
+-	365	SI_SceneName_14	8	0	240	128	16
+-	366	SI_SceneName_15	8	128	0	128	16
+-	367	SI_SceneName_16	8	128	16	128	16
+-	368	SI_SceneName_17	8	128	32	128	16
+-	369	SI_SceneName_18	8	128	48	128	16
+-	370	SI_SceneName_19	8	128	64	128	16
+-	371	SI_SceneName_20	8	128	80	128	16
+-	372	SI_SceneName_21	8	128	96	128	16
+-	373	SI_SceneName_22	8	128	112	128	16
+-	374	SI_SceneName_23	8	128	128	128	16
+-	375	SI_SceneName_24	8	128	144	128	16
 #		Face(400~499)					
 -	400	SI_Face_01	110	0	0	-1	-1
 -	401	SI_Face_02	111	0	0	-1	-1
@@ -1031,7 +1058,7 @@ Comment	Index	SI_Name	Tex	Tex_x	Tex_y	Tex_w	Tex_h
 -	1830	SI_BulletEx_Yuka_Middle_0	63	128	0	96	96
 -	1831	SI_BulletEx_Yuka_Small_0	63	0	128	64	64
 -	1832	SI_BulletEx_Reisen_0	82	0	0	-1	-1
--	1833	SI_BulletEx_ReimuII_0	50	96	0	32	32
+-	1833	SI_BulletEx_ReimuII_0	69	96	0	32	32
 -	1834	SI_BulletEx_Hatate_0	233	0	0	128	256
 -	1835	SI_BulletEx_Hatate_1	233	128	0	128	256
 #		Player(2000~2999)					

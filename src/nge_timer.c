@@ -96,7 +96,7 @@ static void TM_unpause(nge_timer* timer)
 
 #ifdef WIN32
 #include <windows.h>
-uint64 nge_get_tick_longlong()
+uint64 nge_get_tick_longlong(uint64 * frequency)
 {
 /*
 	LARGE_INTEGER Counter;
@@ -149,17 +149,29 @@ uint64 nge_get_time(uint16 *wYear, uint16 *wMonth, uint16 *wDay, uint16 *wHour, 
 #else
 #include <psprtc.h>
 static u64 mTickFrequency = 0;
-uint64 nge_get_tick_longlong()
+uint64 nge_get_tick_frequency()
+{
+	if(mTickFrequency == 0)
+	{
+		mTickFrequency = sceRtcGetTickResolution();
+	}
+	return mTickFrequency;
+}
+
+uint64 nge_get_tick_longlong(uint64 * frequency)
 {
 	u64 ticks;
-	if(mTickFrequency == 0)
-		mTickFrequency = sceRtcGetTickResolution();
+	nge_get_tick_frequency();
 	sceRtcGetCurrentTick(&ticks);
+	if (frequency)
+	{
+		* frequency = mTickFrequency;
+	}
 	return (uint64)ticks;
 }
 uint32 nge_get_tick()
 {
-	uint32 tick32 = nge_get_tick_longlong()/1000;
+	uint32 tick32 = nge_get_tick_longlong(NULL)/1000;
 	return tick32;
 }
 uint64 nge_get_time(uint16 *wYear, uint16 *wMonth, uint16 *wDay, uint16 *wHour, uint16 *wMinutes, uint16 *wSeconds, uint32 *dMicroseconds)

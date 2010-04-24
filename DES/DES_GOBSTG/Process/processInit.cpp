@@ -5,22 +5,24 @@ int Process::processPreInitial()
 	BResource::Init();
 	Replay::Init();
 
+	BYTE * _content = hge->Resource_Load(CONFIG_STR_FILENAME);
 	bool rebuilddone = false;
-	if(
-#ifdef WIN32
-		_access(CONFIG_STR_FILENAME, 00) == -1
-#else
-		true
-#endif
-		)
+	if(!_content)
 	{
 rebuild:
 		if (rebuilddone)
 		{
+			if (_content)
+			{
+				hge->Resource_Free(_content);
+				_content = NULL;
+			}
 			errorcode = PROC_ERROR_INIFILE;
 			return PQUIT;
 		}
+#ifdef WIN32
 		io_fdelete(hge->Resource_MakePath(CONFIG_STR_FILENAME));
+#endif
 //		DeleteFile(CONFIG_STR_FILENAME);
 
 		hge->Ini_SetInt(Data::data.translateSection(Data::data.sLinkType(DATAS_HEADER)), Data::data.translateName(Data::data.nLinkType(DATAN_GAMEVERSION)), GAME_VERSION);
@@ -98,8 +100,13 @@ rebuild:
 		hge->Ini_SetInt(RESCONFIGS_KEYSETTING_1, RESCONFIGN_DEBUG_JOYSPEEDUP, RESCONFIGDEFAULT_DEBUG_JOYSPEEDUP);
 		HGELOG("Succeeded in rebuilding Config File.");
 
-		rebuilddone = true;
 #endif
+		rebuilddone = true;
+	}
+	if (_content)
+	{
+		hge->Resource_Free(_content);
+		_content = NULL;
 	}
 
 	if (!GameInput::InitInput())
@@ -126,14 +133,22 @@ rebuild:
 	//
 
 	if(hge->Ini_GetInt(Data::data.translateSection(Data::data.sLinkType(DATAS_HEADER)), Data::data.translateName(Data::data.nLinkType(DATAN_GAMEVERSION)), -1) != GAME_VERSION)
+	{
 		goto rebuild;
+	}
 	
 	if(screenmode < 0 || screenmode > 1)
+	{
 		goto rebuild;
+	}
 	if(bgmvol < 0 || bgmvol > 100)
+	{
 		goto rebuild;
+	}
 	if(sevol < 0 || sevol > 100)
+	{
 		goto rebuild;
+	}
 	if (renderskip < 0 || renderskip > 3)
 	{
 		goto rebuild;
@@ -326,6 +341,10 @@ int Process::processInit()
 	SpriteItemManager::Init(texinfo);
 
 	Fontsys::Init();
+	if (turnoffflag & TURNOFFFLAG_EFFECTSYS)
+	{
+		memset(BResource::pbres->resdata.effectsysfilename, 0, sizeof(char)*EFFECTSYSTYPEMAX*M_PATHMAX);
+	}
 	if(!Effectsys::Init(NULL, BResource::pbres->resdata.effectsysfoldername, BResource::pbres->resdata.effectsysfilename))
 	{
 #ifdef __DEBUG

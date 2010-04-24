@@ -287,11 +287,13 @@ void Export_Lua::ShowError(int errortype, const char * err)
 #ifdef WIN32
 	MessageBox(NULL, err, msgtitle, MB_OK);
 #endif
+#ifdef __DEBUG
 	if (!hge->System_GetState(HGE_LOGFILE) || !strlen(hge->System_GetState(HGE_LOGFILE)))
 	{
 		hge->System_SetState(HGE_LOGFILE, LOG_STR_FILENAME);
 	}
 	hge->System_Log("%s: %s", msgtitle, err);
+#endif
 }
 
 #endif

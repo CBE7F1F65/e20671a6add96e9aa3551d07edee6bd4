@@ -765,7 +765,11 @@ function ePlayerShootCharge_23_3(playerindex, level, oplayerID, px, py)
 	local x = TotalCenterX;
 	local y = 0;
 	--
-	local toindex = RANDT(0, 22);
+--	local toindex = RANDT(0, 22);
+	local toindex = hdss.Get(HDSS_CHARA, playerindex);
+	if toindex == CC_PlayerID_Hatate then
+		toindex = CC_PlayerID_Aya;
+	end
 	--
 	hdssSD(LConst_Desc_HatateIndex+playerindex, toindex);
 	hdssEB(CC_ShootChargeEnemyEID_23_3, playerindex, x, y, 9000, 0, oplayerID, 1400, helper_GetRandomItem());

@@ -149,7 +149,7 @@
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../../win32depends/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;__DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="0"
