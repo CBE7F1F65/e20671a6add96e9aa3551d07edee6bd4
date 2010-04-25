@@ -1,13 +1,20 @@
-function _Edef_ShootChargeEnemyEID_07_CallPerfectFreeze(x, y, level)
+function _Edef_ShootChargeEnemyEID_07_CallPerfectFreeze(x, y, level, playerindex)
+	
+	game.SetPerfectFreezeParam(1-playerindex,
+		{
+			TIMEREQUAL, 2, AND, INDEXMODEQUAL, 2, 0, THEN, TYPESET, CC_Bullet_SmallBall, 
+			TIMEREQUAL, 2, AND, INDEXMODEQUAL, 2, 0, THEN, COLORSET, 15, 
+			TIMEREQUAL, 2, ANGLESETRAND, 1, 36000, 
+			TIMERRANGE, 60, level*4+80, SPEEDSETADD, 3
+		}
+	)
+	game.SetPerfectFreezeParam(playerindex,
+		{
+			TIMEREQUAL, 2, ANGLESETRAND, 1, 36000, 
+			TIMERRANGE, 60, level*4+80, SPEEDSETADD, 3
+		}
+	)
 	for i=0, 1 do
-		game.SetPerfectFreezeParam(i,
-			{
-				TIMEREQUAL, 2, AND, INDEXMODEQUAL, 2, 0, THEN, TYPESET, CC_Bullet_SmallBall, 
-				TIMEREQUAL, 2, AND, INDEXMODEQUAL, 2, 0, THEN, COLORSET, 15, 
-				TIMEREQUAL, 2, ANGLESETRAND, 1, 36000, 
-				TIMERRANGE, 60, level*4+80, SPEEDSETADD, 3
-			}
-		)
 		hdss.Call(HDSS_EZONEBUILD,
 			{
 				EZONETYPE_BULLETPERFECTFREEZE+EZONECHECK_CIRCLE, i, helper_GetCenterX(i), CenterY, 
@@ -25,7 +32,7 @@ function Edef_ShootChargeEnemyEID_07_1(playerindex, level, x, y, timer, px, py)
 		hdssBC(playerindex, num, angle, 0, x, y, 2.0, CC_Bullet_Arris, 6);
 		hdssBC(playerindex, num, angle+18000/num, 0, x, y, 2.0, CC_Bullet_SmallBall, 6);
 	elseif timer == 60 then
-		_Edef_ShootChargeEnemyEID_07_CallPerfectFreeze(x, y, level);
+		_Edef_ShootChargeEnemyEID_07_CallPerfectFreeze(x, y, level, playerindex);
 	elseif timer > 60 and math.mod(timer, 4) == 0 then	
 		hdssSE(CC_SE_Bullet_2);
 	end
@@ -40,7 +47,7 @@ function Edef_ShootChargeEnemyEID_07_2(playerindex, level, x, y, timer, px, py)
 		hdssBC(playerindex, num, angle, 0, x, y, 2.0, CC_Bullet_Arris, 6);
 		hdssBC(playerindex, num, angle+18000/num, 0, x, y, 1.2, CC_Bullet_Arris, 6);
 	elseif timer == 60 then
-		_Edef_ShootChargeEnemyEID_07_CallPerfectFreeze(x, y, level);
+		_Edef_ShootChargeEnemyEID_07_CallPerfectFreeze(x, y, level, playerindex);
 	elseif timer > 60 and math.mod(timer, 4) == 0 then	
 		hdssSE(CC_SE_Bullet_2);
 	end

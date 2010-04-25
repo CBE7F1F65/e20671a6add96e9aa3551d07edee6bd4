@@ -466,7 +466,6 @@ void RenderHGEQuad(const hgeQuad * quad, image_p texture)
 	for (i=0; i<4; i++)
 	{
 		int j = i;
-		uint8 r, g, b, a;
 		if (i > 1)
 		{
 			j = 5-i;
@@ -476,8 +475,7 @@ void RenderHGEQuad(const hgeQuad * quad, image_p texture)
 		vertices[i].x = quad->v[j].x;
 		vertices[i].y = quad->v[j].y;
 		vertices[i].z = quad->v[j].z;
-//		GetRGBA(quad->v[j].col, texture->dtype, &b, &g, &r, &a);
-		vertices[i].color = quad->v[j].col;//MAKE_RGBA_8888(b, a, g, r);
+		vertices[i].color = MAKE_RGBA_8888(GETR(quad->v[j].col), GETG(quad->v[j].col), GETB(quad->v[j].col), GETA(quad->v[j].col));
 	}
 	sceGumDrawArray(GU_TRIANGLE_STRIP,GU_TEXTURE_32BITF|(texture->dtype)|GU_VERTEX_32BITF|GU_TRANSFORM_3D|GU_COLOR_8888,4,0,vertices);
 }

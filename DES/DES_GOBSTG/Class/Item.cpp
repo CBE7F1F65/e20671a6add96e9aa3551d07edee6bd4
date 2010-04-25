@@ -16,7 +16,7 @@ VectorList<Item> Item::mi[M_PL_MATCHMAXPLAYER];
 
 #define ITEMMAX				0x10
 
-#define _ITEM_GETR				32
+#define _ITEM_GETR				16
 #define _ITEM_DRAINDELAY		24
 #define _ITEM_DRAINFASTSPEED	8.8f
 #define _ITEM_DRAINSLOWSPEED	5.0f
@@ -181,9 +181,9 @@ void Item::SendBullet(BYTE playerindex, float x, float y, BYTE setID)
 
 void Item::action(BYTE playerindex)
 {
-	if(!bDrained && !(Player::p[playerindex].flag & PLAYER_COLLAPSE || Player::p[playerindex].flag & PLAYER_SHOT))
+	if(Player::p[playerindex].bSlow && !bDrained && !(Player::p[playerindex].flag & PLAYER_COLLAPSE || Player::p[playerindex].flag & PLAYER_SHOT))
 	{
-		float rdrain = (Player::p[playerindex].bSlow) ? 64 : 48;
+		float rdrain = 56;
 		if (checkCollisionSquare(Player::p[playerindex].x, Player::p[playerindex].y, rdrain))
 		{
 			bDrained = true;

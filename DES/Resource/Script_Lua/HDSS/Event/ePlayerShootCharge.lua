@@ -37,7 +37,7 @@ end
 function ePlayerShootCharge_00_3(playerindex, level, oplayerID, px, py)
 	local x = TotalCenterX;
 	local y = 0;
-	hdssEB(CC_ShootChargeEnemyEID_00_3, playerindex, x, y, 9000, 0, oplayerID, 1400, 0, helper_GetRandomItem());
+	hdssEB(CC_ShootChargeEnemyEID_00_3, playerindex, x, y, 9000, 0, oplayerID, 1400, helper_GetRandomItem());
 	hdssENSAIM(playerindex, level);
 	return true;
 end
@@ -641,7 +641,7 @@ end
 function ePlayerShootCharge_19_3(playerindex, level, oplayerID, px, py)
 	local x = TotalCenterX;
 	local y = 0;
-	hdssEB(CC_ShootChargeEnemyEID_19_3, playerindex, x, y, 9000, 0, oplayerID, 1400, 0, helper_GetRandomItem());
+	hdssEB(CC_ShootChargeEnemyEID_19_3, playerindex, x, y, 9000, 0, oplayerID, 1400, helper_GetRandomItem());
 	hdssENSAIM(playerindex, level);
 
 	return true;
