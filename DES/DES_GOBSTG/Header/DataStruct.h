@@ -125,6 +125,7 @@ struct bulletData
 	BYTE fadecolor;
 	BYTE autosendsetID;
 	BYTE renderdepth;
+	BYTE renderflag;
 };
 
 struct enemyData 

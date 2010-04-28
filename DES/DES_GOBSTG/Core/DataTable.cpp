@@ -257,7 +257,7 @@ bool _DataTable::MusicDefineFile()
 bool _DataTable::BulletDefineFile()
 {
 	ZeroMemory(BResource::pbres->bulletdata, RSIZE_BULLET);
-	_READSTRINGBUFFERLINE(16);
+	_READSTRINGBUFFERLINE(17);
 	while (!feof(file))
 	{
 		_INITTINT;
@@ -266,7 +266,7 @@ bool _DataTable::BulletDefineFile()
 		bulletData * item = &(BResource::pbres->bulletdata[tindex]);
 		_CHECKEOF_DATATABLE;
 
-		fscanf(file, "%s%d%d%d%f%f%d%d%d%d%d%d%d%d", 
+		fscanf(file, "%s%d%d%d%f%f%d%d%d%d%d%d%d%d%x", 
 			strbuffer[0],
 			_SAVETINT, 
 			_SAVETINT, 
@@ -277,6 +277,7 @@ bool _DataTable::BulletDefineFile()
 			_SAVETINT, 
 			_SAVETINT, 
 			&(item->nTurnAngle), 
+			_SAVETINT, 
 			_SAVETINT, 
 			_SAVETINT, 
 			_SAVETINT, 
@@ -295,6 +296,7 @@ bool _DataTable::BulletDefineFile()
 		item->effID = _LOADTINT;
 		item->blendtype = _LOADTINT;
 		item->renderdepth = _LOADTINT;
+		item->renderflag = _LOADTINT;
 	}
 	return true;
 }

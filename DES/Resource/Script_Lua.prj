@@ -14,15 +14,15 @@ Relative to Project File=1
 Save Account=0
 Use Relative Directory=1
 Using VCS=0
-Working Time=1591507
+Working Time=1597664
 [Folders]
+.\=1
+.\ - ÎÄµµ=1
 HDSS=1
 HDSS - Control=1
 HDSS - Edef=1
 HDSS - Event=1
 HDSS - Scene=1
-.\=1
-.\ - ÎÄµµ=1
 [uemakeXp]
 ReleaseMode=0
 [Debug Settings]
@@ -32,13 +32,8 @@ Source Paths=
 Symbol Paths=
 Working Directory=
 [Open Files]
-Active File Display Mode=3
-Active File Index=0
-Open File Line0=0
-Open File Pos0=0
-Open File Window Pos0=2,3,-1,-1,-8,-30,125,125,949,429
-Open File0=E:\hge\Resource\Script_Lua\Global.lua
-Open File1=
+Active File Display Mode=-1
+Open File0=
 [Group Filter]
 .\=*.lua
 [Files]

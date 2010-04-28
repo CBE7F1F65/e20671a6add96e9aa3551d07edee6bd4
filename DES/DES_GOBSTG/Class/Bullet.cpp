@@ -16,6 +16,9 @@
 
 #define _BULLETRENDERMAX	256
 
+#define _BURENDERFLAG_NONE	0
+#define _BURENDERFLAG_ROUND	1
+
 RenderDepth Bullet::renderDepth[M_PL_MATCHMAXPLAYER][BULLETTYPEMAX];
 
 int Bullet::_actionList[M_PL_MATCHMAXPLAYER][BULLETACTIONMAX];
@@ -220,7 +223,12 @@ void Bullet::Render()
 	if (sprite[i])
 	{
 		sprite[i]->SetColor(alpha<<24 | diffuse);
-		sprite[i]->RenderEx(x, y, ARC(angle+headangle+BULLET_ANGLEOFFSET), hscale);
+		float arc = 0;
+		if (!(renderflag & _BURENDERFLAG_ROUND))
+		{
+			arc = ARC(angle+headangle+BULLET_ANGLEOFFSET);
+		}
+		sprite[i]->RenderEx(x, y, arc, hscale);
 		eff.Render();
 	}
 }
@@ -618,6 +626,7 @@ void Bullet::changeType(BYTE totype)
 		{
 			eff.valueSet(effID, playerindex, *this);
 		}
+		renderflag = BResource::pbres->bulletdata[type].renderflag;
 	}
 }
 

@@ -123,6 +123,8 @@ public:
 
 	BYTE	bouncetime;
 
+	BYTE	renderflag;
+
 	Effectsys	eff;
 
 	static int _actionList[M_PL_MATCHMAXPLAYER][BULLETACTIONMAX];
