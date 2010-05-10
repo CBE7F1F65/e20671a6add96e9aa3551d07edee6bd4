@@ -2,6 +2,7 @@
 #define _MAINDEPENDENCY_H
 
 //#include <windows.h>
+#include "../../../src/hge/HGEExport.h"
 extern "C"
 {
 #include "../../../src/utility/exception.h"
@@ -16,7 +17,6 @@ extern "C"
 #include <vector>
 #include "../Header/VectorList.h"
 #include "../../../src/hge/hgeEffectSystem.h"
-#include "../../../src/hge/hgeDefines.h"
 #include "../../../src/hge/hgeFont.h"
 
 using namespace std;

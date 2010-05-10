@@ -1,7 +1,7 @@
+#include "../../../src/hge/HGEExport.h"
 #include "../Header/SpriteItemManager.h"
 #include "../Header/FrontDisplayName.h"
 #include "../Header/BResource.h"
-#include "../../../src/hge/HGEExport.h"
 
 hgeTextureInfo * SpriteItemManager::texinfo;
 int SpriteItemManager::nullIndex = 0;

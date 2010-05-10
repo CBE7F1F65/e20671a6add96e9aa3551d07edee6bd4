@@ -118,12 +118,14 @@ typedef DWORD HMUSIC;
 typedef DWORD HSTREAM;
 typedef DWORD HCHANNEL;
 
-typedef struct tagHgeTextureInfo
+#ifdef __cplusplus
+struct hgeTextureInfo
 {
 	HTEXTURE tex;
 	float texw;
 	float texh;
-}hgeTextureInfo;
+};
+#endif
 
 /************************************************************************/
 /* This define is added by Yuki                                         */
