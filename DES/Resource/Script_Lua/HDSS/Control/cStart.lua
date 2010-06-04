@@ -16,7 +16,6 @@ function ControlExecute_cStart(timer)
 		local scene = hdss.Get(HDSS_GETSCENE);
 		game.LoadTextureSet(LTable_TextureSet_Scene[scene+1]);
 	
-		local scene = hdss.Get(HDSS_GETSCENE);
 		local col = global.ARGB(0xff, 0);
 		local baseangle = hdss.Get(HDSS_ATAN2, TotalH, TotalW);
 		local enemyrandrom = RANDT();
