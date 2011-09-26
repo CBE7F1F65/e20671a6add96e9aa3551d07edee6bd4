@@ -109,7 +109,7 @@ bool Export::clientAfterInitial(hgeTextureInfo * texset)
 	matView2DMode._33 = scaleval;
 	matView2DMode._41 = offsetval;
 	matProj2DMode = hge->Gfx_GetTransform(HGEMATRIX_PROJECTION);
-/*
+
 	HGELOG("View2DMode");
 	for (int i=0; i<4; i++)
 	{
@@ -126,7 +126,7 @@ bool Export::clientAfterInitial(hgeTextureInfo * texset)
 			HGELOG("%f", matProj2DMode.m[i][j]);
 		}
 	}
-*/
+
 
 	for (int i=0; i<M_PL_MATCHMAXPLAYER; i++)
 	{

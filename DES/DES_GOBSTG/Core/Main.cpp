@@ -1,5 +1,5 @@
 #ifdef WIN32
-#include <vld.h>
+//#include <vld.h>
 #endif
 
 
